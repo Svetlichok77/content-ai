@@ -3,835 +3,186 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Контент на автопилоте PRO — Продакшн v9 · Платформенный режим</title>
+<title>Контент на автопилоте PRO — финальная простая версия</title>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800&family=Onest:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#030606;--card:#0b1111;--card2:#111d1c;--line:#1d3d3a;--line2:#00ffd155;--accent:#00ffd1;--accent2:#00a7ff;--violet:#8a5cff;--lime:#c8ff00;--text:#ecfffb;--muted:#89aaa5;--shadow:0 28px 90px rgba(0,255,209,.13);--r:24px;--rs:14px}*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Onest,system-ui,sans-serif;background:radial-gradient(circle at 8% 0%,rgba(0,255,209,.22),transparent 30%),radial-gradient(circle at 96% 8%,rgba(0,167,255,.16),transparent 32%),radial-gradient(circle at 50% 100%,rgba(138,92,255,.13),transparent 35%),linear-gradient(135deg,#020404,#07100f 42%,#030606);color:var(--text);min-height:100vh;line-height:1.55;font-size:15px}.noise:before{content:"";position:fixed;inset:0;background:linear-gradient(120deg,transparent,rgba(0,255,209,.04),transparent),repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 3px);pointer-events:none;mix-blend-mode:screen}.noise:after{content:"";position:fixed;right:6%;bottom:8%;width:280px;height:280px;border-radius:50%;background:rgba(0,255,209,.06);filter:blur(55px);pointer-events:none}header{padding:70px 22px 42px;text-align:center;border-bottom:1px solid var(--line);position:relative;overflow:hidden}header:before{content:'PRO';position:absolute;right:5%;top:8px;font-family:Unbounded,sans-serif;font-size:120px;font-weight:800;color:transparent;-webkit-text-stroke:1px rgba(0,255,209,.12);letter-spacing:-.08em;pointer-events:none}header:after{content:'';position:absolute;left:50%;bottom:-1px;transform:translateX(-50%);width:min(760px,82vw);height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}.brand{font-family:Unbounded,sans-serif;color:var(--accent);font-size:12px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:18px}h1{font-family:Unbounded,sans-serif;font-size:clamp(30px,5vw,60px);line-height:1.02;letter-spacing:-.05em;margin-bottom:18px}h1 span{color:var(--accent);text-shadow:0 0 30px rgba(0,255,209,.42)}.sub{max-width:880px;margin:0 auto;color:var(--muted);font-size:16px}.herochips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:24px}.herochips span{border:1px solid rgba(0,255,209,.24);background:rgba(0,255,209,.055);color:#b7fff6;border-radius:999px;padding:8px 13px;font-size:12px;box-shadow:0 0 24px rgba(0,255,209,.08)}.wrap{max-width:1220px;margin:0 auto;padding:30px 20px 82px}.grid{display:grid;grid-template-columns:minmax(0,1fr) 520px;gap:22px;align-items:start}.panel{background:linear-gradient(180deg,rgba(13,22,22,.92),rgba(7,11,11,.96));border:1px solid rgba(0,255,209,.16);border-radius:var(--r);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.035);padding:24px;margin-bottom:16px;backdrop-filter:blur(14px);position:relative;overflow:hidden}.panel:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,255,209,.06),transparent 38%,rgba(0,167,255,.035));pointer-events:none}.panel>*{position:relative}.sticky{position:sticky;top:18px}.label{font-family:Unbounded,sans-serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px}.label:after{content:"";height:1px;background:var(--line);flex:1}.pills{display:flex;flex-wrap:wrap;gap:8px}.pill{border:1px solid rgba(136,170,165,.18);background:linear-gradient(180deg,#081312,#06100f);color:#a7c4c0;border-radius:999px;padding:9px 15px;cursor:pointer;transition:.18s;font-family:Onest,sans-serif;font-size:13px;box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}.pill:hover{border-color:var(--line2);color:#fff;background:#0b1d1b;transform:translateY(-1px)}.pill.on{background:linear-gradient(135deg,var(--accent),#66fff0);color:#02100e;border-color:var(--accent);font-weight:800;box-shadow:0 0 26px rgba(0,255,209,.24),0 8px 24px rgba(0,255,209,.12)}textarea,input{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--text);border-radius:var(--rs);padding:13px 15px;font-family:Onest,sans-serif;font-size:14px;outline:none}textarea:focus,input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,255,209,.07)}textarea{min-height:94px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.btn{border:0;border-radius:18px;background:linear-gradient(135deg,var(--accent),#67fff0 55%,var(--lime));color:#04110f;font-family:Unbounded,sans-serif;font-weight:800;font-size:13px;letter-spacing:.04em;padding:18px;width:100%;cursor:pointer;transition:.18s;box-shadow:0 18px 54px rgba(0,255,209,.18)}.btn:hover{transform:translateY(-2px);box-shadow:0 24px 66px rgba(0,255,209,.23)}.btn2{background:transparent;color:var(--accent);border:1px solid var(--line2);padding:11px 14px;border-radius:999px;cursor:pointer;font-weight:700}.tabs{display:flex;gap:6px;background:#071010;border:1px solid var(--line);border-radius:16px;padding:5px;margin-bottom:14px;overflow:auto}.tab{white-space:nowrap;padding:10px 12px;border-radius:12px;color:var(--muted);cursor:pointer;font-size:13px}.tab.on{background:linear-gradient(180deg,#132120,#0d1716);color:var(--text);border:1px solid var(--line)}.out{background:#071010;border:1px solid var(--line);border-radius:18px;padding:18px;white-space:pre-wrap;word-break:break-word;min-height:300px;color:#dffbf7;font-weight:300;max-height:72vh;overflow:auto}.out{width:100%;resize:vertical;line-height:1.55}.hint{background:rgba(0,255,209,.07);border:1px solid var(--line2);border-radius:14px;padding:13px 15px;color:#aefdf0;font-size:13px;margin-top:12px}.copybar{display:flex;gap:8px;justify-content:flex-end;margin-top:10px;flex-wrap:wrap}.copyguide{margin-top:12px;border-radius:16px;border:1px solid rgba(200,255,0,.42);background:linear-gradient(135deg,rgba(200,255,0,.14),rgba(0,255,209,.08));padding:14px 16px;color:#eaffbd;font-weight:800;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 14px 36px rgba(200,255,0,.08)}.copyguide button{border:0;background:var(--lime);color:#07100f;border-radius:999px;padding:10px 14px;font-weight:900;cursor:pointer}.copyguide small{display:block;color:#b9d6d1;font-weight:400;margin-top:2px}.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#071010;border-radius:999px;padding:6px 10px;color:#9feee3;font-size:12px;margin:3px}.hidden{display:none}.footer{text-align:center;color:var(--muted);font-size:12px;padding:24px;border-top:1px solid var(--line)}.check{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.check label{display:flex;gap:8px;align-items:center;background:#071010;border:1px solid var(--line);border-radius:12px;padding:9px 10px;color:#b9d4d0;font-size:13px}.check input{width:auto}.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.kpi div{background:linear-gradient(180deg,#071010,#081615);border:1px solid var(--line);border-radius:16px;padding:13px}.kpi b{color:var(--accent);display:block;font-size:20px;font-family:Unbounded,sans-serif}.kpi span{font-size:12px;color:var(--muted)}.microline{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.microline span{font-size:12px;color:#95c8c1;border:1px solid rgba(0,255,209,.12);background:#06100f;border-radius:999px;padding:7px 10px}.step-hero h2{font-family:Unbounded,sans-serif;font-size:clamp(22px,3vw,34px);letter-spacing:-.04em;margin-bottom:10px}.step-hero p{color:var(--muted);max-width:760px}.stepnav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px}.stepnav a{text-decoration:none;text-align:center;border:1px solid var(--line2);background:linear-gradient(135deg,rgba(0,255,209,.12),rgba(0,167,255,.06));color:#dffffa;border-radius:18px;padding:14px 16px;font-weight:900;box-shadow:0 14px 36px rgba(0,255,209,.08);transition:.18s}.stepnav a:hover{transform:translateY(-2px);background:linear-gradient(135deg,rgba(0,255,209,.18),rgba(0,167,255,.1))}#step-audience{border-color:rgba(200,255,0,.28);box-shadow:0 28px 90px rgba(200,255,0,.07),inset 0 1px 0 rgba(255,255,255,.035)}#step-content{border-color:rgba(0,255,209,.32)}
-.extract-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}.extract-card{background:linear-gradient(180deg,#071010,#081615);border:1px solid rgba(0,255,209,.18);border-radius:16px;padding:14px;min-height:96px}.extract-card.wide{grid-column:1/-1}.extract-card b{display:block;color:var(--accent);font-family:Unbounded,sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}.extract-card ul{padding-left:18px;color:#dffbf7}.extract-card li{margin:4px 0}.extract-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.mini-toggle{display:flex;gap:8px;align-items:center;background:#071010;border:1px solid var(--line);border-radius:12px;padding:10px;color:#b9d4d0;font-size:13px}.mini-toggle input{width:auto}.textarea-tall{min-height:160px}
-@media(max-width:960px){.grid{grid-template-columns:1fr}.sticky{position:static}.row,.check,.kpi{grid-template-columns:1fr}header{padding-top:42px}header:before{font-size:82px}.copyguide{align-items:flex-start;flex-direction:column}.stepnav{grid-template-columns:1fr}.extract-grid{grid-template-columns:1fr}}
-
-.preview-box{margin-top:12px;background:#071010;border:1px solid rgba(0,255,209,.18);border-radius:18px;padding:14px;max-height:360px;overflow:auto;color:#dffbf7;font-size:13px;line-height:1.55;white-space:pre-wrap}.preview-line{display:block;padding:5px 7px;border-radius:10px;margin:2px 0;cursor:pointer;transition:.15s;border:1px solid transparent}.preview-line:hover{background:rgba(0,255,209,.08);border-color:rgba(0,255,209,.25);transform:translateX(2px)}.preview-head{font-family:Unbounded,sans-serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#00ffd1;margin-top:8px;margin-bottom:4px}.hl-segment{color:#00ffd1;font-weight:800}.hl-pain{color:#ff8a7a}.hl-fear{color:#c99cff}.hl-want{color:#a6ff8f}.hl-phrase{color:#ffd166;font-style:italic}.hl-topic{color:#9fd7ff}.selected-snips{margin-top:12px;background:linear-gradient(180deg,#071010,#081615);border:1px solid rgba(200,255,0,.28);border-radius:18px;padding:14px;min-height:62px}.selected-snips b{display:block;color:var(--lime);font-family:Unbounded,sans-serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}.snip{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(200,255,0,.28);background:rgba(200,255,0,.09);color:#ecffbd;border-radius:999px;padding:7px 10px;margin:4px;font-size:12px}.snip button{border:0;background:transparent;color:#ecffbd;font-weight:900;cursor:pointer}.tiny-note{font-size:12px;color:#95c8c1;margin-top:8px}
-
-/* Production mode */
-.mode-panel{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-.mode-buttons{display:flex;gap:8px;flex-wrap:wrap}
-.mode-btn{border:1px solid rgba(0,255,209,.26);background:#071010;color:#b7fff6;border-radius:999px;padding:11px 15px;font-weight:800;cursor:pointer}
-.mode-btn.active{background:linear-gradient(135deg,var(--accent),#67fff0);color:#03100f;border-color:var(--accent);box-shadow:0 0 28px rgba(0,255,209,.18)}
-body.production-active main>section:not(.step-hero):not(#mode-switch):not(#production-panel){display:none}
-body:not(.production-active) #production-panel{display:none}
-.prod-card{border:1px solid rgba(0,255,209,.16);background:linear-gradient(180deg,#071111,#06100f);border-radius:18px;padding:16px;margin-top:12px}
-.prod-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.prod-formats{display:flex;flex-wrap:wrap;gap:8px}
-.prod-format{border:1px solid rgba(0,255,209,.18);background:#071010;color:#b9d4d0;border-radius:999px;padding:9px 12px;cursor:pointer;font-size:13px}
-.prod-format.on{background:linear-gradient(135deg,var(--accent),#66fff0);color:#02100e;border-color:var(--accent);font-weight:900}
-.prod-note{font-size:12px;color:var(--muted);margin-top:8px}
-@media(max-width:960px){.prod-mini{grid-template-columns:1fr}}
-
-.platform-card{margin-top:12px;border:1px solid rgba(0,255,209,.22);background:linear-gradient(135deg,rgba(0,255,209,.08),rgba(0,167,255,.04));border-radius:18px;padding:14px;color:#dffbf7}.platform-card b{display:block;color:var(--accent);font-family:Unbounded,sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}.platform-card p{color:#b9d6d1;font-size:13px;margin:0}.platform-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.platform-tags span{border:1px solid rgba(0,255,209,.18);background:#06100f;border-radius:999px;padding:6px 9px;font-size:11px;color:#aefdf0}
-
-/* AI generation output */
-.ai-output-wrap{margin-top:14px;border:1px solid rgba(0,167,255,.34);background:linear-gradient(180deg,#071010,#061416);border-radius:18px;padding:14px;box-shadow:0 14px 40px rgba(0,167,255,.08)}
-.ai-output-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
-.ai-output-title{font-family:Unbounded,sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#9fd7ff}
-.ai-output-status{font-size:12px;color:#95c8c1}
-.ai-output{background:#071010;border:1px solid rgba(0,255,209,.16);border-radius:16px;padding:16px;white-space:pre-wrap;word-break:break-word;min-height:220px;max-height:72vh;overflow:auto;color:#e9fffb;font-weight:300;line-height:1.55}
-.ai-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px;flex-wrap:wrap}
-.btn-ai{margin-top:10px;background:linear-gradient(135deg,#00a7ff,#00ffd1 58%,#c8ff00)!important}
-
+:root{--bg:#030606;--card:#0b1111;--card2:#111d1c;--line:#1d3d3a;--line2:#00ffd155;--accent:#00ffd1;--accent2:#00a7ff;--lime:#c8ff00;--text:#ecfffb;--muted:#89aaa5;--danger:#ff6b6b;--r:24px;--rs:14px;--shadow:0 28px 90px rgba(0,255,209,.13)}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Onest,system-ui,sans-serif;background:radial-gradient(circle at 8% 0%,rgba(0,255,209,.22),transparent 30%),radial-gradient(circle at 96% 8%,rgba(0,167,255,.16),transparent 32%),radial-gradient(circle at 50% 100%,rgba(138,92,255,.13),transparent 35%),linear-gradient(135deg,#020404,#07100f 42%,#030606);color:var(--text);min-height:100vh;line-height:1.55;font-size:15px}.noise:before{content:"";position:fixed;inset:0;background:linear-gradient(120deg,transparent,rgba(0,255,209,.04),transparent),repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 3px);pointer-events:none;mix-blend-mode:screen}.noise:after{content:"";position:fixed;right:6%;bottom:8%;width:280px;height:280px;border-radius:50%;background:rgba(0,255,209,.06);filter:blur(55px);pointer-events:none}header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--line);position:relative;overflow:hidden}header:before{content:'PRO';position:absolute;right:5%;top:8px;font-family:Unbounded,sans-serif;font-size:112px;font-weight:800;color:transparent;-webkit-text-stroke:1px rgba(0,255,209,.12);letter-spacing:-.08em;pointer-events:none}.brand{font-family:Unbounded,sans-serif;color:var(--accent);font-size:12px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:18px}h1{font-family:Unbounded,sans-serif;font-size:clamp(30px,5vw,58px);line-height:1.02;letter-spacing:-.05em;margin-bottom:18px}h1 span{color:var(--accent);text-shadow:0 0 30px rgba(0,255,209,.42)}.sub{max-width:880px;margin:0 auto;color:var(--muted);font-size:16px}.herochips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:24px}.herochips span{border:1px solid rgba(0,255,209,.24);background:rgba(0,255,209,.055);color:#b7fff6;border-radius:999px;padding:8px 13px;font-size:12px;box-shadow:0 0 24px rgba(0,255,209,.08)}
+.wrap{max-width:1260px;margin:0 auto;padding:30px 20px 82px}.grid{display:grid;grid-template-columns:minmax(0,1fr) 520px;gap:22px;align-items:start}.panel{background:linear-gradient(180deg,rgba(13,22,22,.92),rgba(7,11,11,.96));border:1px solid rgba(0,255,209,.16);border-radius:var(--r);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.035);padding:24px;margin-bottom:16px;backdrop-filter:blur(14px);position:relative;overflow:hidden}.panel:before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,255,209,.06),transparent 38%,rgba(0,167,255,.035));pointer-events:none}.panel>*{position:relative}.sticky{position:sticky;top:18px}.label{font-family:Unbounded,sans-serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px}.label:after{content:"";height:1px;background:var(--line);flex:1}.hint{background:rgba(0,255,209,.07);border:1px solid var(--line2);border-radius:14px;padding:13px 15px;color:#aefdf0;font-size:13px;margin-top:12px}.warning{background:rgba(200,255,0,.08);border:1px solid rgba(200,255,0,.38);color:#eaffbd}.muted{color:var(--muted)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}textarea,input,select{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--text);border-radius:var(--rs);padding:13px 15px;font-family:Onest,sans-serif;font-size:14px;outline:none}textarea:focus,input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,255,209,.07)}textarea{min-height:104px;resize:vertical}.textarea-tall{min-height:170px}.pills{display:flex;flex-wrap:wrap;gap:8px}.pill{border:1px solid rgba(136,170,165,.18);background:linear-gradient(180deg,#081312,#06100f);color:#a7c4c0;border-radius:999px;padding:9px 15px;cursor:pointer;transition:.18s;font-family:Onest,sans-serif;font-size:13px}.pill:hover{border-color:var(--line2);color:#fff;background:#0b1d1b;transform:translateY(-1px)}.pill.on{background:linear-gradient(135deg,var(--accent),#66fff0);color:#02100e;border-color:var(--accent);font-weight:800;box-shadow:0 0 26px rgba(0,255,209,.24),0 8px 24px rgba(0,255,209,.12)}.check{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.check label{display:flex;gap:8px;align-items:center;background:#071010;border:1px solid var(--line);border-radius:12px;padding:9px 10px;color:#b9d4d0;font-size:13px}.check input{width:auto}.btn{border:0;border-radius:18px;background:linear-gradient(135deg,var(--accent),#67fff0 55%,var(--lime));color:#04110f;font-family:Unbounded,sans-serif;font-weight:800;font-size:13px;letter-spacing:.04em;padding:18px;width:100%;cursor:pointer;transition:.18s;box-shadow:0 18px 54px rgba(0,255,209,.18);margin-top:12px}.btn:hover{transform:translateY(-2px);box-shadow:0 24px 66px rgba(0,255,209,.23)}.btn-blue{background:linear-gradient(135deg,#00a7ff,#00ffd1 55%,var(--lime))}.btn2{background:transparent;color:var(--accent);border:1px solid var(--line2);padding:11px 14px;border-radius:999px;cursor:pointer;font-weight:700}.btn2:hover{background:rgba(0,255,209,.08)}.copybar{display:flex;gap:8px;justify-content:flex-end;margin-top:10px;flex-wrap:wrap}.out{background:#071010;border:1px solid var(--line);border-radius:18px;padding:18px;white-space:pre-wrap;word-break:break-word;min-height:260px;color:#dffbf7;font-weight:300;max-height:72vh;overflow:auto;width:100%;resize:vertical;line-height:1.55}.tabs{display:flex;gap:6px;background:#071010;border:1px solid var(--line);border-radius:16px;padding:5px;margin-bottom:14px;overflow:auto}.tab{white-space:nowrap;padding:10px 12px;border-radius:12px;color:var(--muted);cursor:pointer;font-size:13px}.tab.on{background:linear-gradient(180deg,#132120,#0d1716);color:var(--text);border:1px solid var(--line)}.copyguide{margin-top:12px;border-radius:16px;border:1px solid rgba(200,255,0,.42);background:linear-gradient(135deg,rgba(200,255,0,.14),rgba(0,255,209,.08));padding:14px 16px;color:#eaffbd;font-weight:800;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 14px 36px rgba(200,255,0,.08)}.copyguide button{border:0;background:var(--lime);color:#07100f;border-radius:999px;padding:10px 14px;font-weight:900;cursor:pointer}.copyguide small{display:block;color:#b9d6d1;font-weight:400;margin-top:2px}.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:#071010;border-radius:999px;padding:6px 10px;color:#9feee3;font-size:12px;margin:3px}.hidden{display:none}.footer{text-align:center;color:var(--muted);font-size:12px;padding:24px;border-top:1px solid var(--line)}.microline{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.microline span{font-size:12px;color:#95c8c1;border:1px solid rgba(0,255,209,.12);background:#06100f;border-radius:999px;padding:7px 10px}.start-list{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}.start-list div{background:#071010;border:1px solid rgba(0,255,209,.18);border-radius:16px;padding:14px}.start-list b{display:block;color:var(--accent);font-family:Unbounded,sans-serif;margin-bottom:6px}.platform-card{margin-top:12px;border:1px solid rgba(0,255,209,.22);background:linear-gradient(135deg,rgba(0,255,209,.08),rgba(0,167,255,.04));border-radius:18px;padding:14px;color:#dffbf7}.platform-card b{display:block;color:var(--accent);font-family:Unbounded,sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}.platform-card p{color:#b9d6d1;font-size:13px;margin:0}.platform-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.platform-tags span{border:1px solid rgba(0,255,209,.18);background:#06100f;border-radius:999px;padding:6px 9px;font-size:11px;color:#aefdf0}.paywall{border:1px solid rgba(200,255,0,.4);background:linear-gradient(135deg,rgba(200,255,0,.13),rgba(0,255,209,.06));border-radius:18px;padding:18px;margin-top:14px}.paywall h3{font-family:Unbounded,sans-serif;font-size:16px;color:#eaffbd;margin-bottom:8px}.paywall ul{padding-left:19px;color:#dffbf7}.api-status{font-size:12px;color:var(--muted);margin-top:8px}.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.kpi div{background:linear-gradient(180deg,#071010,#081615);border:1px solid var(--line);border-radius:16px;padding:13px}.kpi b{color:var(--accent);display:block;font-size:20px;font-family:Unbounded,sans-serif}.kpi span{font-size:12px;color:var(--muted)}
+@media(max-width:960px){.grid{grid-template-columns:1fr}.sticky{position:static}.row,.row3,.check,.start-list,.kpi{grid-template-columns:1fr}header{padding-top:42px}header:before{font-size:82px}.copyguide{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
 <body class="noise">
-<header><div class="brand">AI content system · PRO constructor</div><h1>Контент на <span>автопилоте</span> PRO</h1><p class="sub">Премиальный HTML-конструктор промптов для контента, продаж и воронок. Вводишь проект, тему и вводные — получаешь систему: посты, пины, Threads, сценарии видео, заголовки, описания, CTA и визуальные промпты.</p><div class="herochips"><span>SMM в кармане</span><span>1 идея → 15 форматов</span><span>Промпты без шаманства</span><span>Контент без ступора</span></div></header>
+<header>
+  <div class="brand">AI content system · simple final</div>
+  <h1>Контент на <span>автопилоте</span> PRO</h1>
+  <p class="sub">Один понятный конструктор: вставляешь ЦА, выбираешь площадку и формат — получаешь готовый контент или мощный промпт для генерации.</p>
+  <div class="herochips"><span>SMM в кармане</span><span>5 бесплатных генераций</span><span>1 идея → много форматов</span><span>Без ступора</span></div>
+</header>
 <div class="wrap"><div class="grid"><main>
-<section class="panel step-hero"><div class="label">Как пользоваться</div><h2>Выбери нужный шаг</h2><p>Шаги независимые: можно сначала найти ЦА, можно сразу писать контент, можно вернуться к любому блоку в любой момент.</p><div class="stepnav"><a href="#step-audience">ШАГ 1 · ЦА и смыслы</a><a href="#step-content">ШАГ 2 · Контент</a></div></section>
-<section class="panel" id="mode-switch"><div class="label">Режим работы</div><div class="mode-panel"><div><h2 style="font-family:Unbounded,sans-serif;font-size:20px;letter-spacing:-.03em;margin-bottom:4px">Продакшн или полный конструктор</h2><p style="color:var(--muted);font-size:13px">Продакшн — чистый экран для пользователя. Полный режим — все настройки, ШАГ 1, подсветка и кликабельные акценты.</p></div><div class="mode-buttons"><button class="mode-btn active" id="prodModeBtn" onclick="setMode('production')">Продакшн режим</button><button class="mode-btn" id="fullModeBtn" onclick="setMode('full')">Полный режим</button></div></div></section>
-
-<section class="panel" id="production-panel"><div class="label">Продакшн режим · Быстрая генерация</div><div class="microline"><span>Минимум полей</span><span>Без лишней настройки</span><span>1–3 формата</span><span>Готовый промпт на выходе</span></div><br><div class="hint">Для покупателя: вставил данные ЦА, выбрал формат, тему и нажал кнопку. Полный конструктор остаётся рядом, если нужно докрутить тонкости.</div>
-<div class="prod-card"><div class="label">1 · Проект и площадка</div><div class="row"><input id="prodProject" placeholder="Название проекта: Психология отношений / Фриланс без хаоса"><input id="prodRole" placeholder="Роль автора: психолог, эксперт, диетолог..."></div><br><div class="prod-mini"><select id="prodPlatform"></select><select id="prodAudience"></select><select id="prodGoal"></select></div><div id="prodPlatformInfo" class="platform-card"></div></div>
-<div class="prod-card"><div class="label">2 · Данные о ЦА</div><textarea id="prodStep1Data" class="textarea-tall" placeholder="Вставь сюда блок из ШАГА 1: фокус-сегмент, боли, страхи, желания, живые фразы..."></textarea><div class="prod-note">Если данных ШАГА 1 нет — можно оставить пустым, но точность будет ниже. Кибер-Ванга пока в отпуске.</div></div>
-<div class="prod-card"><div class="label">3 · Тема и продукт</div><div class="row"><input id="prodTopic" placeholder="Тема: как выйти из зависимых отношений"><input id="prodProduct" placeholder="Продукт / лид-магнит / услуга"></div><br><textarea id="prodDetails" placeholder="Исходные тезисы, факты, кейс, что важно учесть"></textarea></div>
-<div class="prod-card"><div class="label">4 · Форматы результата</div><div class="hint">Выбери 1–3 формата. Если выбрать больше — самый первый автоматически снимется.</div><br><div class="prod-formats" id="prodFormats"></div></div>
-<div class="prod-card"><div class="label">5 · Подача</div><div class="prod-mini"><select id="prodTone"></select><select id="prodDepth"></select><select id="prodExtraPreset"><option value="clean">Проверка на воду</option><option value="pain">Усиление боли + проверка</option><option value="seo">SEO/ключи + проверка</option><option value="none">Без дополнений</option></select></div><br><input id="prodCta" value="мягкий переход к продукту / лид-магниту / следующему шагу"></div>
-<button class="btn" onclick="generateProduction()">Собрать промпт в продакшн режиме →</button>
-<button class="btn btn-ai" onclick="generateProductionAI()">🔥 Сгенерировать контент сразу</button>
+<section class="panel">
+  <div class="label">Начни здесь</div>
+  <h2 style="font-family:Unbounded,sans-serif;font-size:24px;letter-spacing:-.03em">4 шага — и контент готов</h2>
+  <div class="start-list">
+    <div><b>1</b><span>Если ЦА неизвестна — нажми “Найти ЦА”. Если известна — вставь готовый блок.</span></div>
+    <div><b>2</b><span>Выбери площадку, цель и 1–3 формата результата.</span></div>
+    <div><b>3</b><span>Напиши тему и продукт, добавь тезисы.</span></div>
+    <div><b>4</b><span>Нажми “Сгенерировать контент”.</span></div>
+  </div>
+  <div class="hint warning">💡 Подсказка: если пользователь не знает свою ЦА, сначала заполни мини-блок “Найти ЦА”. Конструктор соберёт сегменты, боли, желания, живые фразы и темы — потом одним кликом перенесёшь это в основной блок.</div>
 </section>
-<section class="panel" id="step-audience"><div class="label">ШАГ 1 · ЦА, боли, запросы, смыслы</div><div class="microline"><span>Найди сегменты</span><span>Вытащи боли</span><span>Собери язык клиента</span><span>Передай в ШАГ 2</span></div><br><div class="hint">Этот блок работает отдельно. Сначала собери промпт для анализа ЦА и вставь его в нейросеть. Потом готовый финальный блок из ШАГА 1 вставь ниже — конструктор покажет подсветку, а нужные строки можно кликнуть и добавить в акценты для ШАГА 2.</div><br><div class="row"><input id="marketTopic" placeholder="Ниша / тема: психология отношений, фитнес дома, Wildberries..."><input id="geo" placeholder="География: РФ / СНГ / город / без привязки"></div><br><div class="row"><input id="audLevel" placeholder="Уровень аудитории: новички / средний / профи"><input id="audGoal" placeholder="Что аудитория хочет получить: выйти из отношений, похудеть, запустить товар..."></div><br><textarea id="audOffer" placeholder="Что продаёте или планируете продавать: консультация, курс, гайд, подписка, услуга, цифровой продукт"></textarea><br><br><textarea id="audContext" placeholder="Что уже известно: кто покупал, частые вопросы, комментарии, возражения, конкуренты, наблюдения. Если есть ЦА и боли — вставляй сюда, это будет главным источником."></textarea><br><br><div class="row"><button class="btn2" onclick="generateAudience('quick')">Быстро найти ЦА →</button><button class="btn2" onclick="generateAudience('deep')">Глубокий анализ ЦА →</button></div><div class="hint">Промпт попросит финальный блок для переноса: фокус-сегмент, боли, страхи, желания, живые фразы и темы. Именно его удобнее вставлять ниже.</div><br><div class="label">Перенос данных из ШАГА 1</div><textarea id="step1FullResult" class="textarea-tall" placeholder="Вставь сюда финальный блок из ШАГА 1: ФОКУС-СЕГМЕНТ, БОЛИ, СКРЫТЫЕ СТРАХИ, ЖЕЛАНИЯ, ЖИВЫЕ ФРАЗЫ, ТЕМЫ..."></textarea><div class="extract-actions"><button class="btn2" onclick="transferStep1ToStep2()">Перенести весь блок в ШАГ 2 →</button><button class="btn2" onclick="clearStep1Bridge()">Очистить</button></div><div id="step1Preview" class="preview-box hidden"></div><div id="selectedSnipsBox" class="selected-snips"><b>Выбранные акценты для ШАГА 2</b><div id="selectedSnips"></div><div class="tiny-note">Кликни по строкам в подсветке: боль, страх, желание или живую фразу — они попадут сюда и усилят генерацию.</div></div><div class="hint">⚡ Теперь мы ничего не “улучшаем” и не ломаем: переносим данные как есть. Подсветка нужна только для удобства и выбора акцентов.</div></section>
-<section class="panel" id="step-content"><div class="label">ШАГ 2 · Генерация контента</div><div class="microline"><span>1 идея → 15 форматов</span><span>Посты · Пины · Threads</span><span>Контент за 15 минут</span><span>Без обязательного ШАГА 1</span></div><br><div class="hint">Этот блок работает отдельно. Если ЦА уже понятна — сразу заполняй вводные и собирай промпт. Если нет — вернись к ШАГУ 1 и получи аудиторию, боли, запросы и смыслы.</div></section>
-<section class="panel"><div class="label">ШАГ 2.1 · Площадка</div><div class="pills" id="platforms"></div><div id="platformInfo" class="platform-card"></div></section>
-<section class="panel"><div class="label">ШАГ 2.2 · Ниша / тип проекта</div><div class="pills" id="audiences"></div></section>
-<section class="panel"><div class="label">ШАГ 2.3 · Быстрая боль / фокус</div><div class="pills" id="pains"></div></section>
-<section class="panel"><div class="label">ШАГ 2.4 · Формат результата</div><div class="hint">Выбери от 1 до 3 форматов. Конструктор соберёт промпт именно под них: например, «Pinterest-пины» + «Вирусные заголовки» + «Контент-план».</div><br><div class="pills" id="formats"></div></section>
-<section class="panel"><div class="label">ШАГ 2.5 · Цель</div><div class="pills" id="goals"></div></section>
-<section class="panel"><div class="label">ШАГ 2.6 · Тон и подача</div><div class="pills" id="tone"></div></section>
-<section class="panel"><div class="label">ШАГ 2.7 · Уровень глубины</div><div class="pills" id="depth"></div></section>
-<section class="panel"><div class="label">ШАГ 2.8 · Вводные проекта</div><div class="row"><input id="project" placeholder="Название проекта клиента: Студия Марии / Школа речи / Блог эксперта"><input id="topic" placeholder="Тема: Как из кейса сделать продающий пост"></div><br><div class="row"><input id="product" placeholder="Продукт / услуга / лид-магнит"><input id="role" placeholder="Роль автора: эксперт, психолог, SMM, AI-креатор..."></div><br><textarea id="details" placeholder="Факты, кейс, ссылка, тезисы или мысль, из которой нужно сделать контент"></textarea><br><br><div class="hint">Данные из ШАГА 1 — главный источник для ЦА. Можно перенести весь блок кнопкой сверху или вставить вручную.</div><textarea id="step1Data" class="textarea-tall" placeholder="Данные из ШАГА 1: фокус-сегмент, боли, страхи, желания, живые фразы, темы..."></textarea><br><br><textarea id="selectedStep1Accents" placeholder="Выбранные акценты из ШАГА 1: сюда автоматически попадают строки, по которым ты кликнула в подсветке"></textarea><br><br><textarea id="audienceCustom" placeholder="ЦА подробно: если ШАГ 1 не проходили, опишите аудиторию здесь"></textarea><br><br><textarea id="painCustom" placeholder="Боли, желания и возражения ЦА: если ШАГ 1 не проходили, опишите здесь"></textarea><br><br><div class="row"><input id="style" value="живой, человеческий, экспертный, без пафоса, с лёгким юмором"><input id="cta" value="мягкий переход к продукту / лид-магниту / следующему шагу"></div></section>
-<section class="panel"><div class="label">ШАГ 2.9 · Что добавить в выдачу</div><div class="check" id="extras"></div></section>
-<button class="btn" onclick="generate()">Собрать контент-промпт →</button><button class="btn btn-ai" onclick="generateAI()">🔥 Сгенерировать контент</button><div class="kpi"><div><b>1</b><span>тема на входе</span></div><div><b>15+</b><span>единиц контента</span></div><div><b>A/B/C</b><span>варианты подачи</span></div></div>
-</main><aside class="sticky"><section class="panel"><div class="label">Выбрано</div><div id="summary"></div><div class="hint">Версия без API: конструктор собирает мощный промпт, который клиент копирует в ChatGPT, Claude, Gemini, YandexGPT или другой ИИ. Без ключей, хостинга и технических болот с крокодилами.</div></section><section class="panel hidden" id="result"><div class="tabs"><div class="tab on" onclick="showTab('master',this)">Мастер-промпт</div><div class="tab" onclick="showTab('chain',this)">Цепочка</div><div class="tab" onclick="showTab('quick',this)">Быстрый</div></div><textarea class="out" id="out" spellcheck="false" oninput="current=this.value" placeholder="Здесь появится промпт. Его можно редактировать перед копированием."></textarea>
-<div class="ai-output-wrap">
-  <div class="ai-output-head">
-    <div class="ai-output-title">Готовый контент</div>
-    <div class="ai-output-status" id="aiStatus">API пока не подключён · тестовый режим</div>
-  </div>
-  <div id="aiOutput" class="ai-output">Нажми «🔥 Сгенерировать контент» — здесь появится готовая выдача нейросети. Пока стоит безопасная заглушка, чтобы проверить интерфейс без API.</div>
-  <div class="ai-actions">
-    <button class="btn2" onclick="copyAIOutput()">Скопировать контент</button>
-    <button class="btn2" onclick="clearAIOutput()">Очистить</button>
-  </div>
-</div>
-<div class="copyguide"><div>Готово: проверь, отредактируй и скопируй промпт<small>Можно править прямо в окне выше, а потом копировать в ChatGPT, Claude, Gemini, YandexGPT или другой ИИ.</small></div><button onclick="copyOut()">Скопировать промпт →</button></div><div class="copybar"><button class="btn2" onclick="copyOut()" id="copyBtn">Скопировать</button><button class="btn2" onclick="downloadTxt()">Скачать .txt</button></div></section></aside></div></div>
-<div class="footer">Контент на автопилоте PRO · Продакшн v9 · Платформенный режим · быстрый режим + полный конструктор</div>
+
+<section class="panel">
+  <div class="label">1 · Проект и площадка</div>
+  <div class="row"><input id="project" placeholder="Название проекта: Психология отношений / Pinterest без лица"><input id="role" placeholder="Роль автора: психолог, эксперт, SMM, AI-креатор..."></div><br>
+  <div class="row3"><select id="platform"></select><select id="goal"></select><select id="audienceType"></select></div>
+  <div id="platformInfo" class="platform-card"></div>
+</section>
+
+<section class="panel">
+  <div class="label">2 · Не знаю ЦА · Найти аудиторию</div>
+  <h2 style="font-family:Unbounded,sans-serif;font-size:20px;letter-spacing:-.03em;margin-bottom:8px">Сначала найдём, кому вообще это нужно</h2>
+  <div class="hint warning">Если ЦА не понятна, не начинай с контента. Сначала найди сегменты, боли, страхи, запросы и живые фразы. Иначе получится пост “для всех”, то есть ни для кого.</div><br>
+  <div class="row"><input id="audFindNiche" placeholder="Ниша / тема: Pinterest, фитнес дома, психология отношений"><input id="audFindProduct" placeholder="Продукт / услуга: курс, консультация, гайд, подписка"></div><br>
+  <div class="row"><input id="audFindKnown" placeholder="Что уже известно: кто покупает, комментарии, наблюдения"><select id="audFindDepth"><option value="deep">Глубоко</option><option value="quick">Быстро</option></select></div><br>
+  <textarea id="audienceFinderOutput" class="textarea-tall" placeholder="Здесь появится найденная ЦА: сегменты, боли, страхи, желания, живые фразы и темы. Потом нажми “Перенести в ЦА”."></textarea>
+  <div class="copybar"><button class="btn2" onclick="findAudience()">🔎 Найти ЦА</button><button class="btn2" onclick="transferAudienceFinder()">Перенести в ЦА ↓</button><button class="btn2" onclick="copyText('audienceFinderOutput')">Скопировать</button><button class="btn2" onclick="clearText('audienceFinderOutput')">Очистить</button></div>
+</section>
+
+<section class="panel">
+  <div class="label">3 · ЦА и смыслы</div>
+  <textarea id="audienceData" class="textarea-tall" placeholder="Вставь сюда готовый блок ЦА или перенеси из блока выше: ФОКУС-СЕГМЕНТ, БОЛИ, СТРАХИ, ЖЕЛАНИЯ, ЖИВЫЕ ФРАЗЫ, ТЕМЫ..."></textarea>
+  <div class="hint">🔥 Это главный блок. Конструктор будет писать не “для всех”, а под этого конкретного человека.</div>
+</section>
+
+<section class="panel">
+  <div class="label">4 · Форматы результата</div>
+  <div class="hint">Выбери 1–3 формата. Если выбрать больше — первый автоматически снимется.</div><br>
+  <div class="pills" id="formats"></div>
+</section>
+
+<section class="panel">
+  <div class="label">5 · Тема, продукт и тезисы</div>
+  <div class="row"><input id="topic" placeholder="Тема: как получать трафик из Pinterest без лица"><input id="product" placeholder="Продукт / лид-магнит / услуга"></div><br>
+  <textarea id="details" placeholder="Исходные тезисы, факты, кейс, что важно учесть. Чем больше конкретики — тем лучше результат."></textarea><br><br>
+  <div class="row3"><select id="tone"></select><select id="depth"></select><select id="extraPreset"><option value="clean">Проверка на воду</option><option value="viral">Вирусность + конкретика</option><option value="pain">Усиление боли</option><option value="seo">SEO/ключи + проверка</option><option value="none">Без дополнений</option></select></div><br>
+  <input id="cta" value="мягкий переход к продукту / лид-магниту / следующему шагу">
+  <div class="hint warning">Ты сейчас создашь: посты / пины / заголовки / контент-план — в зависимости от выбранных форматов. Вручную это обычно занимает 2–3 часа.</div>
+  <button class="btn btn-blue" onclick="generateAI()">🔥 Сгенерировать контент</button>
+  <button class="btn" onclick="generatePromptOnly()">Собрать промпт без генерации →</button>
+</section>
+</main>
+
+<aside class="sticky">
+<section class="panel"><div class="label">Выбрано</div><div id="summary"></div><div class="hint">Финальная версия без лишнего продакшн-режима. Один экран, понятная логика, меньше “а куда нажимать?”.</div></section>
+<section class="panel" id="contentPanel"><div class="label">Готовый контент</div><div class="api-status" id="apiStatus">API подключён через /api/generate. Если появится ошибка — проверим Vercel logs.</div><textarea class="out" id="aiOutput" spellcheck="false" placeholder="Здесь появится готовый контент: пины, посты, заголовки, контент-план или другой выбранный формат."></textarea><div class="copybar"><button class="btn2" onclick="copyText('aiOutput')">Скопировать контент</button><button class="btn2" onclick="clearText('aiOutput')">Очистить</button></div><div class="paywall hidden" id="paywall"><h3>Лимит бесплатных генераций закончился</h3><ul><li>Открой PRO-доступ на месяц</li><li>Получай больше генераций</li><li>Сохраняй время на контенте каждый день</li></ul><button class="btn" onclick="openPay()">Открыть PRO — 1490 ₽</button></div></section>
+<section class="panel hidden" id="promptPanel"><div class="tabs"><div class="tab on">Мастер-промпт</div></div><textarea class="out" id="promptOut" spellcheck="false"></textarea><div class="copyguide"><div>Готово: промпт можно править и копировать<small>Для ручной проверки в ChatGPT, Claude, Gemini, YandexGPT.</small></div><button onclick="copyText('promptOut')">Скопировать →</button></div></section>
+</aside></div></div>
+<div class="footer">Контент на автопилоте PRO · финальная простая версия · API-ready</div>
 <script>
-const data={
+const API_ENDPOINT = "/api/generate"; // Vercel Serverless Function: api/generate.js
+const PAY_URL = ""; // сюда позже вставим ссылку Продамус
+const FREE_LIMIT = 5;
+const data = {
   platforms:['Telegram','Pinterest','ВКонтакте','Дзен','Instagram / Reels','YouTube Shorts','TikTok','Threads','TenChat','Одноклассники'],
+  goals:['Охват','Сохранения','Комментарии','Диалог с аудиторией','Переход в Telegram','Подписка','Продажа','Прогрев доверия','Объяснить ценность','Показать экспертность','Запуск продукта'],
   audiences:['Эксперт / фрилансер','Контент-мейкер / блогер','SMM-специалист','Нейроассистент / AI-креатор','Онлайн-школа','Малый бизнес','Новичок в нейросетях','Женский проект / лайфстайл','Продавец цифрового продукта'],
-  pains:['Из данных ШАГА 1','Нет идей','Долго писать','Низкие охваты','Нет продаж','Страх чистого листа','Сложно упаковать кейс','Скучный контент','Нет времени на SMM','Нужно много контента','Не умею писать продающе'],
-  formats:['Просто пост','Рассуждение эксперта','Эмоциональный пост','Пост с юмором','Telegram-пост','Полезный пост / инструкция','Вовлекающий пост','Личный пост с выводом','Продающий пост','Пост-прогрев','Контент-план','Pinterest-пины','Pinterest-карусель 5 слайдов','Threads-ветка','Вирусные заголовки','Описание к пинам','Сценарий Reels/Shorts','Разбор кейса','Серия из 10 постов','Контент-воронка'],
-  goals:['Охват','Сохранения','Комментарии','Диалог с аудиторией','Переход в Telegram','Подписка','Продажа','Прогрев доверия','Объяснить ценность','Показать экспертность','Запуск продукта','Реактивация аудитории'],
-  tone:['Короткий','Эмоциональный','С юмором','Рассуждения эксперта','Живой разговорный','Дерзкий, но умный','Мягкий и заботливый','Продажный без впаривания'],
-  depth:['Быстро и по делу','Экспертно','Максимально глубоко','С дерзким крючком','Мягко и человечно','Продажно, но без впаривания'],
-  extras:['A/B/C варианты заголовков','CTA под Telegram','SEO-ключи для Pinterest','Промпт для визуала','Промпт для фона','Антибанальность','Проверка на воду','Усиление боли','Идеи для серии','Переупаковка в 5 форматов','Контент на 7 дней','Финальная таблица','Threads-ветка','Хуки для видео','Контент-матрица','Прогрев к продукту']
+  formats:['Просто пост','Рассуждение эксперта','Эмоциональный пост','Пост с юмором','Полезный пост / инструкция','Вовлекающий пост','Продающий пост','Пост-прогрев','Контент-план','Pinterest-пины','Pinterest-карусель 5 слайдов','Threads-ветка','Вирусные заголовки','Описание к пинам','Сценарий Reels/Shorts','Разбор кейса','Серия из 10 постов','Контент-воронка'],
+  tone:['Живой разговорный','Короткий','Эмоциональный','С юмором','Рассуждения эксперта','Дерзкий, но умный','Мягкий и заботливый','Продажный без впаривания'],
+  depth:['Быстро и по делу','Экспертно','Максимально глубоко','С дерзким крючком','Мягко и человечно','Продажно, но без впаривания']
 };
-
-let S={platforms:'Telegram',audiences:'Эксперт / фрилансер',pains:'Из данных ШАГА 1',formats:['Просто пост'],goals:'Переход в Telegram',tone:'Живой разговорный',depth:'Максимально глубоко'};
-let current='';
-
-function makePills(id){
-  const box=document.getElementById(id);
-  data[id].forEach((v,i)=>{
-    let b=document.createElement('button');
-    b.type='button';
-    b.className='pill'+(i===0?' on':'');
-    b.textContent=v;
-    b.onclick=()=>{
-      if(id==='formats'){
-        const isOn=b.classList.contains('on');
-        if(isOn && S.formats.length>1){
-          b.classList.remove('on');
-          S.formats=S.formats.filter(x=>x!==v);
-        }else if(!isOn){
-          if(S.formats.length>=3){
-            const first=S.formats.shift();
-            [...box.querySelectorAll('.pill')].find(x=>x.textContent===first)?.classList.remove('on');
-          }
-          b.classList.add('on');
-          S.formats.push(v);
-        }
-      }else{
-        box.querySelectorAll('.pill').forEach(x=>x.classList.remove('on'));
-        b.classList.add('on');
-        S[id]=v;
-      }
-      sum();
-    };
-    box.appendChild(b);
-  });
-}
-['platforms','audiences','pains','formats','goals','tone','depth'].forEach(makePills);
-
-const ex=document.getElementById('extras');
-data.extras.forEach((v,i)=>{
-  let l=document.createElement('label');
-  l.innerHTML=`<input type="checkbox" ${['SEO-ключи для Pinterest','Проверка на воду'].includes(v)?'checked':''}> ${v}`;
-  ex.appendChild(l);
-});
-
-function selectedExtras(){return [...document.querySelectorAll('#extras input')].map((x,i)=>x.checked?data.extras[i]:null).filter(Boolean)}
-function formatsText(){return S.formats.join(' + ')}
-function sum(){
-  const chips=[S.platforms,S.audiences,S.pains,formatsText(),S.goals,S.tone,S.depth];
-  document.getElementById('summary').innerHTML=chips.map(v=>`<span class="badge">${v}</span>`).join('');
-}
-sum();
-
-function baseVars(){return {
-  project:document.getElementById('project').value.trim()||'[название проекта клиента]',
-  topic:document.getElementById('topic').value.trim()||'[вставьте тему]',
-  product:document.getElementById('product').value.trim()||'[ваш продукт / услуга / лид-магнит]',
-  role:document.getElementById('role').value.trim()||'[роль автора / эксперта]',
-  details:document.getElementById('details').value.trim(),
-  audienceCustom:document.getElementById('audienceCustom').value.trim(),
-  painCustom:document.getElementById('painCustom').value.trim(),
-  style:document.getElementById('style').value.trim(),
-  cta:document.getElementById('cta').value.trim(),
-  extras:selectedExtras().join(', '),
-  step1Data:(document.getElementById('step1Data')?.value||'').trim(),
-  selectedAccents:(document.getElementById('selectedStep1Accents')?.value||'').trim()
-}}
-function audVars(){return {
-  market:document.getElementById('marketTopic').value.trim()||'[ниша / тема проекта]',
-  geo:document.getElementById('geo').value.trim()||'РФ / СНГ',
-  level:document.getElementById('audLevel').value.trim()||'[уровень аудитории]',
-  goal:document.getElementById('audGoal').value.trim()||'[желаемый результат аудитории]',
-  offer:document.getElementById('audOffer').value.trim()||'[продукт / услуга / будущий оффер]',
-  context:document.getElementById('audContext').value.trim()||'[исходных данных мало — дополняй гипотезами, но помечай их как ГИПОТЕЗА]'
-}}
-
-
-function setMode(mode){
-  const prod=mode==='production';
-  document.body.classList.toggle('production-active', prod);
-  document.getElementById('prodModeBtn')?.classList.toggle('active', prod);
-  document.getElementById('fullModeBtn')?.classList.toggle('active', !prod);
-}
-let prodSelectedFormats=['Просто пост'];
-function initProduction(){
-  const fill=(id,arr,def)=>{const el=document.getElementById(id); if(!el) return; el.innerHTML=arr.map(v=>`<option value="${esc(v)}" ${v===def?'selected':''}>${esc(v)}</option>`).join('');};
-  fill('prodPlatform', data.platforms, 'Telegram');
-  fill('prodAudience', data.audiences, 'Женский проект / лайфстайл');
-  fill('prodGoal', data.goals, 'Комментарии');
-  fill('prodTone', data.tone, 'Живой разговорный');
-  fill('prodDepth', data.depth, 'Мягко и человечно');
-  const pp=document.getElementById('prodPlatform');
-  if(pp) pp.addEventListener('change', ()=>{S.platforms=pp.value; updatePlatformModeInfo();});
-  updatePlatformModeInfo();
-  const box=document.getElementById('prodFormats');
-  if(box){
-    box.innerHTML='';
-    data.formats.forEach(v=>{
-      const b=document.createElement('button');
-      b.type='button';
-      b.className='prod-format'+(v==='Просто пост'?' on':'');
-      b.textContent=v;
-      b.onclick=()=>{
-        const on=b.classList.contains('on');
-        if(on && prodSelectedFormats.length>1){
-          b.classList.remove('on');
-          prodSelectedFormats=prodSelectedFormats.filter(x=>x!==v);
-        }else if(!on){
-          if(prodSelectedFormats.length>=3){
-            const first=prodSelectedFormats.shift();
-            [...box.querySelectorAll('.prod-format')].find(x=>x.textContent===first)?.classList.remove('on');
-          }
-          b.classList.add('on');
-          prodSelectedFormats.push(v);
-        }
-      };
-      box.appendChild(b);
-    });
-  }
-}
-function setSelectPill(id,value){
-  const box=document.getElementById(id);
-  if(!box) return;
-  box.querySelectorAll('.pill').forEach(x=>x.classList.toggle('on', x.textContent===value));
-  if(id==='formats'){
-    box.querySelectorAll('.pill').forEach(x=>x.classList.toggle('on', S.formats.includes(x.textContent)));
-  }
-}
-function syncExtrasFromProduction(){
-  document.querySelectorAll('#extras input').forEach(x=>x.checked=false);
-  const preset=document.getElementById('prodExtraPreset')?.value||'clean';
-  const need=[];
-  if(preset==='clean') need.push('Проверка на воду');
-  if(preset==='pain') need.push('Проверка на воду','Усиление боли');
-  if(preset==='seo') need.push('Проверка на воду','SEO-ключи для Pinterest');
-  document.querySelectorAll('#extras label').forEach((label,i)=>{
-    const name=data.extras[i];
-    const input=label.querySelector('input');
-    if(input && need.includes(name)) input.checked=true;
-  });
-}
-function generateProduction(){
-  document.getElementById('project').value=document.getElementById('prodProject').value.trim()||'Проект без названия';
-  document.getElementById('role').value=document.getElementById('prodRole').value.trim()||'эксперт';
-  document.getElementById('topic').value=document.getElementById('prodTopic').value.trim()||'[тема не указана]';
-  document.getElementById('product').value=document.getElementById('prodProduct').value.trim();
-  document.getElementById('details').value=document.getElementById('prodDetails').value.trim();
-  document.getElementById('step1Data').value=document.getElementById('prodStep1Data').value.trim();
-  document.getElementById('cta').value=document.getElementById('prodCta').value.trim();
-  document.getElementById('audienceCustom').value='';
-  document.getElementById('painCustom').value='';
-  S.platforms=document.getElementById('prodPlatform').value;
-  S.audiences=document.getElementById('prodAudience').value;
-  S.goals=document.getElementById('prodGoal').value;
-  S.tone=document.getElementById('prodTone').value;
-  S.depth=document.getElementById('prodDepth').value;
-  S.pains='Из данных ШАГА 1';
-  S.formats=[...prodSelectedFormats];
-  syncExtrasFromProduction();
-  ['platforms','audiences','pains','goals','tone','depth','formats'].forEach(id=>setSelectPill(id,S[id]));
-  sum();
-  generate();
-}
-
-function generateAudience(mode){
-  const a=audVars();
-  const deep=mode==='deep';
-  const prompt=`Ты — поведенческий исследователь рынка, маркетолог-аналитик и специалист по болям аудитории.
-
-Твоя задача — не писать общие слова, а разобрать ЦА так, чтобы по ней можно было сразу делать контент и продавать.
-
-ВВОДНЫЕ
-Ниша / тема проекта: ${a.market}
-География: ${a.geo}
-Продукт / услуга: ${a.offer}
-Уровень аудитории: ${a.level}
-Что хотят получить: ${a.goal}
-Что уже известно / ЦА / боли / наблюдения: ${a.context}
-
-РЕЖИМ АНАЛИЗА: ${deep?'глубокий':'быстрый, но конкретный'}
-
-ВАЖНО
-— Главный источник — блок «Что уже известно / ЦА / боли / наблюдения». Не игнорируй его.
-— НЕ придумывай новую аудиторию с нуля, если данные уже есть.
-— Сначала переработай существующие данные, потом дополняй гипотезами.
-— Если чего-то не хватает — добавляй как ГИПОТЕЗА.
-— Пиши живыми формулировками, как говорят люди, а не “языком экспертов”.
-— Учитывай российский рынок и площадки: Telegram, Pinterest, VK, Дзен, Threads, Reels/Shorts/TikTok.
-${deep?'— Если у тебя есть доступ к интернету, предложи, где искать подтверждения: Яндекс Wordstat, Pinterest-поиск, Telegram-каналы, VK, отзывы, комментарии, маркетплейсы, форумы. Не выдумывай точные цифры без источников.':'— Не растекайся: дай то, что можно сразу вставить в контент-конструктор.'}
-
-ЗАДАЧА
-Сделай ${deep?'глубокий, но сфокусированный':'короткий и прикладной'} анализ ЦА.
-
-1. СЕГМЕНТЫ ЦА — ОСНОВА
-Сделай ${deep?'3–5':'2–3'} сегмента.
-
-ЖЁСТКОЕ ПРАВИЛО:
-— сегменты должны быть ЧЁТКО РАЗДЕЛЕНЫ;
-— не пиши размытые группы типа “женщины 25–45”;
-— сегменты должны отличаться поведением и проблемой;
-— если исходных данных мало, помечай сегменты как ГИПОТЕЗА.
-
-Формат строго такой:
-
-СЕГМЕНТ 1 — [короткое название]
-Кто это:
-Уровень осознанности:
-Главная боль:
-Скрытый страх:
-Желаемый результат:
-Что уже пробовали:
-Почему не получилось:
-Возражения:
-3 живые фразы:
-
-СЕГМЕНТ 2 — [короткое название]
-Кто это:
-Уровень осознанности:
-Главная боль:
-Скрытый страх:
-Желаемый результат:
-Что уже пробовали:
-Почему не получилось:
-Возражения:
-3 живые фразы:
-
-2. КАРТА БОЛЕЙ
-Раздели:
-— Поверхностные: что человек говорит сам
-— Глубокие: эмоции и внутренний конфликт
-— Денежные
-— Временные
-— Социальные: стыд, сравнение, страх выглядеть глупо
-— Скрытые: не формулирует, но это влияет на решение
-
-3. ЯЗЫК АУДИТОРИИ
-Дай:
-— ${deep?'15':'8'} живых фраз, как пишут в комментариях или думают в голове
-— ${deep?'10':'5'} поисковых формулировок
-— ${deep?'10':'5'} “кривых” формулировок: как реально ищут, с бытовым языком и ошибками
-
-4. ТЕМЫ КОНТЕНТА
-Дай:
-— ${deep?'15':'8'} тем, которые вызывают “это про меня”
-— ${deep?'10':'5'} тем для сохранений
-— ${deep?'10':'5'} тем для комментариев
-
-5. ЧТО ЦЕПЛЯЕТ
-Отдельно:
-— что заставляет сохранить
-— что вызывает “хочу попробовать”
-— что ведёт к покупке
-
-6. МИНИ-ОФФЕРЫ
-Сделай ${deep?'5':'3'} идей:
-— название
-— что обещает
-— почему за это заплатят или почему это скачают
-
-7. ФИНАЛЬНЫЙ БЛОК ДЛЯ ПЕРЕНОСА В ШАГ 2
-Сожми результат в готовый блок:
-
-ФОКУС-СЕГМЕНТ:
-БОЛИ:
-СКРЫТЫЕ СТРАХИ:
-ЖЕЛАНИЯ:
-ЖИВЫЕ ФРАЗЫ:
-ТЕМЫ, КОТОРЫЕ ЗАЦЕПЯТ:
-
-ФИНАЛЬНОЕ ПРАВИЛО
-Не делай “аналитику ради аналитики”. Каждый пункт должен быть таким, чтобы его можно было сразу использовать в контенте или продукте.`;
-  current=prompt;
-  window.prompts={master:prompt,chain:prompt,quick:prompt};
-  document.getElementById('out').value=current;
-  document.getElementById('result').classList.remove('hidden');
-  document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-function cleanLines(text){
-  return text.split(/\n+/).map(x=>x.replace(/^[\s—•*-]+/,'').trim()).filter(Boolean);
-}
-function takeAfter(text, startPatterns, endPatterns, limit=6){
-  const lower=text.toLowerCase();
-  let start=-1;
-  for(const p of startPatterns){ const i=lower.indexOf(p.toLowerCase()); if(i>=0 && (start<0 || i<start)) start=i; }
-  if(start<0) return [];
-  let sub=text.slice(start);
-  let end=-1;
-  const subLower=sub.toLowerCase();
-  for(const p of endPatterns){ const i=subLower.indexOf(p.toLowerCase(), 20); if(i>0 && (end<0 || i<end)) end=i; }
-  if(end>0) sub=sub.slice(0,end);
-  return cleanLines(sub).filter(x=>!/^\d+\.|^(карта|язык|темы|что цепляет|мини|сегмент)/i.test(x)).slice(1,limit+1);
-}
-function extractQuoted(text, limit=5){
-  const out=[]; let m;
-  const re=/[«“"]([^»”"]{8,160})[»”"]/g;
-  while((m=re.exec(text)) && out.length<limit){ out.push(m[1].trim()); }
-  return [...new Set(out)].slice(0,limit);
-}
-function extractSegments(text){
-  const re=/СЕГМЕНТ\s*\d+\s*[—-]\s*([^\n]+)/gi;
-  const segs=[]; let m;
-  while((m=re.exec(text)) && segs.length<5){ segs.push(m[1].trim()); }
-  return segs;
-}
-
-let selectedAccents=[];
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function detectKind(line){
-  const l=line.toLowerCase();
-  if(/фокус-сегмент|сегмент\s*\d+/.test(l)) return 'segment';
-  if(/боли|боль|болит|не могу|не получается|снова|трат|устал|хаос/.test(l)) return 'pain';
-  if(/страх|стыд|боюсь|без него|никому не нужна|сломано|скучным|раскро/.test(l)) return 'fear';
-  if(/желания|хочу|получить|результат|перестать|почувствовать|наконец/.test(l)) return 'want';
-  if(/[«“"]/.test(line)) return 'phrase';
-  if(/темы|почему|что делать|как выглядит|разница/.test(l)) return 'topic';
-  return 'plain';
-}
-function kindClass(kind){return {segment:'hl-segment',pain:'hl-pain',fear:'hl-fear',want:'hl-want',phrase:'hl-phrase',topic:'hl-topic'}[kind]||'';}
-function updateStep1Preview(){
-  const raw=document.getElementById('step1FullResult').value.trim();
-  const box=document.getElementById('step1Preview');
-  if(!raw){box.classList.add('hidden');box.innerHTML='';return;}
-  box.classList.remove('hidden');
-  const lines=raw.split(/\n/);
-  let html='';
-  lines.forEach((line,idx)=>{
-    const clean=line.trim();
-    if(!clean){html+='\n';return;}
-    const kind=detectKind(clean);
-    const cls=kindClass(kind);
-    const isHeader=/^[А-ЯЁA-Z0-9\s,·.:-]+:$/.test(clean) || /^(ФОКУС-СЕГМЕНТ|БОЛИ|СКРЫТЫЕ СТРАХИ|ЖЕЛАНИЯ|ЖИВЫЕ ФРАЗЫ|ТЕМЫ)/i.test(clean);
-    if(isHeader){html+=`<div class="preview-head ${cls}">${esc(clean)}</div>`;}
-    else {html+=`<span class="preview-line ${cls}" onclick="addAccentFromLine(${idx})" title="Кликни, чтобы добавить в акценты ШАГА 2">${esc(clean)}</span>`;}
-  });
-  box.innerHTML=html;
-}
-function addAccentFromLine(idx){
-  const lines=document.getElementById('step1FullResult').value.split(/\n/).map(x=>x.trim()).filter(Boolean);
-  const line=lines[idx];
-  if(!line || /^[А-ЯЁA-Z0-9\s,·.:-]+:$/.test(line)) return;
-  if(!selectedAccents.includes(line)) selectedAccents.push(line);
-  renderSelectedAccents();
-}
-function renderSelectedAccents(){
-  const box=document.getElementById('selectedSnips');
-  box.innerHTML=selectedAccents.length?selectedAccents.map((x,i)=>`<span class="snip">${esc(x)} <button onclick="removeAccent(${i})" title="убрать">×</button></span>`).join(''):'<span class="badge">Пока ничего не выбрано</span>';
-  const field=document.getElementById('selectedStep1Accents');
-  if(field) field.value=selectedAccents.map(x=>'— '+x).join('\n');
-}
-function removeAccent(i){selectedAccents.splice(i,1);renderSelectedAccents();}
-function transferStep1ToStep2(){
-  const data=document.getElementById('step1FullResult').value.trim();
-  if(!data){alert('Сначала вставь блок из ШАГА 1');return;}
-  document.getElementById('step1Data').value=data;
-  updateStep1Preview();
-  document.getElementById('step-content').scrollIntoView({behavior:'smooth',block:'start'});
-}
-function clearStep1Bridge(){
-  document.getElementById('step1FullResult').value='';
-  document.getElementById('step1Data').value='';
-  const acc=document.getElementById('selectedStep1Accents'); if(acc) acc.value='';
-  selectedAccents=[]; renderSelectedAccents(); updateStep1Preview();
-}
-document.addEventListener('DOMContentLoaded',()=>{
-  const el=document.getElementById('step1FullResult');
-  if(el) el.addEventListener('input',updateStep1Preview);
-  renderSelectedAccents();
-  initProduction();
-  setMode('production');
-});
-
-
-function buildFormatInstructions(){
-  const f=S.formats;
-  const blocks=[];
-  const has=(name)=>f.includes(name);
-  const postFormats=['Просто пост','Рассуждение эксперта','Эмоциональный пост','Пост с юмором','Telegram-пост','Полезный пост / инструкция','Вовлекающий пост','Личный пост с выводом','Продающий пост','Пост-прогрев'];
-  const chosenPosts=f.filter(x=>postFormats.includes(x));
-  if(chosenPosts.length){
-    blocks.push(`БЛОК ПОСТОВ (${chosenPosts.join(' + ')})
-Сделай ОТДЕЛЬНЫЙ готовый материал для КАЖДОГО выбранного формата: ${chosenPosts.join(' + ')}.
-
-ЖЁСТКОЕ ПРАВИЛО:
-— не смешивай форматы в один текст;
-— не делай один текст с разными названиями;
-— каждый формат должен иметь свою логику, свой заход и свои формулировки;
-— не повторяй одинаковые абзацы, хуки и концовки.
-
-Для каждого материала дай:
-— заголовок;
-— готовый текст;
-— короткий CTA или вопрос в конце;
-— мини-проверку: что убрать, если текст выглядит слишком нейросетевым.
-
-Перед каждым материалом укажи: “Логика формата: ...” — в 1 строку, чтобы было понятно, чем этот текст отличается от других.
-
-Правила форматов: если выбран «Просто пост» — без продажи, только польза и человеческий вывод. Если «Рассуждение эксперта» — дай ход мысли, наблюдение, объяснение и вывод. Если «Эмоциональный пост» — усили узнавание, но без истерики. Если «Пост с юмором» — добавь лёгкую иронию без клоунады. Если «Продающий пост» или «Пост-прогрев» — веди к продукту мягко: боль → объяснение → решение → доверие → CTA.`);
-  }
-  if(has('Pinterest-пины')){
-    blocks.push('БЛОК PINTEREST-ПИНОВ\nСделай 10 пинов. Для каждого: название пина, заголовок на картинке 3–5 слов, формат пина, описание до 800 знаков по схеме «боль — решение — CTA», ключевые слова, доска, промпт для визуала. Не добавляй посты, Threads или видео, если они не выбраны отдельно.');
-  }
-  if(has('Pinterest-карусель 5 слайдов')){
-    blocks.push('БЛОК PINTEREST-КАРУСЕЛИ\nСделай карусель ровно на 5 слайдов: 1 обложка + 4 содержательных слайда. Для каждого слайда: заголовок, короткий текст, визуальная идея. В конце дай описание пина, ключи и CTA.');
-  }
-  if(has('Контент-план')){
-    blocks.push('БЛОК КОНТЕНТ-ПЛАНА\nСделай контент-план на 7 дней. Для каждого дня: тема, формат, площадка, цель, крючок, короткое содержание, CTA, что можно переупаковать в Pinterest/Threads/видео.');
-  }
-  if(has('Вирусные заголовки')){
-    blocks.push('БЛОК ВИРУСНЫХ ЗАГОЛОВКОВ\nДай 30 заголовков по категориям: боль, ошибка, быстрый результат, секрет/фишка, до/после, провокация без токсичности, экспертный разбор. Заголовки 3–7 слов, без дешёвого кликбейта.');
-  }
-  if(has('Описание к пинам')){
-    blocks.push('БЛОК ОПИСАНИЙ К ПИНАМ\nСделай 10 SEO-описаний для Pinterest до 800 знаков: боль → решение → CTA. В каждое описание органично добавь ключевые слова.');
-  }
-  if(has('Threads-ветка')){
-    blocks.push('БЛОК THREADS\nСделай ветку из 5–8 коротких сообщений. Первое сообщение должно цеплять, середина развивает мысль, финал ведёт к диалогу или действию. Пиши разговорно, без тяжелой структуры.');
-  }
-  if(has('Сценарий Reels/Shorts')){
-    blocks.push('БЛОК КОРОТКОГО ВИДЕО\nСделай сценарий Reels/Shorts/TikTok: хук 0–3 секунды, текст на экране, что сказать голосом, визуальная идея, пример, финальный CTA.');
-  }
-  if(has('Разбор кейса')){
-    blocks.push('БЛОК РАЗБОРА КЕЙСА\nУпакуй кейс по схеме: было → проблема → что сделали → почему это сработало → результат → вывод → мягкий CTA. Если фактов мало, пометь гипотезы и предложи, что уточнить.');
-  }
-  if(has('Серия из 10 постов')){
-    blocks.push('БЛОК СЕРИИ\nСделай серию из 10 постов из одной темы. Для каждого: угол, заголовок, краткое содержание, цель, CTA. Углы не должны повторяться.');
-  }
-  if(has('Контент-воронка')){
-    blocks.push('БЛОК КОНТЕНТ-ВОРОНКИ\nСобери цепочку: охватный контент → экспертный контент → доверие → прогрев → мягкая продажа. Дай 5–7 единиц контента с задачей каждого элемента.');
-  }
-  if(!blocks.length){
-    blocks.push(`Сделай материал в выбранном формате: ${formatsText()}.`);
-  }
-  return blocks.map((b,i)=>`${i+1}. ${b}`).join('\n\n');
-}
-
-function buildExtrasInstruction(){
-  const extras=selectedExtras();
-  if(!extras.length) return 'Дополнительные блоки не выбраны — не добавляй лишние разделы.';
-  let text=`Дополнительно добавь только отмеченные пункты: ${extras.join(', ')}. Не добавляй невыбранные форматы ради объёма.`;
-  if(S.goals==='Комментарии' && extras.includes('CTA под Telegram')){
-    text += '\nЕсли выбран «CTA под Telegram», а цель стоит «Комментарии», не делай Telegram главным действием. Сначала дай сильный вопрос для обсуждения, а Telegram-CTA добавь отдельной мягкой строкой после основного финала.';
-  }
-  return text;
-}
-
-
+let S = {platform:'Pinterest', goal:'Охват', audience:'SMM-специалист', formats:['Pinterest-пины','Вирусные заголовки'], tone:'Короткий', depth:'С дерзким крючком'};
 const platformProfiles={
-  'Telegram':{mission:'Доверие, удержание и диалог. Человек должен дочитать и захотеть ответить.',tags:['живой пост','диалог','мягкий CTA'],rules:`Telegram-режим:
-— Пиши как пост в Telegram, а не как статья, лендинг или SEO-текст.
-— Первые 2–3 строки должны давать узнавание: ситуация, внутренняя фраза, бытовая деталь.
-— Абзацы короткие, но не рубленые. Нужны человеческие переходы.
-— Финал зависит от цели: если комментарии — вопрос; если переход — мягкий CTA; если продажа — спокойное объяснение результата.
-— Не добавляй хэштеги, SEO-ключи, сценарии видео и Pinterest-блоки, если они не выбраны.`},
-  'Pinterest':{mission:'Поиск, сохранения и переход. Пользователь должен захотеть сохранить пин или кликнуть.',tags:['SEO','пины','сохранения'],rules:`Pinterest-режим:
-— Думай как поисковик + как человек, который сохраняет полезное.
-— Нужны короткие заголовки 3–7 слов, понятный запрос, боль или быстрый результат.
-— Если выбран формат «Pinterest-пины» — для каждого пина дай: название, текст на картинке 3–5 слов, формат, описание до 800 знаков, ключевые слова, доску, визуальный промпт.
-— Если выбран формат «Вирусные заголовки» — дай заголовки группами: боль, ошибка, быстрый результат, секрет/фишка, до/после.
-— Не пиши длинный Telegram-пост, если он не выбран отдельным форматом.`},
-  'ВКонтакте':{mission:'Польза + обсуждение. Текст должен быть понятным, цепким и комментируемым.',tags:['пост','обсуждение','польза'],rules:`VK-режим:
-— Начинай с понятной ситуации или вопроса.
-— Дай структуру: заголовок, короткий заход, польза/пример, вывод, вопрос.
-— Можно добавить список, но без перегруза.
-— Финал лучше вести в комментарии, обсуждение или сохранение.
-— Не делай текст слишком «телеграмным» с внутренними недомолвками.`},
-  'Дзен':{mission:'Клик по заголовку и дочитывание. Нужен журнальный заход и раскрытие темы.',tags:['статья','интрига','дочитывание'],rules:`Дзен-режим:
-— Заголовок должен обещать понятную историю, конфликт или пользу.
-— Вступление через ситуацию, наблюдение или проблему.
-— Дальше: раскрытие, примеры, вывод.
-— Не делай короткий пост как для Telegram: Дзен требует более развернутую структуру.
-— Не используй пустую интригу без содержания.`},
-  'Instagram / Reels':{mission:'Быстро зацепить в видео. Хук, текст на экране, сцена, финальный CTA.',tags:['Reels','хук','сценарий'],rules:`Instagram/Reels-режим:
-— Если выбран видео-формат, дай сценарий: хук 0–3 сек, что в кадре, текст на экране, голос/субтитры, финал.
-— Хук должен быть коротким и визуальным.
-— Не делай длинный пост вместо сценария, если выбран Reels/Shorts.
-— Если выбран обычный пост, адаптируй под подпись: сильный первый абзац, короткие блоки, CTA.`},
-  'YouTube Shorts':{mission:'Один тезис, быстрый хук, удержание до конца.',tags:['Shorts','сценарий','удержание'],rules:`YouTube Shorts-режим:
-— Дай хук 0–3 секунды, тезис, 3–5 быстрых смысловых шагов, финальную фразу.
-— Учитывай удержание: каждые 3–5 секунд должен быть новый поворот.
-— Не расписывай длинную статью.
-— Если видео-формат не выбран, не добавляй сценарий.`},
-  'TikTok':{mission:'Контраст, реакция, быстрая эмоция и комментируемость.',tags:['TikTok','контраст','эмоция'],rules:`TikTok-режим:
-— Больше контраста, живой речи, коротких фраз и ситуаций.
-— Сценарий должен быть простым для съемки на телефон.
-— Хук может быть провокационным, но не токсичным.
-— Финал: вопрос, спорная мысль или простой CTA.
-— Не делай академический экспертный текст.`},
-  'Threads':{mission:'Короткая цепочка мыслей, в которую хочется ответить.',tags:['ветка','мысли','диалог'],rules:`Threads-режим:
-— Если выбрана Threads-ветка, дай 5–8 коротких сообщений.
-— Первое сообщение — самостоятельный хук, не вступление.
-— Каждое следующее сообщение добавляет мысль, пример или поворот.
-— Стиль разговорный, чуть мыслительный, без длинных абзацев.
-— Финал должен провоцировать ответ, а не выглядеть как продажа.`},
-  'TenChat':{mission:'Экспертность и деловой смысл без канцелярита.',tags:['B2B','экспертность','кейс'],rules:`TenChat-режим:
-— Больше деловой пользы, кейсов, наблюдений, выводов.
-— Тон уверенный, но живой.
-— Хорошо работают: разбор ошибки, кейс, список выводов, позиция эксперта.
-— Не делай слишком личный драматичный пост, если тема не требует.`},
-  'Одноклассники':{mission:'Просто, понятно, бытово, без сложных слов.',tags:['простота','бытовые примеры','понятность'],rules:`Одноклассники-режим:
-— Максимально простой человеческий язык.
-— Больше бытовых примеров и конкретных ситуаций.
-— Не используй маркетинговый, психологический или технический жаргон.
-— Финал: понятный вопрос или простой следующий шаг.`}
+  'Telegram':{mission:'Доверие, удержание и диалог. Человек должен дочитать и захотеть ответить.',tags:['живой пост','диалог','мягкий CTA'],rules:'Пиши как Telegram-пост: живой заход, короткие абзацы, удержание, финал под цель.'},
+  'Pinterest':{mission:'Поиск, сохранения и переход. Пользователь должен захотеть сохранить пин или кликнуть.',tags:['SEO','пины','сохранения'],rules:'Думай как поисковик + как человек, который сохраняет полезное. Короткие заголовки 3–7 слов, боль или быстрый результат, SEO-описания и визуальные идеи.'},
+  'ВКонтакте':{mission:'Польза + обсуждение. Текст должен быть понятным, цепким и комментируемым.',tags:['пост','обсуждение','польза'],rules:'Начинай с понятной ситуации или вопроса. Дай пользу/пример/вывод и финал под обсуждение.'},
+  'Дзен':{mission:'Клик по заголовку и дочитывание. Нужен журнальный заход и раскрытие темы.',tags:['статья','интрига','дочитывание'],rules:'Дай цепкий заголовок, ввод через конфликт/наблюдение, раскрытие и вывод.'},
+  'Instagram / Reels':{mission:'Быстро зацепить в видео. Хук, текст на экране, сцена, финальный CTA.',tags:['Reels','хук','сценарий'],rules:'Если видео — дай хук 0–3 сек, текст на экране, кадр, голос/субтитры и финал.'},
+  'YouTube Shorts':{mission:'Один тезис, быстрый хук, удержание до конца.',tags:['Shorts','сценарий','удержание'],rules:'Короткий сценарий с хук 0–3 сек и поворотами каждые 3–5 секунд.'},
+  'TikTok':{mission:'Контраст, реакция, быстрая эмоция и комментируемость.',tags:['TikTok','контраст','эмоция'],rules:'Больше живой речи, контраста, коротких фраз и простой съемки.'},
+  'Threads':{mission:'Короткая цепочка мыслей, в которую хочется ответить.',tags:['ветка','мысли','диалог'],rules:'5–8 коротких сообщений, первое — самостоятельный хук, финал провоцирует ответ.'},
+  'TenChat':{mission:'Экспертность и деловой смысл без канцелярита.',tags:['B2B','кейс','экспертность'],rules:'Больше деловой пользы, кейсов, наблюдений и выводов.'},
+  'Одноклассники':{mission:'Просто, понятно, бытово, без сложных слов.',tags:['простота','бытовые примеры','понятность'],rules:'Максимально простой язык, бытовые примеры, понятный следующий шаг.'}
 };
-
-function getPlatformProfile(){
-  return platformProfiles[S.platforms] || platformProfiles['Telegram'];
-}
-
-function buildPlatformRules(){
-  const p=getPlatformProfile();
-  return `${p.rules}\n\nГлавная задача площадки: ${p.mission}`;
-}
-
-function updatePlatformModeInfo(){
-  const p=getPlatformProfile();
-  const html=`<b>Платформенный режим: ${S.platforms}</b><p>${p.mission}</p><div class="platform-tags">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div>`;
-  const full=document.getElementById('platformInfo');
-  const prod=document.getElementById('prodPlatformInfo');
-  if(full) full.innerHTML=html;
-  if(prod) prod.innerHTML=html;
-}
-
-
-function buildGoalInstruction(){
-  const extras=selectedExtras();
-  const tg=extras.includes('CTA под Telegram');
-  if(S.goals==='Комментарии'){
-    return 'Приоритет цели: комментарии. ЗАПРЕТ: не добавляй переход к продукту, курсу, программе, профилю, описанию профиля, подписке или продаже, если CTA не выбран отдельным дополнением. Главный финал каждого материала — живой вопрос, на который хочется ответить. '+(tg?'CTA в Telegram разрешён только как вторичный вариант одной мягкой строкой после вопроса, без давления и без ощущения продажи.':'Telegram-CTA не добавляй вообще.');
-  }
-  if(S.goals==='Переход в Telegram'){
-    return 'Приоритет цели: переход в Telegram. CTA должен быть заметным, но нативным: через пользу, готовый промпт, чек-лист или продолжение темы. Не делай продажу, если продающий формат не выбран.';
-  }
-  if(['Продажа','Запуск продукта'].includes(S.goals)){
-    return 'Приоритет цели: продажа/запуск. Продавай через боль, результат, доверие и конкретный следующий шаг, без впаривания, дешёвого давления и “уникальных возможностей”.';
-  }
-  return 'Приоритет цели: '+S.goals+'. Не подменяй эту цель продажей, если продающий формат не выбран.';
-}
-
-function buildPriorityInstruction(){
-  return `ПРИОРИТЕТЫ ДЛЯ ВЫПОЛНЕНИЯ
-1. Форматы результата: ${formatsText()} — важнее всего. Выдавай только их.
-2. Цель: ${S.goals} — определяет финал, вопрос и CTA.
-3. Фокус-сегмент ЦА — выбери 1 главный сегмент и не размазывай текст на всех.
-4. Тон: ${S.tone} и стиль автора — сохраняй живой человеческий язык.
-5. Дополнения — добавляй только выбранные, без лишних разделов.`;
-}
-
-function buildAudienceFocusInstruction(){
-  return 'ЖЁСТКИЙ ФОКУС ПО ЦА: если поле «ЦА подробно» большое или содержит несколько сегментов, выбери ОДИН главный сегмент для каждого материала. Только если два выбранных формата требуют разных углов, можно взять второй сегмент. Не пиши “для всех фрилансеров/экспертов сразу”. В начале ответа укажи: “Фокус-сегмент: ...” и объясни в 1 строку, почему выбран именно он. Остальные сегменты не используй, чтобы текст не расползался.';
-}
-
-function generate(){
-  const v=baseVars();
-  const formatInstr=buildFormatInstructions();
-  const extrasInstr=buildExtrasInstruction();
-  const fmt=formatsText();
-  const platformRules=buildPlatformRules();
-  const platformMode=getPlatformProfile();
-  const goalInstr=buildGoalInstruction();
-  const audFocus=buildAudienceFocusInstruction();
-  const priorityInstr=buildPriorityInstruction();
-  const ctaAllowed = selectedExtras().some(x=>x.includes('CTA')) || ['Переход в Telegram','Подписка','Продажа','Запуск продукта'].includes(S.goals) || S.formats.some(x=>['Продающий пост','Пост-прогрев','Контент-воронка'].includes(x));
-  const ctaForPrompt = (S.goals==='Комментарии' && !ctaAllowed) ? 'НЕ ДОБАВЛЯТЬ. Цель — комментарии, финал только вопрос для диалога.' : v.cta;
-  const audienceBrief = v.step1Data || v.audienceCustom || '[целевая аудитория не указана]';
-  const painBrief = v.selectedAccents || v.painCustom || '[боли/желания/возражения не указаны]';
-  const master=`Ты — редактор, SMM-стратег, маркетолог, копирайтер и контент-архитектор проекта «${v.project}». Ты работаешь не как шаблонный генератор текста, а как сильная мини-команда: стратег, автор, упаковщик смыслов и редактор. Твоя задача — сделать результат строго под выбранные форматы, без лишней выдачи «на всякий случай».
+function fillSelect(id, arr, def){const el=document.getElementById(id); el.innerHTML=arr.map(v=>`<option ${v===def?'selected':''}>${escapeHtml(v)}</option>`).join(''); el.addEventListener('change',()=>{if(id==='platform')S.platform=el.value;if(id==='goal')S.goal=el.value;if(id==='audienceType')S.audience=el.value;if(id==='tone')S.tone=el.value;if(id==='depth')S.depth=el.value; updatePlatform(); sum();});}
+function init(){fillSelect('platform',data.platforms,S.platform);fillSelect('goal',data.goals,S.goal);fillSelect('audienceType',data.audiences,S.audience);fillSelect('tone',data.tone,S.tone);fillSelect('depth',data.depth,S.depth);renderFormats();updatePlatform();sum();}
+function renderFormats(){const box=document.getElementById('formats');box.innerHTML='';data.formats.forEach(v=>{const b=document.createElement('button');b.type='button';b.className='pill'+(S.formats.includes(v)?' on':'');b.textContent=v;b.onclick=()=>{if(S.formats.includes(v)&&S.formats.length>1){S.formats=S.formats.filter(x=>x!==v);b.classList.remove('on')}else if(!S.formats.includes(v)){if(S.formats.length>=3){const first=S.formats.shift();[...box.querySelectorAll('.pill')].find(x=>x.textContent===first)?.classList.remove('on')}S.formats.push(v);b.classList.add('on')}sum()};box.appendChild(b)});}
+function updatePlatform(){const p=platformProfiles[S.platform]||platformProfiles['Telegram'];document.getElementById('platformInfo').innerHTML=`<b>Платформенный режим: ${S.platform}</b><p>${p.mission}</p><div class="platform-tags">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div>`;}
+function sum(){document.getElementById('summary').innerHTML=[S.platform,S.goal,S.audience,S.formats.join(' + '),S.tone,S.depth].map(v=>`<span class="badge">${escapeHtml(v)}</span>`).join('');}
+function v(id){return document.getElementById(id).value.trim();}
+function buildFormatInstructions(){const f=S.formats;const blocks=[];const has=n=>f.includes(n);const posts=['Просто пост','Рассуждение эксперта','Эмоциональный пост','Пост с юмором','Полезный пост / инструкция','Вовлекающий пост','Продающий пост','Пост-прогрев'];const chosen=f.filter(x=>posts.includes(x));if(chosen.length)blocks.push(`БЛОК ПОСТОВ (${chosen.join(' + ')})\nСделай отдельный готовый материал для каждого выбранного формата. Для каждого: заголовок, готовый текст, финал под цель, мини-проверка на нейросетевость. Не повторяй хуки и абзацы.`);if(has('Pinterest-пины'))blocks.push('БЛОК PINTEREST-ПИНОВ\nСделай 10 пинов. Для каждого: название, текст на картинке 3–5 слов, формат, описание до 800 знаков по схеме боль → решение → CTA, ключевые слова, доска, визуальный промпт. Сгруппируй пины в 2–3 мини-серии: боль, ошибка, быстрый результат/фишка. Каждый 2-й пин — с конфликтом или ломкой ожидания.');if(has('Pinterest-карусель 5 слайдов'))blocks.push('БЛОК PINTEREST-КАРУСЕЛИ\nСделай карусель ровно на 5 слайдов: 1 обложка + 4 содержательных слайда. Для каждого: заголовок, короткий текст, визуальная идея.');if(has('Контент-план'))blocks.push('БЛОК КОНТЕНТ-ПЛАНА\nСделай план на 7 дней: тема, формат, цель, крючок, содержание, CTA, как переупаковать.');if(has('Вирусные заголовки'))blocks.push('БЛОК ВИРУСНЫХ ЗАГОЛОВКОВ\nДай 30 заголовков по категориям: боль, ошибка, быстрый результат, секрет/фишка, до/после, провокация без токсичности, экспертный разбор. 30% заголовков сделай резче: сомнение, внутренний конфликт, желание проверить.');if(has('Описание к пинам'))blocks.push('БЛОК ОПИСАНИЙ К ПИНАМ\nСделай 10 SEO-описаний до 800 знаков: боль → решение → CTA, ключи органично.');if(has('Threads-ветка'))blocks.push('БЛОК THREADS\nСделай ветку из 5–8 коротких сообщений: хук, развитие, поворот, финал к ответу.');if(has('Сценарий Reels/Shorts'))blocks.push('БЛОК ВИДЕО\nСценарий: хук 0–3 сек, текст на экране, что сказать, визуал, финал.');if(has('Разбор кейса'))blocks.push('БЛОК РАЗБОРА КЕЙСА\nБыло → проблема → что сделали → почему сработало → результат → вывод → CTA.');if(has('Серия из 10 постов'))blocks.push('БЛОК СЕРИИ\n10 постов из одной темы: угол, заголовок, содержание, цель, CTA.');if(has('Контент-воронка'))blocks.push('БЛОК КОНТЕНТ-ВОРОНКИ\nОхват → экспертность → доверие → прогрев → продажа. Дай 5–7 единиц контента.');return blocks.join('\n\n')||`Сделай результат в форматах: ${S.formats.join(' + ')}.`;}
+function extraInstruction(){const p=document.getElementById('extraPreset').value;if(p==='viral')return 'Дополнительно: усили вирусность, хук, конкретику, цифры, конфликт и сохранения. Проверка на воду обязательна.';if(p==='pain')return 'Дополнительно: усили боль на 30%, но без токсичности и давления. Проверка на воду обязательна.';if(p==='seo')return 'Дополнительно: дай SEO-ключи, поисковые формулировки и проверку на воду.';if(p==='clean')return 'Дополнительно: проверка на воду, канцелярит, клише и нейросетевые фразы.';return 'Дополнительные блоки не выбраны.';}
+function buildPrompt(){const project=v('project')||'Проект без названия';const role=v('role')||'эксперт';const topic=v('topic')||'[тема не указана]';const product=v('product')||'[продукт / лид-магнит / услуга]';const audience=v('audienceData')||'[целевая аудитория не указана]';const details=v('details')||'не указаны';const cta=v('cta')||'мягкий следующий шаг';const pf=platformProfiles[S.platform]||platformProfiles['Telegram'];return `Ты — редактор, SMM-стратег, маркетолог, копирайтер и контент-архитектор проекта «${project}». Работай как сильная мини-команда: стратег, автор, упаковщик смыслов и редактор. Твоя задача — выдать готовый результат строго под выбранные форматы, без лишнего.
 
 ВАЖНО О СТИЛЕ
-Пиши по-русски. Стиль: ${v.style}. Тон подачи: ${S.tone}. Не используй канцелярит, пафос, клише и пустые экспертные слова. Не начинай с «представьте себе», «в современном мире», «важно понимать». Текст должен звучать как живой разговор с умным человеком, а не как методичка из шкафа. Не усложняй терминами: если используешь термин, сразу переведи его в бытовой язык. Диагноз аудитории должен звучать так, будто человек сам мог бы это сказать, а не как формулировка эксперта сверху.
+Пиши по-русски. Стиль: живой, человеческий, экспертный, без пафоса, без канцелярита, с лёгким юмором только если уместно. Тон подачи: ${S.tone}. Не начинай с «представьте себе», «в современном мире», «важно понимать». Если фраза звучит “умно и красиво”, перепиши её так, как человек сказал бы подруге. Признак правильной фразы: её можно отправить в WhatsApp без редактирования.
 
 ВВОДНЫЕ
-Проект: ${v.project}
-Роль автора / эксперта: ${v.role}
-Площадка: ${S.platforms}
-Ниша / тип проекта: ${S.audiences}
-${v.step1Data ? 'ДАННЫЕ ИЗ ШАГА 1 (ГЛАВНЫЙ ИСТОЧНИК):\n' + v.step1Data + '\n' : ''}${v.selectedAccents ? 'ВЫБРАННЫЕ АКЦЕНТЫ ИЗ ШАГА 1 (ОБЯЗАТЕЛЬНО ИСПОЛЬЗОВАТЬ):\n' + v.selectedAccents + '\n' : ''}${v.audienceCustom ? 'ЦА подробно: ' + v.audienceCustom + '\n' : ''}${v.painCustom ? 'Боли, желания и возражения ЦА: ' + v.painCustom + '\n' : ''}Быстрая боль / фокус: ${S.pains}${v.step1Data ? ' (если противоречит данным из ШАГА 1 — игнорируй и бери фокус из ШАГА 1)' : ''}
-Выбранные форматы результата: ${fmt}
-Цель: ${S.goals}
+Проект: ${project}
+Роль автора / эксперта: ${role}
+Площадка: ${S.platform}
+Ниша / тип проекта: ${S.audience}
+ДАННЫЕ О ЦА — ГЛАВНЫЙ ИСТОЧНИК:
+${audience}
+
+Выбранные форматы результата: ${S.formats.join(' + ')}
+Цель: ${S.goal}
 Глубина: ${S.depth}
-Тема: ${v.topic}
-Продукт / услуга / лид-магнит: ${v.product}
-Исходные материалы: ${v.details || 'не указаны'}
-CTA / следующий шаг (использовать только если уместно по цели и выбранным дополнениям): ${ctaForPrompt}
-Дополнительно добавить: ${v.extras || 'ничего'}
+Тема: ${topic}
+Продукт / услуга / лид-магнит: ${product}
+Исходные материалы: ${details}
+CTA / следующий шаг: ${cta}
 
-ПЛАТФОРМЕННЫЙ РЕЖИМ: ${S.platforms}
-Главная задача площадки: ${platformMode.mission}
-Ключевые маркеры режима: ${platformMode.tags.join(', ')}
-Работай по логике выбранной площадки, а не просто меняй название платформы. Если выбранная площадка и формат конфликтуют, приоритет у выбранных форматов, но стиль и упаковка должны соответствовать площадке.
+ПЛАТФОРМЕННЫЙ РЕЖИМ: ${S.platform}
+Главная задача площадки: ${pf.mission}
+Правила площадки: ${pf.rules}
 
-${priorityInstr}
+ПРИОРИТЕТЫ
+1. Форматы результата: ${S.formats.join(' + ')} — важнее всего. Выдавай только их.
+2. Цель: ${S.goal} — определяет финал, вопрос и CTA.
+3. ЦА — выбери 1 главный фокус-сегмент из данных и не распыляйся.
+4. Площадка — упаковка должна соответствовать ${S.platform}.
+5. Дополнения — только выбранные.
 
-ОСОБОЕ ПРАВИЛО ПО ДАННЫМ ИЗ ШАГА 1
-Если есть блок «ДАННЫЕ ИЗ ШАГА 1», это главный источник ЦА. Не переписывай, не улучшай и не придумывай новую аудиторию. Выбери один фокус-сегмент из этого блока и пиши как для конкретного человека. Если быстрый фокус/боль из кнопки противоречит данным из ШАГА 1 — игнорируй кнопку и бери боль из ШАГА 1. Если есть «ВЫБРАННЫЕ АКЦЕНТЫ», обязательно используй их в хуке, примерах, болях или живых фразах.
-
-ОСОБОЕ ПРАВИЛО ПО ЦА
-Не выдумывай аудиторию только по кнопке «Ниша / тип проекта». Главный источник — поля «ЦА подробно» и «Боли, желания и возражения ЦА». Если данных мало, пометь допущения как «ГИПОТЕЗА» и предложи, что уточнить.
-${audFocus}
-
-ОСОБОЕ ПРАВИЛО ПО ФОРМАТАМ
-Пользователь выбрал 1–3 формата. Выдавай результат строго по этим форматам: ${fmt}. Не добавляй Threads, Reels, Telegram-пост, продающий пост, контент-план или другие блоки, если они не выбраны в форматах или в дополнительных пунктах.
-
-ОСОБОЕ ПРАВИЛО ПО ПЛОЩАДКЕ
-${platformRules}
-Не добавляй форматы других площадок, если они не выбраны в разделе «Формат результата» или в дополнительных пунктах.
-
-ЗАДАЧА
-Собери готовый результат под выбранные вводные. Сначала коротко объясни, на какую боль и желание аудитории опирается материал. Затем выдай только выбранные форматы.
-${goalInstr}
+ОСОБЫЕ ПРАВИЛА ДЛЯ СИЛЬНОЙ ВЫДАЧИ
+— В первой строке всегда должна быть конкретная ситуация, а не общая мысль. Не “хочешь трафик”, а “выкладываешь 10 постов — 0 переходов”.
+— Используй живые фразы и боли из ЦА в хуках, заголовках и примерах.
+— Добавляй цифры, время или результат, если это не выглядит выдумкой: “за 15 минут”, “1 идея → 10 пинов”, “контент на 3 дня”.
+— 30% идей должны вызывать сомнение, внутренний конфликт или желание проверить.
+— Не пиши банальности: “создавайте качественный контент”, “регулярность — ключ”, “важно систематизировать”. Сразу создавай конкретный материал.
+— Текст не должен быть идеально гладким. Добавь 1–2 живые неровности: короткую фразу, обрыв мысли, разговорную вставку.
+— Если цель = комментарии, финал — вопрос. Если цель = переход, финал — мягкий переход. Если цель = продажа, продавай через результат человека.
 
 ФОРМАТ ОТВЕТА
-0. Короткий диагноз аудитории: 3–5 строк. Что болит, что она хочет, почему выбранная тема может сработать. Не растягивай диагноз на большой анализ.
+0. Фокус-сегмент: 1 строка, кого выбрал и почему.
+1. Короткий диагноз аудитории: 3–5 строк, живым языком.
 
-${formatInstr}
+${buildFormatInstructions()}
 
-${extrasInstr}
-
-ТЕСТ НА УЗНАВАНИЕ
-Перед финалом проверь текст: в первой половине материала человек должен узнать себя и свою ситуацию. Если нет ощущения «это про меня», перепиши хук и первые абзацы конкретнее: через ситуацию, боль, живую фразу или бытовой пример.
+${extraInstruction()}
 
 ФИНАЛЬНАЯ ПРОВЕРКА
 — Убери воду и общие советы.
-— Не пиши «создайте ценный контент» — сразу создай его.
-— Не копируй исходные формулировки, а усиливай их.
-— Убери универсальные фразы вроде «контент должен быть полезным», «важно систематизировать», «нужно оптимизировать процессы».
+— Проверь первые строки: человек должен узнать себя быстро.
+— Убери клише и псевдоэкспертность.
 — Добавь конкретику: время, действие, ситуация, фраза клиента, микро-пример.
-— Если выбран продающий формат, продавай через результат человека, а не через восторги о продукте.`;
+— Выдай финальный результат, который можно использовать сразу.`;}
+function buildAudiencePrompt(){const niche=v('audFindNiche')||v('topic')||'[ниша / тема не указана]';const product=v('audFindProduct')||v('product')||'[продукт / услуга не указаны]';const known=v('audFindKnown')||'исходных данных мало — строй гипотезы, но помечай их как ГИПОТЕЗА';const mode=document.getElementById('audFindDepth')?.value||'deep';const deep=mode==='deep';return `Ты — поведенческий исследователь рынка, маркетолог-аналитик и специалист по болям аудитории.\n\nТвоя задача — не писать общие слова, а найти реальные сегменты ЦА, их боли, запросы, желания, возражения и темы контента, на которых можно строить продажи.\n\nВВОДНЫЕ\nНиша / тема: ${niche}\nПродукт / услуга: ${product}\nГеография: РФ / русскоязычный сегмент\nЧто уже известно: ${known}\nРежим: ${deep?'глубокий анализ':'быстрый анализ'}\n\nВАЖНО\n— Не пиши абстрактно: “люди хотят качество и результат”. Это мусор.\n— Если данных мало, помечай допущения как ГИПОТЕЗА.\n— Пиши живыми фразами, как аудитория говорит в комментариях, поиске и личных сообщениях.\n— Не делай сегменты по полу/возрасту, если это не влияет на поведение. Сегменты должны отличаться проблемой, мотивацией и уровнем осознанности.\n\nЧТО НУЖНО ВЫДАТЬ\n1. СЕГМЕНТЫ ЦА\nСделай ${deep?'4–6':'2–3'} сегмента. Формат строго:\n\nСЕГМЕНТ 1 — [живое название]\nКто это простыми словами:\nУровень осознанности:\nГлавная боль:\nСкрытый страх:\nЖелаемый результат:\nЧто уже пробовали и почему не получилось:\nВозражения перед покупкой:\n3 живые фразы:\n\n2. КАРТА БОЛЕЙ\n— поверхностные боли\n— глубокие эмоциональные боли\n— денежные боли\n— временные боли\n— социальные боли: стыд, сравнение, страх выглядеть глупо\n— скрытые боли, которые человек не формулирует напрямую\n\n3. ЯЗЫК АУДИТОРИИ\n— ${deep?'20':'10'} живых фраз\n— ${deep?'15':'8'} поисковых запросов\n— ${deep?'10':'5'} кривых бытовых формулировок, как реально ищут\n\n4. ТЕМЫ КОНТЕНТА\n— ${deep?'20':'10'} тем, которые вызывают “это про меня”\n— ${deep?'10':'5'} тем для сохранений\n— ${deep?'10':'5'} тем для комментариев\n— ${deep?'10':'5'} тем для перехода/покупки\n\n5. ФИНАЛЬНЫЙ БЛОК ДЛЯ КОНСТРУКТОРА\nВ конце обязательно дай отдельный готовый блок, который можно вставить в контент-конструктор:\n\nФОКУС-СЕГМЕНТ:\nБОЛИ:\nСКРЫТЫЕ СТРАХИ:\nЖЕЛАНИЯ:\nЖИВЫЕ ФРАЗЫ:\nТЕМЫ, КОТОРЫЕ ЗАЦЕПЯТ:\n\nФИНАЛЬНОЕ ПРАВИЛО\nКаждый пункт должен быть пригоден для контента, заголовков, пинов или оффера. Не делай аналитику ради аналитики.`;}
 
-  const chain=`ШАГ 1 — УГОЛ ПОДАЧИ
-Используй вводные проекта «${v.project}» и тему «${v.topic}». ЦА/данные из ШАГА 1: ${audienceBrief}. Боли и акценты: ${painBrief}. Сначала выбери 1 фокус-сегмент, затем придумай 5 углов подачи под выбранные форматы: ${fmt}. Для каждого угла дай: крючок, обещание, риск банальности, как усилить.
+async function findAudience(){const output=document.getElementById('audienceFinderOutput');const prompt=buildAudiencePrompt();output.value='⏳ Ищу ЦА, боли и живые фразы...';try{if(!API_ENDPOINT){setTimeout(()=>{output.value='🔎 Тестовый режим без API.\n\nКогда подключим API, здесь будет готовый анализ ЦА. А пока вот промпт, который можно вставить в ChatGPT/Gemini вручную:\n\n'+prompt;},700);return;}const res=await fetch(API_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});if(!res.ok)throw new Error('Ошибка API: '+res.status);const data=await res.json().catch(()=>null);const text=data?.result || data?.text || data?.choices?.[0]?.message?.content || await res.text();output.value=text;}catch(e){output.value='Ошибка поиска ЦА: '+e.message;}}
 
-ШАГ 2 — ГОТОВАЯ ВЫДАЧА
-Возьми лучший угол и сделай результат строго по выбранным форматам: ${fmt}. Не добавляй лишние блоки, если они не выбраны.
+function transferAudienceFinder(){const text=v('audienceFinderOutput');if(!text){alert('Сначала найди или вставь ЦА');return;}document.getElementById('audienceData').value=text;document.getElementById('audienceData').scrollIntoView({behavior:'smooth',block:'center'});}
 
-${formatInstr}
-
-ШАГ 3 — ДОПОЛНЕНИЯ
-${extrasInstr}
-
-ШАГ 4 — РЕДАКТУРА
-Проверь всё на воду, скуку, шаблонность и слабый CTA. Дай финальную улучшенную версию.`;
-
-  const quick=`Сделай контент-пакет для проекта «${v.project}» по теме «${v.topic}». Площадка: ${S.platforms}. Роль автора: ${v.role}. ЦА/данные из ШАГА 1: ${audienceBrief}. Боли и акценты: ${painBrief}. Выбранные форматы: ${fmt}. Цель: ${S.goals}. Продукт: ${v.product}. Стиль: ${v.style}. Тон: ${S.tone}.
-
-Выдай только выбранные форматы, без лишних разделов. Сначала выбери 1 фокус-сегмент ЦА и держи цель ${S.goals}.
-
-${formatInstr}
-
-Дополнительно: ${v.extras || 'ничего'}.`;
-
-  window.prompts={master,chain,quick};
-  current=master;
-  document.getElementById('out').value=current;
-  document.getElementById('result').classList.remove('hidden');
-  document.getElementById('result').scrollIntoView({behavior:'smooth',block:'start'});
-}
-
-function showTab(n,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');current=window.prompts?.[n]||'';document.getElementById('out').value=current}
-function copyOut(){current=document.getElementById('out').value;navigator.clipboard.writeText(current).then(()=>{let b=document.getElementById('copyBtn');b.textContent='Скопировано ✓';setTimeout(()=>b.textContent='Скопировать',1600)})}
-function downloadTxt(){current=document.getElementById('out').value;let blob=new Blob([current],{type:'text/plain;charset=utf-8'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='content-autopilot-prompt.txt';a.click();URL.revokeObjectURL(a.href)}
-
-
-// ===== API-ready generation layer =====
-// Вставь сюда URL из Pipedream, когда подключим API.
-// Пример: const API_ENDPOINT = "https://xxxx.m.pipedream.net";
-const API_ENDPOINT = "";
-
-function getPromptForAI(){
-  const out = document.getElementById('out');
-  return (out?.value || current || '').trim();
-}
-
-async function generateProductionAI(){
-  generateProduction();
-  // Небольшая пауза, чтобы generateProduction успел собрать промпт и вывести блок результата.
-  setTimeout(generateAI, 120);
-}
-
-async function generateAI(){
-  const prompt = getPromptForAI();
-  const output = document.getElementById('aiOutput');
-  const status = document.getElementById('aiStatus');
-
-  if(!prompt){
-    alert('Сначала собери промпт');
-    return;
-  }
-
-  document.getElementById('result')?.classList.remove('hidden');
-  output.innerText = '⏳ Генерирую контент...';
-  status.innerText = API_ENDPOINT ? 'Отправляю запрос в нейросеть' : 'Тестовый режим · API пока не подключён';
-
-  try{
-    if(!API_ENDPOINT){
-      // Безопасная заглушка: проверяем UX без трат и без API-ключей.
-      setTimeout(()=>{
-        output.innerText = '🔥 Готово! Интерфейс работает.\n\nКогда подключим API, здесь будет появляться готовый контент от нейросети: посты, пины, заголовки, контент-план или другой выбранный формат.\n\nСейчас промпт уже собран и готов к отправке.';
-        status.innerText = 'Готово · тестовый режим';
-      }, 1200);
-      return;
-    }
-
-    const res = await fetch(API_ENDPOINT, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ prompt })
-    });
-
-    if(!res.ok){
-      throw new Error('HTTP ' + res.status);
-    }
-
-    const data = await res.json();
-    const text = data.result || data.output || data.text || 'Ответ получен, но поле result/output/text не найдено.';
-    output.innerText = text;
-    status.innerText = 'Готово · контент сгенерирован';
-  }catch(e){
-    output.innerText = 'Ошибка генерации. Проверь API endpoint или попробуй ещё раз.\n\nТехнически: ' + e.message;
-    status.innerText = 'Ошибка';
-  }
-}
-
-function copyAIOutput(){
-  const text = document.getElementById('aiOutput')?.innerText || '';
-  if(!text.trim()) return;
-  navigator.clipboard.writeText(text).then(()=>{
-    const status = document.getElementById('aiStatus');
-    const old = status.innerText;
-    status.innerText = 'Контент скопирован ✓';
-    setTimeout(()=>status.innerText = old, 1400);
-  });
-}
-
-function clearAIOutput(){
-  const output = document.getElementById('aiOutput');
-  const status = document.getElementById('aiStatus');
-  output.innerText = 'Очищено. Нажми «🔥 Сгенерировать контент», чтобы получить новую выдачу.';
-  status.innerText = API_ENDPOINT ? 'API подключён' : 'API пока не подключён · тестовый режим';
-}
-
+function generatePromptOnly(){const prompt=buildPrompt();document.getElementById('promptOut').value=prompt;document.getElementById('promptPanel').classList.remove('hidden');document.getElementById('promptPanel').scrollIntoView({behavior:'smooth',block:'start'});}
+function getFreeUsed(){return Number(localStorage.getItem('free_generations_used')||0)}
+function setFreeUsed(n){localStorage.setItem('free_generations_used',String(n))}
+async function generateAI(){const prompt=buildPrompt();document.getElementById('promptOut').value=prompt;document.getElementById('promptPanel').classList.remove('hidden');const output=document.getElementById('aiOutput');const status=document.getElementById('apiStatus');const used=getFreeUsed();if(used>=FREE_LIMIT){document.getElementById('paywall').classList.remove('hidden');output.value='Бесплатный лимит закончился. Открой PRO-доступ, чтобы продолжить генерации.';return;}output.value='⏳ Генерирую контент...';status.textContent=`Генерация ${used+1}/${FREE_LIMIT} в бесплатном лимите.`;try{if(!API_ENDPOINT){setTimeout(()=>{setFreeUsed(used+1);output.value=`🔥 Тестовый режим работает.\n\nКогда подключим API, здесь появится настоящий готовый контент по твоему запросу.\n\nСейчас промпт уже собран и готов к отправке. Проверь вкладку “Мастер-промпт” ниже — именно он будет уходить в нейросеть.\n\nОсталось бесплатных генераций: ${Math.max(0,FREE_LIMIT-used-1)}.`;status.textContent='Готово · тестовый режим без API';},900);return;}const res=await fetch(API_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})});if(!res.ok)throw new Error('Ошибка API: '+res.status);const data=await res.json().catch(()=>null);const text=data?.result || data?.text || data?.choices?.[0]?.message?.content || await res.text();setFreeUsed(used+1);output.value=text;status.textContent='Готово · ответ нейросети получен';}catch(e){output.value='Ошибка генерации: '+e.message;status.textContent='Ошибка. Проверь API endpoint.';}}
+function copyText(id){const el=document.getElementById(id);el.select();navigator.clipboard.writeText(el.value||el.innerText||'');}
+function clearText(id){document.getElementById(id).value='';}
+function openPay(){if(PAY_URL){window.open(PAY_URL,'_blank')}else{alert('Ссылка Продамус пока не добавлена.')}}
+function escapeHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+init();
 </script>
 </body>
 </html>
