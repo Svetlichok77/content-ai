@@ -99,7 +99,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   <div class="hint" style="margin-top:8px;font-size:12px">💡 Нет мыслей? Скопируй боли и ключевые запросы из блока 2 «Найти ЦА» и вставь сюда — нейросеть сама выстроит смыслы.</div><br><br>
   <div class="row3"><select id="tone"></select><select id="depth"></select><select id="extraPreset"><option value="clean">Убрать воду и клише</option><option value="viral">Вирусность + конкретика</option><option value="pain">Усиление боли</option><option value="seo">SEO / ключи</option><option value="none">Без дополнений</option></select></div><br>
   <input id="cta" value="мягкий переход к продукту / лид-магниту / следующему шагу">
-  <div class="hint warning">⚡ То, что вручную занимает 2–3 часа — здесь делается за 30 секунд.</div>
+  <div class="hint warning">⚡ То, что вручную занимает 2–3 часа — здесь делается за пару минут.</div>
   <button class="btn btn-blue" id="btnGenerate" onclick="generateAI()">🔥 Сгенерировать контент</button>
   <button class="btn" onclick="generatePromptOnly()">Собрать промпт без генерации →</button>
 </section>
@@ -245,7 +245,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
     <button onclick="openLegal('refund')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;text-decoration:underline;font-family:Onest,sans-serif">Политика возврата</button>
     <button onclick="openLegal('terms')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;text-decoration:underline;font-family:Onest,sans-serif">Условия использования</button>
   </div>
-  <div>Контент на автопилоте PRO · ИП [Ваше имя] · ИНН [000000000000] · <a href="mailto:info@example.com" style="color:var(--muted)">info@example.com</a></div>
+  <div>Контент на автопилоте PRO · ИП [Михайлова Светлана Александровна] · ИНН [10050176301] · <a href="mailto:info@example.com" style="color:var(--muted)">info@example.com</a></div>
 </div>
 
 <!-- ========== ВИДЕОИНСТРУКЦИЯ ========== -->
@@ -355,17 +355,19 @@ function cleanMarkdown(text) {
 // Ключи: generations_left, generation_balance_initialized, user_tier
 // ============================================================
 
-// Миграция: переносим старые ключи (gen_left/gen_init) в новые, чтобы не терять баланс существующих пользователей
+// Миграция старых ключей в новые, чтобы не потерять баланс у себя/пользователей
 (function migrateStorage() {
-  if (localStorage.getItem('gen_init') && !localStorage.getItem('generation_balance_initialized')) {
-    const oldLeft = localStorage.getItem('gen_left');
-    const oldTier = localStorage.getItem('user_tier');
-    if (oldLeft !== null) localStorage.setItem('generations_left', oldLeft);
-    if (oldTier !== null) localStorage.setItem('user_tier', oldTier);
-    localStorage.setItem('generation_balance_initialized', '1');
-    localStorage.removeItem('gen_left');
-    localStorage.removeItem('gen_init');
-  }
+  try {
+    if (localStorage.getItem('gen_init') && !localStorage.getItem('generation_balance_initialized')) {
+      const oldLeft = localStorage.getItem('gen_left');
+      const oldTier = localStorage.getItem('user_tier');
+      if (oldLeft !== null) localStorage.setItem('generations_left', oldLeft);
+      if (oldTier !== null) localStorage.setItem('user_tier', oldTier);
+      localStorage.setItem('generation_balance_initialized', '1');
+      localStorage.removeItem('gen_left');
+      localStorage.removeItem('gen_init');
+    }
+  } catch(e) {}
 })();
 
 function ensureGenerationBalance(){
@@ -383,11 +385,12 @@ function spendGeneration(){const left=getGenerationsLeft();if(left<=0)return fal
 function getTierLimit(){return getGenerationsLeft();}
 
 // ============================================================
-// ОПЛАТА — ПРОДАМУС (улучшенная версия)
-// Настрой в дашборде Продамуса для каждой формы:
-//   Success URL: https://ВАШ_ДОМЕН/?payment=success
-//   Fail URL:    https://ВАШ_ДОМЕН/?payment=fail
-// Тариф берётся из pending_tier, сохранённого перед переходом.
+// ОПЛАТА — ПРОДАМУС
+// Важно: фронт не может сам узнать, что СБП/QR оплачен, пока Продамус не вернёт пользователя на сайт.
+// Поэтому есть 2 пути:
+// 1) нормальный: Success URL в Продамусе -> ?payment=success, тогда начисление автоматически;
+// 2) аварийный для текущего MVP: если после QR пользователь вернулся/закрыл оплату, показываем кнопку ручной активации.
+// Платёжные ссылки НЕ меняем — используем те, что уже есть в PAY_URLS.
 // ============================================================
 function goToPay(tier){
   const baseUrl=PAY_URLS[tier];
@@ -396,19 +399,23 @@ function goToPay(tier){
   ensureGenerationBalance();
   localStorage.setItem('pending_tier',tier);
   localStorage.setItem('pending_tier_ts',String(Date.now()));
+  localStorage.setItem('pending_payment_started','1');
 
   const successUrl=window.location.origin+window.location.pathname+'?payment=success';
   const failUrl=window.location.origin+window.location.pathname+'?payment=fail';
 
   const url=new URL(baseUrl,window.location.href);
-  // Передаём success/fail URL всеми возможными параметрами — разные формы Продамуса поддерживают разные
+  // Продамус может игнорировать параметры из ссылки, если Success/Fail уже заданы в кабинете.
+  // Всё равно передаём несколько вариантов — это не ломает существующие ссылки.
   url.searchParams.set('success_url',successUrl);
   url.searchParams.set('fail_url',failUrl);
   url.searchParams.set('success',successUrl);
   url.searchParams.set('error',failUrl);
+  url.searchParams.set('return_url',successUrl);
+  url.searchParams.set('redirect_url',successUrl);
 
   closePricingModal();
-  window.location.href=url.toString(); // Та же вкладка — localStorage сохраняется
+  window.location.href=url.toString();
 }
 
 // ============================================================
@@ -423,18 +430,18 @@ function detectTierFromUrl(){
 
   const pendingTier=localStorage.getItem('pending_tier');
   const pendingTs=Number(localStorage.getItem('pending_tier_ts')||0);
-  const pendingRecent=pendingTier&&(Date.now()-pendingTs)<24*60*60*1000; // 24 часа
+  const pendingRecent=pendingTier&&(Date.now()-pendingTs)<24*60*60*1000;
 
-  // Вариант 1: ?tier=pro — прямой параметр тарифа
+  // Вариант 1: Success URL сразу с тарифом: ?tier=pro
   if(tierParam&&TIER_PACKS[tierParam]){
-    activatePaidTier(tierParam);
+    activatePaidTier(tierParam,'auto');
     cleanPaymentUrl();
     return;
   }
 
-  // Вариант 2: ?payment=success — общий Success URL, тариф из pending_tier
+  // Вариант 2: общий Success URL: ?payment=success, тариф берём из pending_tier
   if(['success','paid','ok','done'].includes(paymentParam)&&pendingRecent&&TIER_PACKS[pendingTier]){
-    activatePaidTier(pendingTier);
+    activatePaidTier(pendingTier,'auto');
     cleanPaymentUrl();
     return;
   }
@@ -443,32 +450,30 @@ function detectTierFromUrl(){
   if(['fail','failed','error','cancel','canceled'].includes(paymentParam)){
     localStorage.removeItem('pending_tier');
     localStorage.removeItem('pending_tier_ts');
+    localStorage.removeItem('pending_payment_started');
     cleanPaymentUrl();
-    showPaymentNotice('Оплата не завершена','Если это ошибка — попробуй оплатить ещё раз или напиши в поддержку.','⚠️');
+    showPaymentNotice('Оплата не завершена','Если деньги списались — напиши в поддержку и приложи чек.','⚠️');
     return;
   }
 
-  // Вариант 4: пользователь вернулся вручную с payform.ru без параметров
-  const fromPayform=document.referrer.includes('payform.ru')||document.referrer.includes('prodamus');
-  if(fromPayform&&pendingRecent&&TIER_PACKS[pendingTier]){
-    showPaymentNotice(
-      'Вернулись с оплаты',
-      'Если генерации не начислились, проверь Success URL в Продамусе: '+window.location.origin+window.location.pathname+'?payment=success',
-      'ℹ️'
-    );
+  // Вариант 4: человек вернулся на сайт без success-параметра после QR/крестика.
+  // Автоматически не начисляем, но показываем аварийную кнопку для MVP/теста.
+  if(pendingRecent&&TIER_PACKS[pendingTier]){
+    setTimeout(()=>showPendingPaymentNotice(pendingTier),600);
   }
 }
 
-function activatePaidTier(tier){
+function activatePaidTier(tier,source){
   const pack=TIER_PACKS[tier];
   if(!pack)return;
 
-  // Защита от двойного начисления: уникальный ключ по тарифу + timestamp
-  const activationKey='activated_'+tier+'_'+(localStorage.getItem('pending_tier_ts')||'direct');
+  const pendingTs=localStorage.getItem('pending_tier_ts')||'direct';
+  const activationKey='activated_'+tier+'_'+pendingTs;
   if(localStorage.getItem(activationKey)){
     localStorage.removeItem('pending_tier');
     localStorage.removeItem('pending_tier_ts');
-    showActivationBanner(tier,true); // уже активирован
+    localStorage.removeItem('pending_payment_started');
+    showActivationBanner(tier,true);
     updateStatusBar();
     return;
   }
@@ -478,8 +483,20 @@ function activatePaidTier(tier){
   localStorage.setItem(activationKey,'1');
   localStorage.removeItem('pending_tier');
   localStorage.removeItem('pending_tier_ts');
+  localStorage.removeItem('pending_payment_started');
   showActivationBanner(tier,false);
   updateStatusBar();
+}
+
+function activatePendingPaymentManually(){
+  const tier=localStorage.getItem('pending_tier');
+  const ts=Number(localStorage.getItem('pending_tier_ts')||0);
+  const recent=tier&&(Date.now()-ts)<24*60*60*1000;
+  if(!recent||!TIER_PACKS[tier]){
+    showPaymentNotice('Не нашла ожидаемый тариф','Открой тарифы и начни оплату ещё раз. Если деньги списались — напиши в поддержку.','⚠️');
+    return;
+  }
+  activatePaidTier(tier,'manual');
 }
 
 function cleanPaymentUrl(){
@@ -496,9 +513,27 @@ function showActivationBanner(tier,alreadyActivated){
   );
 }
 
+function showPendingPaymentNotice(tier){
+  const labels={start:'START',pro:'PRO',max:'PRO MAX'};
+  const old=document.querySelector('.act-banner');
+  if(old)old.remove();
+
+  const b=document.createElement('div');
+  b.className='act-banner';
+  b.innerHTML=`<span style="font-size:28px">ℹ️</span>
+    <div>
+      <strong style="font-family:Unbounded,sans-serif;color:var(--accent);font-size:13px">Оплата тарифа ${escapeHtml(labels[tier]||tier)}</strong>
+      <div style="color:#b9d6d1;font-size:13px;margin-top:4px">Если QR оплачен, но Продамус не вернул на сайт, нажми кнопку ниже.</div>
+      <button onclick="activatePendingPaymentManually()" style="margin-top:10px;background:linear-gradient(135deg,var(--accent),var(--lime));color:#04110f;border:0;border-radius:999px;padding:9px 14px;font-weight:900;cursor:pointer;font-family:Onest,sans-serif">Я оплатила — начислить генерации</button>
+    </div>
+    <button onclick="this.closest('.act-banner').remove()" style="margin-left:auto;background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:22px;line-height:1">×</button>`;
+  document.body.appendChild(b);
+}
+
 function showPaymentNotice(title,text,icon){
   const old=document.querySelector('.act-banner');
   if(old)old.remove();
+
   const b=document.createElement('div');
   b.className='act-banner';
   b.innerHTML=`<span style="font-size:28px">${icon||'ℹ️'}</span>
@@ -520,6 +555,24 @@ function updateStatusBar(){
   if(el){el.innerHTML=`Тариф: <strong style="color:var(--accent)">${tierLabel}</strong> · Осталось генераций: <strong style="color:var(--lime)">${left}</strong> · не сгорают`;}
   if(left<=0&&tier==='free')document.getElementById('paywall').classList.remove('hidden');
 }
+
+// Когда пользователь возвращается на вкладку после оплаты QR, показываем аварийную кнопку
+window.addEventListener('pageshow',()=>{
+  const tier=localStorage.getItem('pending_tier');
+  const ts=Number(localStorage.getItem('pending_tier_ts')||0);
+  if(tier&&TIER_PACKS[tier]&&(Date.now()-ts)<24*60*60*1000){
+    setTimeout(()=>showPendingPaymentNotice(tier),700);
+  }
+});
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible'){
+    const tier=localStorage.getItem('pending_tier');
+    const ts=Number(localStorage.getItem('pending_tier_ts')||0);
+    if(tier&&TIER_PACKS[tier]&&(Date.now()-ts)<24*60*60*1000){
+      setTimeout(()=>showPendingPaymentNotice(tier),700);
+    }
+  }
+});
 
 // ============================================================
 // FIX #1: ЛОГИКА ПРОМПТОВ
@@ -841,6 +894,27 @@ async function generateAI() {
 // ============================================================
 function openPricingModal()  { document.getElementById('pricingOverlay').style.display='block'; document.body.style.overflow='hidden'; }
 function closePricingModal() { document.getElementById('pricingOverlay').style.display='none'; document.body.style.overflow=''; }
+
+// ============================================================
+// ОПЛАТА — ПРОДАМУС
+// pending_tier → редирект в той же вкладке → ?tier=XXX → зачисление.
+// Резерв: document.referrer (payform.ru) + pending_tier.
+// ============================================================
+function goToPay(tier) {
+  const baseUrl = PAY_URLS[tier];
+  if (!baseUrl) { alert('Ссылка на этот тариф ещё не добавлена.'); return; }
+  // Сохраняем ожидаемый тариф ДО перехода (резервный путь)
+  localStorage.setItem('pending_tier', tier);
+  localStorage.setItem('pending_tier_ts', String(Date.now()));
+  // URL возврата: наш сайт + ?tier=XXX
+  const successUrl = window.location.origin + window.location.pathname + '?tier=' + tier;
+  // Добавляем success_url к ссылке Продамуса
+  const sep = baseUrl.includes('?') ? '&' : '?';
+  const payUrl = baseUrl + sep + 'success_url=' + encodeURIComponent(successUrl);
+  closePricingModal();
+  // Переходим в ТОЙ ЖЕ вкладке — localStorage сохраняется, возврат работает
+  window.location.href = payUrl;
+}
 
 // ============================================================
 // УТИЛИТЫ
