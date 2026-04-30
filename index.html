@@ -37,7 +37,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 <header>
   <div class="brand">AI content system · PRO</div>
   <h1>Контент на <span>автопилоте</span> PRO</h1>
-  <p class="sub">Сделай пост, пин или сценарий за 30 секунд. Без копирайтинга. Без идей. Без ступора.</p>
+  <p class="sub">Сделай пост, пин или сценарий за пару минут. Без копирайтинга. Без идей. Без ступора.</p>
   <div class="herochips"><span>SMM в кармане</span><span>5 бесплатных генераций</span><span>1 идея → много форматов</span><span>Без ступора</span></div>
 </header>
 
@@ -245,7 +245,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
     <button onclick="openLegal('refund')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;text-decoration:underline;font-family:Onest,sans-serif">Политика возврата</button>
     <button onclick="openLegal('terms')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;text-decoration:underline;font-family:Onest,sans-serif">Условия использования</button>
   </div>
-  <div>Контент на автопилоте PRO · ИП [Михайлова Светлана Александровна] · ИНН [10050176301] · <a href="mailto:info@example.com" style="color:var(--muted)">info@example.com</a></div>
+  <div>Контент на автопилоте PRO · Михайлова Светлана Александровна · ИНН 10050176301 · <a href="mailto:Svetlichok777@gmail.com" style="color:var(--muted)">info@example.com</a></div>
 </div>
 
 <!-- ========== ВИДЕОИНСТРУКЦИЯ ========== -->
@@ -836,7 +836,7 @@ const legalDocs = {
     title: 'Публичная оферта',
     body: `<h2 style="font-family:Unbounded,sans-serif;color:var(--accent);font-size:18px;margin-bottom:16px">Публичная оферта на оказание услуг</h2>
 <p style="color:var(--muted);font-size:12px;margin-bottom:16px">Последнее обновление: [дата] · Основание: ГК РФ ст. 435–444</p>
-<p><strong style="color:var(--accent)">1. Стороны.</strong> Исполнитель: ИП [ФИО], ИНН [000000000000], ОГРНИП [000000000000000]. Заказчик: любое физическое лицо, принявшее условия оферты путём оплаты.</p>
+<p><strong style="color:var(--accent)">1. Стороны.</strong> Исполнитель: СЗ Михайлова Светлана Александровна, ИНН 100500176301. Заказчик: любое физическое лицо, принявшее условия оферты путём оплаты.</p>
 <p><strong style="color:var(--accent)">2. Предмет.</strong> Исполнитель предоставляет доступ к онлайн-сервису «Контент на автопилоте PRO» на условиях выбранного тарифа.</p>
 <p><strong style="color:var(--accent)">3. Акцепт.</strong> Акцептом является факт оплаты. Оплачивая услугу, вы соглашаетесь с условиями настоящей оферты.</p>
 <p><strong style="color:var(--accent)">4. Стоимость и порядок оплаты.</strong> Стоимость указана на странице тарифов. Оплата производится через платёжный сервис Продамус.</p>
@@ -849,7 +849,7 @@ const legalDocs = {
     title: 'Политика конфиденциальности',
     body: `<h2 style="font-family:Unbounded,sans-serif;color:var(--accent);font-size:18px;margin-bottom:16px">Политика конфиденциальности</h2>
 <p style="color:var(--muted);font-size:12px;margin-bottom:16px">Последнее обновление: [дата] · Основание: ФЗ-152 «О персональных данных»</p>
-<p><strong style="color:var(--accent)">1. Оператор.</strong> ИП [ФИО], ИНН [000000000000]. Контакт: [email].</p>
+<p><strong style="color:var(--accent)">1. Оператор.</strong> СЗ Михайлова Светлана Александровна, ИНН 100500176301, Контакт: email Svetlichok777@gmail.com.</p>
 <p><strong style="color:var(--accent)">2. Какие данные собираем.</strong> Данные, которые вы добровольно вводите при оплате (имя, email) — обрабатываются платёжным сервисом Продамус. Мы не храним платёжные данные. Настройки сервиса хранятся локально в браузере (localStorage).</p>
 <p><strong style="color:var(--accent)">3. Цели обработки.</strong> Исполнение договора (оферты), техническая поддержка, улучшение сервиса.</p>
 <p><strong style="color:var(--accent)">4. Передача третьим лицам.</strong> Данные не передаются третьим лицам, кроме платёжного оператора Продамус в рамках обработки платежа.</p>
@@ -863,12 +863,12 @@ const legalDocs = {
 <p style="color:var(--muted);font-size:12px;margin-bottom:16px">Последнее обновление: [дата] · Основание: ФЗ-2300-1, ст. 26.1</p>
 <p><strong style="color:var(--accent)">1. Общее правило.</strong> Услуга является цифровым продуктом с мгновенным исполнением. Согласно ст. 26.1 Закона о защите прав потребителей и Постановлению Правительства РФ № 2463 (2020), возврат средств за надлежащим образом оказанную цифровую услугу не предусмотрен.</p>
 <p><strong style="color:var(--accent)">2. Исключения.</strong> Возврат возможен, если услуга фактически не была оказана по техническим причинам на стороне Исполнителя (генерации не были зачислены). В этом случае обратитесь на [email] в течение 3 дней с момента оплаты.</p>
-<p><strong style="color:var(--accent)">3. Порядок обращения.</strong> Направьте письмо на [email] с темой «Возврат» и приложите подтверждение оплаты. Рассмотрение — в течение 5 рабочих дней.</p>`
+<p><strong style="color:var(--accent)">3. Порядок обращения.</strong> Направьте письмо на email Svetlichok777@gmail.com с темой «Возврат» и приложите подтверждение оплаты. Рассмотрение — в течение 5 рабочих дней.</p>`
   },
   terms: {
     title: 'Условия использования',
     body: `<h2 style="font-family:Unbounded,sans-serif;color:var(--accent);font-size:18px;margin-bottom:16px">Условия использования сервиса</h2>
-<p style="color:var(--muted);font-size:12px;margin-bottom:16px">Последнее обновление: [дата] · Основание: ФЗ-149 «Об информации»</p>
+<p style="color:var(--muted);font-size:12px;margin-bottom:16px">Последнее обновление: 30.04.2026г. · Основание: ФЗ-149 «Об информации»</p>
 <p><strong style="color:var(--accent)">1. Использование сервиса.</strong> Сервис предназначен для создания контента в законных целях. Запрещено использование для создания вводящего в заблуждение, незаконного или нарушающего права третьих лиц контента.</p>
 <p><strong style="color:var(--accent)">2. Авторские права на выдачу.</strong> Контент, созданный с помощью сервиса, принадлежит пользователю. Исполнитель не претендует на права на сгенерированные материалы.</p>
 <p><strong style="color:var(--accent)">3. Ответственность.</strong> Пользователь самостоятельно несёт ответственность за публикацию и использование сгенерированного контента.</p>
