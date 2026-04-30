@@ -402,7 +402,7 @@ function transferSelectedTopic(){
     topic=found?found.replace(/^(\d+[\).\s-]+|[-—•]\s+)/,'').trim():'';
   }
   if(!topic){
-    alert('Выдели нужную тему в блоке тем или сначала нажми «Найти темы из ЦА».');
+    alert('Скопируй нужную тему в блоке тем или нажми «Найти темы из ЦА».');
     return;
   }
   topic=topic.replace(/\s+—\s+.*$/,'').replace(/\s+\(.*?\)\s*$/,'').trim();
