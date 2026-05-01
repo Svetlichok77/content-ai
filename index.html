@@ -53,7 +53,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   <div class="brand">AI content system · PRO</div>
   <h1>Контент на <span>автопилоте</span> PRO</h1>
   <p class="sub">Сделай пост, пин или сценарий за 30 секунд. Без копирайтинга. Без идей. Без ступора.</p>
-  <div class="herochips"><span>SMM в кармане</span><span>5 бесплатных генераций</span><span>1 идея → много форматов</span><span>Без ступора</span></div>
+  <div class="herochips"><span>SMM в кармане</span><span>5 генераций бесплатно после регистрации</span><span>1 идея → много форматов</span><span>Без ступора</span></div>
   <div class="user-bar" id="userBar">
     <div class="user-bar-info" id="userBarInfo">⏳ Загрузка...</div>
     <button class="user-bar-btn" id="userBarBtn">Войти</button>
@@ -235,7 +235,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
     <div class="panel" style="text-align:center">
       <div style="font-family:Unbounded,sans-serif;font-size:11px;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:16px">FREE</div>
       <div style="font-family:Unbounded,sans-serif;font-size:40px;color:var(--text);line-height:1;margin-bottom:4px">0<span style="font-size:16px">₽</span></div>
-      <div style="color:var(--muted);font-size:12px;margin-bottom:18px">первый тест</div>
+      <div style="color:var(--muted);font-size:12px;margin-bottom:18px">при регистрации</div>
       <div style="background:rgba(0,255,209,.07);border:1px solid var(--line2);border-radius:12px;padding:12px;margin-bottom:16px">
         <div style="font-family:Unbounded,sans-serif;font-size:26px;color:var(--accent)">5</div>
         <div style="font-size:12px;color:var(--muted)">генераций</div>
@@ -409,7 +409,7 @@ const PAY_URLS = {
   max:   "https://payform.ru/b0bnF8n/"
 };
 
-const FREE_LIMIT  = 5;
+const FREE_LIMIT  = 0; // Бесплатные генерации только после регистрации (5 дают при создании аккаунта в Supabase)
 const TIER_PACKS  = { free:5, test:10, start:50, pro:200, max:500 };
 
 const appData = {
@@ -789,8 +789,14 @@ function canUsePrompt() {
 
 function generatePromptOnly() {
   ensureGenerationBalance();
+
+  if (!currentUser) {
+    openAuthModal('register');
+    showCopyToast('Зарегистрируйся — получишь 5 генераций бесплатно');
+    return;
+  }
+
   if (!canUsePrompt()) {
-    // Показываем paywall — промпт недоступен после исчерпания free-лимита
     document.getElementById('paywall').classList.remove('hidden');
     openPricingModal();
     return;
@@ -1359,6 +1365,13 @@ async function callAPIRaw(prompt) {
 async function findAudience() {
   ensureGenerationBalance();
   const out = document.getElementById('audienceFinderOutput');
+
+  if (!currentUser) {
+    openAuthModal('register');
+    showCopyToast('Зарегистрируйся — получишь 5 генераций бесплатно');
+    return;
+  }
+
   if (getGenerationsLeft() <= 0) { document.getElementById('paywall').classList.remove('hidden'); out.value='Лимит закончился. Выбери тариф.'; openPricingModal(); return; }
   out.value = '⏳ Ищу ЦА, боли и живые фразы...';
   try {
@@ -1372,6 +1385,13 @@ async function findAudience() {
 async function findTopics() {
   ensureGenerationBalance();
   const out = document.getElementById('topicsOutput');
+
+  if (!currentUser) {
+    openAuthModal('register');
+    showCopyToast('Зарегистрируйся — получишь 5 генераций бесплатно');
+    return;
+  }
+
   if (getGenerationsLeft() <= 0) { document.getElementById('paywall').classList.remove('hidden'); out.value='Лимит закончился. Выбери тариф.'; openPricingModal(); return; }
   if (!v('audienceData')&&!v('audienceFinderOutput')) { out.value='Сначала заполни ЦА или нажми «Найти ЦА».'; return; }
   out.value = '⏳ Ищу темы из болей, запросов и живых фраз ЦА...';
@@ -1387,7 +1407,21 @@ async function generateAI() {
   ensureGenerationBalance();
   const out = document.getElementById('aiOutput');
   const btn = document.getElementById('btnGenerate');
-  if (getGenerationsLeft() <= 0) { document.getElementById('paywall').classList.remove('hidden'); out.value='Генерации закончились. Выбери тариф.'; openPricingModal(); return; }
+
+  // Требуем регистрацию — без аккаунта генерации недоступны
+  if (!currentUser) {
+    out.value = '';
+    openAuthModal('register');
+    showCopyToast('Зарегистрируйся — получишь 5 генераций бесплатно');
+    return;
+  }
+
+  if (getGenerationsLeft() <= 0) {
+    document.getElementById('paywall').classList.remove('hidden');
+    out.value = 'Генерации закончились. Выбери тариф.';
+    openPricingModal();
+    return;
+  }
 
   const prompt = buildPrompt();
   document.getElementById('promptOut').value = prompt;
@@ -1755,21 +1789,24 @@ async function loadUserBalance(userId, email) {
   try {
     const { data, error } = await sb.from('user_balance').select('*').eq('id', userId).single();
     if (error && error.code === 'PGRST116') {
-      // Новый пользователь — создаём запись с 5 бесплатными
-      const localLeft = getGenerationsLeft();
-      const localTier = getUserTier();
-      const gens = localLeft > 0 ? localLeft : FREE_LIMIT;
-      const tier = localTier !== 'free' ? localTier : 'free';
-      await sb.from('user_balance').insert({ id: userId, email, tier, generations_left: gens });
-      // Синхронизируем localStorage
-      setGenerationsLeft(gens);
-      localStorage.setItem('user_tier', tier);
+      // Новый пользователь — даём 5 бесплатных генераций за регистрацию
+      const newGens = 5;
+      await sb.from('user_balance').insert({
+        id: userId,
+        email,
+        tier: 'free',
+        generations_left: newGens
+      });
+      setGenerationsLeft(newGens);
+      localStorage.setItem('user_tier', 'free');
+      showCopyToast('🎉 Аккаунт создан! +5 бесплатных генераций');
     } else if (data) {
-      // Пользователь существует — берём данные из базы
+      // Существующий пользователь — берём данные из базы (не из localStorage!)
       setGenerationsLeft(data.generations_left);
       localStorage.setItem('user_tier', data.tier || 'free');
     }
     updateStatusBar();
+    updateUserBar();
   } catch(e) { console.error('loadUserBalance error:', e); }
 }
 
@@ -1808,7 +1845,7 @@ function updateUserBar() {
     infoEl.innerHTML = `👤 ${escapeHtml(shortEmail)} · <strong>${tierLabel}</strong> · ${left} генераций`;
     btnEl.textContent = 'Выйти';
   } else {
-    infoEl.innerHTML = `<strong>${tierLabel}</strong> · ${left} генераций · сохрани прогресс`;
+    infoEl.innerHTML = `🎁 Зарегистрируйся — получи <strong style="color:var(--lime)">5 генераций бесплатно</strong>`;
     btnEl.textContent = 'Войти / Регистрация';
   }
 }
