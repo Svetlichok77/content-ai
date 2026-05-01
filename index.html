@@ -1687,9 +1687,21 @@ function translateAuthError(msg) {
   if (msg.includes('Email rate limit')) return 'Слишком много попыток. Подожди минуту.';
   return msg;
 }
-function handleAuthBtn() {
+async function handleAuthBtn() {
   if (currentUser) {
-    if (confirm('Выйти из аккаунта?')) sb.auth.signOut();
+    // Прямой выход без confirm — он конфликтует в некоторых браузерах
+    try {
+      await sb.auth.signOut();
+      currentUser = null;
+      // Сбрасываем локальный баланс чтобы показать free
+      ensureGenerationBalance();
+      updateStatusBar();
+      updateUserBar();
+      showCopyToast('✓ Вышли из аккаунта');
+    } catch(e) {
+      console.error('signOut error:', e);
+      showCopyToast('Ошибка выхода: ' + e.message);
+    }
   } else {
     openAuthModal('login');
   }
