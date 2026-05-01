@@ -381,8 +381,20 @@ const API_ENDPOINT = "/api/generate";
 // ============================================================
 const SUPABASE_URL = 'https://xacasrnthainxjzxhypb.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_7MnL2ZSmLQk7qbsJSBgkqA_lpnoXaWf';
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let currentUser = null; // текущий пользователь
+let sb = null;
+let currentUser = null;
+
+// Инициализация Supabase — безопасная, не роняет весь скрипт если CDN не загрузился
+try {
+  if (window.supabase && window.supabase.createClient) {
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    console.log('✅ Supabase initialized');
+  } else {
+    console.warn('⚠️ Supabase CDN не загружен — авторизация недоступна, остальное работает');
+  }
+} catch(e) {
+  console.error('Supabase init error:', e);
+}
 
 // FIX #3: реальные ссылки Продамус
 // Настрой "URL успешной оплаты" в дашборде Продамуса:
@@ -1625,6 +1637,7 @@ function switchAuthTab(tab) {
 async function showForgotPassword() {
   const email = document.getElementById('authEmail').value.trim();
   const errEl = document.getElementById('authErr');
+  if (!sb) { errEl.style.color='#ff6b6b'; errEl.textContent='Сервис временно недоступен'; return; }
   if (!email) {
     errEl.style.color = '#00ffd1';
     errEl.textContent = 'Введи email выше — пришлём ссылку для сброса пароля';
@@ -1654,7 +1667,9 @@ async function submitAuth() {
   const tab = document.getElementById('authOverlay').dataset.tab || 'login';
   const btn = document.getElementById('authSubmitBtn');
   const errEl = document.getElementById('authErr');
+  errEl.style.color = '#ff6b6b';
   errEl.textContent = '';
+  if (!sb) { errEl.textContent = 'Авторизация временно недоступна. Попробуй позже.'; return; }
   if (!email || !password) { errEl.textContent = 'Введи email и пароль'; return; }
   if (password.length < 6) { errEl.textContent = 'Пароль минимум 6 символов'; return; }
   btn.disabled = true;
@@ -1689,11 +1704,9 @@ function translateAuthError(msg) {
 }
 async function handleAuthBtn() {
   if (currentUser) {
-    // Прямой выход без confirm — он конфликтует в некоторых браузерах
     try {
-      await sb.auth.signOut();
+      if (sb) await sb.auth.signOut();
       currentUser = null;
-      // Сбрасываем локальный баланс чтобы показать free
       ensureGenerationBalance();
       updateStatusBar();
       updateUserBar();
@@ -1790,15 +1803,17 @@ detectTierFromUrl();
 updateStatusBar();
 updateUserBar();
 
-// Слушаем изменения авторизации
-sb.auth.onAuthStateChange(async (event, session) => {
-  currentUser = session?.user || null;
-  if (currentUser) {
-    await loadUserBalance(currentUser.id, currentUser.email);
-  }
-  updateStatusBar();
-  updateUserBar();
-});
+// Слушаем изменения авторизации — только если Supabase загружен
+if (sb) {
+  sb.auth.onAuthStateChange(async (event, session) => {
+    currentUser = session?.user || null;
+    if (currentUser) {
+      await loadUserBalance(currentUser.id, currentUser.email);
+    }
+    updateStatusBar();
+    updateUserBar();
+  });
+}
 </script>
 </body>
 </html>
