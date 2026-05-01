@@ -56,7 +56,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   <div class="herochips"><span>SMM в кармане</span><span>5 бесплатных генераций</span><span>1 идея → много форматов</span><span>Без ступора</span></div>
   <div class="user-bar" id="userBar">
     <div class="user-bar-info" id="userBarInfo">⏳ Загрузка...</div>
-    <button class="user-bar-btn" id="userBarBtn" onclick="handleAuthBtn()">Войти</button>
+    <button class="user-bar-btn" id="userBarBtn">Войти</button>
   </div>
 
   <!-- Социальные сети -->
@@ -86,23 +86,23 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 </header>
 
 <!-- ========== AUTH MODAL ========== -->
-<div class="auth-overlay" id="authOverlay" style="display:none;position:fixed;inset:0;background:rgba(2,4,4,.94);backdrop-filter:blur(16px);z-index:4000;display:none;align-items:center;justify-content:center;padding:20px">
+<div id="authOverlay" style="display:none;position:fixed;inset:0;background:rgba(2,4,4,.94);backdrop-filter:blur(16px);z-index:4000;align-items:center;justify-content:center;padding:20px">
   <div class="auth-box">
     <div style="font-family:Unbounded,sans-serif;font-size:20px;letter-spacing:-.03em;margin-bottom:6px;text-align:center">Войти в аккаунт</div>
     <div style="color:var(--muted);font-size:13px;text-align:center;margin-bottom:20px">Генерации сохраняются на любом устройстве</div>
     <div class="auth-tab">
-      <button class="on" id="tabLogin" onclick="switchAuthTab('login')">Вход</button>
-      <button id="tabRegister" onclick="switchAuthTab('register')">Регистрация</button>
+      <button class="on" id="tabLogin">Вход</button>
+      <button id="tabRegister">Регистрация</button>
     </div>
     <input class="auth-input" id="authEmail" type="email" placeholder="Email" autocomplete="email">
     <input class="auth-input" id="authPassword" type="password" placeholder="Пароль (минимум 6 символов)" autocomplete="current-password">
     <div id="authForgotRow" style="text-align:right;margin-bottom:6px">
-      <button onclick="showForgotPassword()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;font-family:Onest,sans-serif;text-decoration:underline">Забыла пароль?</button>
+      <button id="forgotBtn" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;font-family:Onest,sans-serif;text-decoration:underline">Забыла пароль?</button>
     </div>
     <div class="auth-err" id="authErr"></div>
-    <button class="btn" id="authSubmitBtn" style="margin-top:0" onclick="submitAuth()">Войти →</button>
+    <button class="btn" id="authSubmitBtn" style="margin-top:0">Войти →</button>
     <div style="text-align:center;margin-top:14px">
-      <button onclick="closeAuthModal()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;font-family:Onest,sans-serif">Закрыть</button>
+      <button id="authCloseBtn" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;font-family:Onest,sans-serif">Закрыть</button>
     </div>
   </div>
 </div>
@@ -1600,12 +1600,33 @@ function closeLegal() {
   document.body.style.overflow = '';
 }
 
-// Close modals on overlay click
+// Close modals on overlay click + attach all button listeners
 document.addEventListener('DOMContentLoaded', () => {
+  // Модальные окна — закрытие по клику на фон
   document.getElementById('pricingOverlay').addEventListener('click', function(e){ if(e.target===this) closePricingModal(); });
   document.getElementById('videoOverlay').addEventListener('click', function(e){ if(e.target===this) closeVideo(); });
   document.getElementById('legalOverlay').addEventListener('click', function(e){ if(e.target===this) closeLegal(); });
   document.getElementById('authOverlay').addEventListener('click', function(e){ if(e.target===this) closeAuthModal(); });
+
+  // Кнопка входа/выхода в шапке
+  const userBarBtn = document.getElementById('userBarBtn');
+  if (userBarBtn) userBarBtn.addEventListener('click', handleAuthBtn);
+
+  // Auth modal кнопки
+  const tabLogin = document.getElementById('tabLogin');
+  const tabReg = document.getElementById('tabRegister');
+  const authSubmit = document.getElementById('authSubmitBtn');
+  const authClose = document.getElementById('authCloseBtn');
+  const forgotBtn = document.getElementById('forgotBtn');
+  const authPassword = document.getElementById('authPassword');
+
+  if (tabLogin) tabLogin.addEventListener('click', () => switchAuthTab('login'));
+  if (tabReg) tabReg.addEventListener('click', () => switchAuthTab('register'));
+  if (authSubmit) authSubmit.addEventListener('click', submitAuth);
+  if (authClose) authClose.addEventListener('click', closeAuthModal);
+  if (forgotBtn) forgotBtn.addEventListener('click', showForgotPassword);
+  // Enter в поле пароля — отправляет форму
+  if (authPassword) authPassword.addEventListener('keydown', (e) => { if(e.key==='Enter') submitAuth(); });
 });
 
 // ============================================================
