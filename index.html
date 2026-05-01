@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Контент на автопилоте PRO</title>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800&family=Onest:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#030606;--card:#0b1111;--card2:#111d1c;--line:#1d3d3a;--line2:#00ffd155;--accent:#00ffd1;--accent2:#00a7ff;--lime:#c8ff00;--text:#ecfffb;--muted:#89aaa5;--danger:#ff6b6b;--r:24px;--rs:14px;--shadow:0 28px 90px rgba(0,255,209,.13)}
 *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Onest,system-ui,sans-serif;background:radial-gradient(circle at 8% 0%,rgba(0,255,209,.22),transparent 30%),radial-gradient(circle at 96% 8%,rgba(0,167,255,.16),transparent 32%),radial-gradient(circle at 50% 100%,rgba(138,92,255,.13),transparent 35%),linear-gradient(135deg,#020404,#07100f 42%,#030606);color:var(--text);min-height:100vh;line-height:1.55;font-size:15px}.noise:before{content:"";position:fixed;inset:0;background:linear-gradient(120deg,transparent,rgba(0,255,209,.04),transparent),repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 3px);pointer-events:none;mix-blend-mode:screen}.noise:after{content:"";position:fixed;right:6%;bottom:8%;width:280px;height:280px;border-radius:50%;background:rgba(0,255,209,.06);filter:blur(55px);pointer-events:none}
@@ -28,6 +29,20 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 /* Legal modal paragraph spacing */
 #legalContent p{margin-bottom:12px}
 #legalContent p:last-child{margin-bottom:0}
+/* Auth modal */
+.auth-overlay{display:none;position:fixed;inset:0;background:rgba(2,4,4,.94);backdrop-filter:blur(16px);z-index:4000;align-items:center;justify-content:center}
+.auth-box{background:linear-gradient(180deg,rgba(13,22,22,.98),rgba(7,11,11,.99));border:1px solid rgba(0,255,209,.22);border-radius:28px;padding:36px 32px;width:100%;max-width:420px;box-shadow:0 32px 80px rgba(0,255,209,.15)}
+.auth-tab{display:flex;gap:0;background:#071010;border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:24px}
+.auth-tab button{flex:1;padding:9px;border:0;background:transparent;color:var(--muted);border-radius:9px;cursor:pointer;font-family:Onest,sans-serif;font-size:13px;font-weight:600;transition:.15s}
+.auth-tab button.on{background:linear-gradient(180deg,#132120,#0d1716);color:var(--text);border:1px solid var(--line)}
+.auth-input{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--text);border-radius:14px;padding:13px 15px;font-family:Onest,sans-serif;font-size:14px;outline:none;margin-bottom:10px}
+.auth-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,255,209,.07)}
+.auth-err{color:#ff6b6b;font-size:12px;margin-bottom:10px;min-height:18px}
+/* User bar in header */
+.user-bar{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:14px;flex-wrap:wrap}
+.user-bar-info{background:rgba(0,255,209,.08);border:1px solid rgba(0,255,209,.2);border-radius:999px;padding:7px 14px;font-size:13px;color:var(--accent)}
+.user-bar-btn{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:7px 14px;cursor:pointer;font-family:Onest,sans-serif;font-size:12px}
+.user-bar-btn:hover{border-color:var(--line2);color:var(--text)}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,255,209,.3);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}@keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:960px){.grid{grid-template-columns:1fr}.sticky{position:static}.row,.row3,.check,.start-list{grid-template-columns:1fr}header{padding-top:42px}header:before{font-size:82px}.copyguide{align-items:flex-start;flex-direction:column}#tierGrid,#featGrid{grid-template-columns:1fr!important}}
 </style>
@@ -39,7 +54,55 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   <h1>Контент на <span>автопилоте</span> PRO</h1>
   <p class="sub">Сделай пост, пин или сценарий за 30 секунд. Без копирайтинга. Без идей. Без ступора.</p>
   <div class="herochips"><span>SMM в кармане</span><span>5 бесплатных генераций</span><span>1 идея → много форматов</span><span>Без ступора</span></div>
+  <div class="user-bar" id="userBar">
+    <div class="user-bar-info" id="userBarInfo">⏳ Загрузка...</div>
+    <button class="user-bar-btn" id="userBarBtn" onclick="handleAuthBtn()">Войти</button>
+  </div>
+
+  <!-- Социальные сети -->
+  <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:18px;padding:0 16px">
+    <a href="https://t.me/neurohack_life" target="_blank" rel="noopener"
+       style="display:flex;align-items:center;gap:9px;background:linear-gradient(135deg,rgba(0,167,255,.15),rgba(0,167,255,.06));border:1px solid rgba(0,167,255,.35);border-radius:999px;padding:10px 18px;text-decoration:none;transition:.18s"
+       onmouseenter="this.style.borderColor='rgba(0,167,255,.7)'" onmouseleave="this.style.borderColor='rgba(0,167,255,.35)'">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.04 9.613c-.152.67-.548.835-1.11.52l-3.07-2.262-1.482 1.427c-.163.163-.3.3-.617.3l.22-3.11 5.667-5.118c.247-.22-.053-.34-.382-.12L6.91 14.41 3.887 13.47c-.66-.206-.673-.66.138-.976l10.88-4.194c.55-.198 1.032.134.657.948z" fill="#00a7ff"/></svg>
+      <div style="text-align:left">
+        <div style="font-family:Unbounded,sans-serif;font-size:10px;color:#00a7ff;letter-spacing:.1em;text-transform:uppercase">Telegram канал</div>
+        <div style="font-size:12px;color:#b9d6d1;margin-top:1px">Полезный контент, продукты и фишки</div>
+      </div>
+      <span style="font-family:Unbounded,sans-serif;font-size:10px;color:#00a7ff;font-weight:800;background:rgba(0,167,255,.15);border-radius:999px;padding:3px 8px;white-space:nowrap">Подписаться →</span>
+    </a>
+
+    <a href="https://ru.pinterest.com/neurohack_life/" target="_blank" rel="noopener"
+       style="display:flex;align-items:center;gap:9px;background:linear-gradient(135deg,rgba(230,0,35,.12),rgba(230,0,35,.05));border:1px solid rgba(230,0,35,.3);border-radius:999px;padding:10px 18px;text-decoration:none;transition:.18s"
+       onmouseenter="this.style.borderColor='rgba(230,0,35,.65)'" onmouseleave="this.style.borderColor='rgba(230,0,35,.3)'">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z" fill="#e60023"/></svg>
+      <div style="text-align:left">
+        <div style="font-family:Unbounded,sans-serif;font-size:10px;color:#e60023;letter-spacing:.1em;text-transform:uppercase">Pinterest</div>
+        <div style="font-size:12px;color:#b9d6d1;margin-top:1px">Идеи, пины и вдохновение</div>
+      </div>
+      <span style="font-family:Unbounded,sans-serif;font-size:10px;color:#e60023;font-weight:800;background:rgba(230,0,35,.12);border-radius:999px;padding:3px 8px;white-space:nowrap">Смотреть →</span>
+    </a>
+  </div>
 </header>
+
+<!-- ========== AUTH MODAL ========== -->
+<div class="auth-overlay" id="authOverlay" style="display:none;position:fixed;inset:0;background:rgba(2,4,4,.94);backdrop-filter:blur(16px);z-index:4000;display:none;align-items:center;justify-content:center;padding:20px">
+  <div class="auth-box">
+    <div style="font-family:Unbounded,sans-serif;font-size:20px;letter-spacing:-.03em;margin-bottom:6px;text-align:center">Войти в аккаунт</div>
+    <div style="color:var(--muted);font-size:13px;text-align:center;margin-bottom:20px">Генерации сохраняются на любом устройстве</div>
+    <div class="auth-tab">
+      <button class="on" id="tabLogin" onclick="switchAuthTab('login')">Вход</button>
+      <button id="tabRegister" onclick="switchAuthTab('register')">Регистрация</button>
+    </div>
+    <input class="auth-input" id="authEmail" type="email" placeholder="Email" autocomplete="email">
+    <input class="auth-input" id="authPassword" type="password" placeholder="Пароль (минимум 6 символов)" autocomplete="current-password">
+    <div class="auth-err" id="authErr"></div>
+    <button class="btn" id="authSubmitBtn" style="margin-top:0" onclick="submitAuth()">Войти →</button>
+    <div style="text-align:center;margin-top:14px">
+      <button onclick="closeAuthModal()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;font-family:Onest,sans-serif">Закрыть</button>
+    </div>
+  </div>
+</div>
 
 <div class="wrap"><div class="grid"><main>
 
@@ -112,7 +175,6 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 <section class="panel" id="contentPanel">
   <div class="label">Готовый контент</div>
   <div class="api-status" id="apiStatus">Готов к генерации. Заполни поля и нажми кнопку.</div>
-  <div style="margin-top:6px;text-align:right"><button onclick="resetDemo()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;font-family:Onest,sans-serif;text-decoration:underline;padding:0" title="Сбросить счётчик для повторного тестирования">↺ Сбросить счётчик</button></div>
   <textarea class="out" id="aiOutput" spellcheck="false" placeholder="Здесь появится готовый контент: пины, посты, заголовки, контент-план или другой выбранный формат."></textarea>
   <div class="copybar"><button class="btn2" onclick="copyText('aiOutput')">Скопировать контент</button><button class="btn2" onclick="clearText('aiOutput')">Очистить</button></div>
   <div class="paywall hidden" id="paywall">
@@ -133,7 +195,22 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
     <button onclick="copyText('promptOut')">Скопировать →</button>
   </div>
 </section>
-</aside>
+
+<!-- Telegram promo -->
+<section class="panel" style="background:linear-gradient(135deg,rgba(0,167,255,.12),rgba(0,167,255,.04));border-color:rgba(0,167,255,.3)">
+  <div style="display:flex;gap:14px;align-items:flex-start">
+    <div style="font-size:32px;flex-shrink:0">✈️</div>
+    <div>
+      <div style="font-family:Unbounded,sans-serif;font-size:13px;color:#00a7ff;margin-bottom:6px">Telegram · neurohack_life</div>
+      <div style="font-size:13px;color:#b9d6d1;line-height:1.5;margin-bottom:12px">Подпишись — там выходят готовые контент-идеи, разборы, фишки по AI и эксклюзивные материалы для тех, кто делает контент быстро и с головой.</div>
+      <a href="https://t.me/neurohack_life" target="_blank" rel="noopener"
+         style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#00a7ff,#0088cc);color:#fff;border-radius:999px;padding:10px 18px;text-decoration:none;font-family:Unbounded,sans-serif;font-size:11px;font-weight:800;letter-spacing:.04em;box-shadow:0 8px 24px rgba(0,167,255,.3)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.04 9.613c-.152.67-.548.835-1.11.52l-3.07-2.262-1.482 1.427c-.163.163-.3.3-.617.3l.22-3.11 5.667-5.118c.247-.22-.053-.34-.382-.12L6.91 14.41 3.887 13.47c-.66-.206-.673-.66.138-.976l10.88-4.194c.55-.198 1.032.134.657.948z"/></svg>
+        Подписаться на канал
+      </a>
+    </div>
+  </div>
+</section>
 </div></div>
 
 <!-- ========== PRICING MODAL ========== -->
@@ -146,18 +223,9 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
     <p style="color:var(--muted);font-size:15px">Промпты тоже расходуют генерации. Остаток не сгорает.</p>
   </div>
 
+
   <!-- FIX #2: padding-top:16px on grid container so badge has space -->
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding-top:16px" id="tierGrid">
-
-  <!-- TEST (для проверки оплаты) -->
-    <div class="panel" style="text-align:center;border-color:rgba(255,107,107,.35);grid-column:1/-1">
-      <div style="font-family:Unbounded,sans-serif;font-size:10px;letter-spacing:.15em;color:#ff6b6b;text-transform:uppercase;margin-bottom:8px">TEST · только для проверки оплаты</div>
-      <div style="display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap">
-        <div><div style="font-family:Unbounded,sans-serif;font-size:32px;color:var(--text);line-height:1">50<span style="font-size:14px">₽</span></div><div style="color:var(--muted);font-size:11px">тестовый платёж</div></div>
-        <div style="background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.3);border-radius:12px;padding:10px 18px"><div style="font-family:Unbounded,sans-serif;font-size:22px;color:#ff6b6b">10</div><div style="font-size:11px;color:var(--muted)">генераций</div></div>
-        <button class="btn" style="margin-top:0;font-size:12px;padding:12px 20px;width:auto;background:linear-gradient(135deg,#ff6b6b,#ff9f43)" onclick="goToPay('test')">Оплатить тест →</button>
-      </div>
-    </div>
 
     <!-- FREE -->
     <div class="panel" style="text-align:center">
@@ -256,7 +324,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
     <button onclick="openLegal('refund')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;text-decoration:underline;font-family:Onest,sans-serif">Политика возврата</button>
     <button onclick="openLegal('terms')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;text-decoration:underline;font-family:Onest,sans-serif">Условия использования</button>
   </div>
-  <div>Контент на автопилоте PRO · ИП [Ваше имя] · ИНН [000000000000] · <a href="mailto:info@example.com" style="color:var(--muted)">info@example.com</a></div>
+  <div>Контент на автопилоте PRO · СЗ Михайлова Светлана Александровна · ИНН 100500176301 · <a href="mailto:svetlichok777@gmail.com" style="color:var(--muted)">svetlichok777@gmail.com</a></div>
 </div>
 
 <!-- ========== ВИДЕОИНСТРУКЦИЯ ========== -->
@@ -304,6 +372,14 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 // КОНФИГ
 // ============================================================
 const API_ENDPOINT = "/api/generate";
+
+// ============================================================
+// SUPABASE
+// ============================================================
+const SUPABASE_URL = 'https://xacasrnthainxjzxhypb.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_7MnL2ZSmLQk7qbsJSBgkqA_lpnoXaWf';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let currentUser = null; // текущий пользователь
 
 // FIX #3: реальные ссылки Продамус
 // Настрой "URL успешной оплаты" в дашборде Продамуса:
@@ -684,48 +760,60 @@ function buildPrompt() {
         pf=platformProfiles[S.platform]||platformProfiles['Telegram'],
         extra=extraInstruction();
 
-  return `Ты — редактор, SMM-стратег, копирайтер проекта «${project}».
+  return `Ты — топовый редактор, SMM-стратег и копирайтер проекта «${project}». Работаешь как сильная мини-команда: стратег + автор + упаковщик смыслов.
 
 КРИТИЧЕСКИ ВАЖНО ДЛЯ ОТВЕТА
-— Выдай ТОЛЬКО готовый контент по выбранным форматам.
-— НЕ выводи: «Финальную проверку», «Проверку на воду», технические блоки, мета-комментарии, инструкции к себе.
-— НЕ используй markdown-разметку: никаких **, *, ##, ___, ---. Только обычный текст.
-— Начни сразу с фокус-сегмента и контента без предисловий.
+— Выдай ТОЛЬКО готовый контент по выбранным форматам. Никаких технических блоков, «Финальной проверки», «Проверки на воду», самокомментариев.
+— НЕ используй markdown: никаких **, *, ##, ---, ___. Только чистый текст.
+— Начни сразу с контента — без предисловий и предисловий к предисловиям.
+— Контент должен быть готов к публикации — скопировал и опубликовал.
 
-СТИЛЬ
-Пиши по-русски. Живо, без пафоса, без канцелярита. Тон: ${S.tone}. Признак правильной фразы: её можно отправить в WhatsApp без редактирования.
+СТИЛЬ И ГОЛОС
+Язык: русский. Тон: ${S.tone}. Живо, по-человечески, без пафоса и канцелярита.
+Тест правильной фразы: её можно отправить другу в мессенджере без редактирования.
+Не начинай с: «Представьте себе», «В современном мире», «Важно понимать», «Дорогой читатель».
+Добавляй живые неровности: короткая фраза, обрыв мысли, разговорная вставка — это делает текст человечным.
 
 ВВОДНЫЕ
 Проект: ${project}
-Роль: ${role}
+Роль автора: ${role}
 Площадка: ${S.platform}
-Тип: ${S.audience}
-ЦА (главный источник):
+Тип проекта: ${S.audience}
+
+ЦА — ГЛАВНЫЙ ИСТОЧНИК (пиши только для этого человека):
 ${audience}
-Форматы: ${S.formats.join(' + ')}
+
+Форматы результата: ${S.formats.join(' + ')}
 Цель: ${S.goal}
-Глубина: ${S.depth}
+Глубина подачи: ${S.depth}
 Тема: ${topic}
-${topicBank?'Банк тем из болей ЦА: '+topicBank:''}
-Продукт: ${product}
-Исходные материалы: ${details}
-CTA: ${cta}
+${topicBank ? 'Банк тем из болей ЦА: ' + topicBank : ''}
+Продукт / услуга: ${product}
+Исходные материалы и тезисы: ${details}
+CTA / следующий шаг: ${cta}
 
-ПЛАТФОРМА: ${S.platform} — ${pf.mission}
-Правила: ${pf.rules}
+ПЛАТФОРМА: ${S.platform}
+Задача площадки: ${pf.mission}
+Правила платформы: ${pf.rules}
 
-ПРАВИЛА КОНТЕНТА
-— Первая строка — конкретная ситуация, не общая мысль.
-— Боли только через ситуацию: не "нет идей", а "сидит 40 минут и не может начать пост".
-— 30% идей — через сомнение, конфликт или желание проверить.
-— Никаких банальностей: "создавайте качественный контент", "регулярность — ключ".
-— Каждый элемент даёт готовую пользу: чек-лист, шаги, формулу, пример.
-— Запрещены: "узнайте", "попробуйте", "наш продукт поможет", "начните уже сегодня".
-${extra?'\n'+extra:''}
+ПРАВИЛА СИЛЬНОГО КОНТЕНТА
+— Первая строка всегда = конкретная ситуация. Не «хочешь трафик», а «выкладываешь 10 постов — 0 переходов».
+— Боль только через ситуацию: не «нет времени», а «открываешь заметки → смотришь 5 минут → закрываешь».
+— Используй живые фразы прямо из блока ЦА — в хуках, заголовках, примерах.
+— Добавляй конкретику: цифры, время, действие — «за 15 минут», «1 идея → 10 пинов», «3 поста из одного текста».
+— 30% идей вызывают внутренний конфликт, сомнение или желание проверить — «а вдруг это про меня?»
+— Никаких банальностей: «создавай качественный контент», «регулярность — ключ», «важно систематизировать».
+— Каждый элемент контента содержит готовую пользу: чек-лист, шаги, формулу, пример, мини-инструкцию.
+— Человек получает пользу прямо в контенте — даже если никуда не перешёл.
+— Запрещены рекламные клише: «узнайте», «попробуйте», «наш продукт поможет», «начните уже сегодня», «подробности по ссылке».
+— Если текст можно применить к любой нише — он плохой. Перепиши под конкретную тему и ЦА.
+${extra ? '\n' + extra : ''}
 
 СТРУКТУРА ОТВЕТА
-Фокус-сегмент: 1 строка — кого выбрал и почему.
-Диагноз аудитории: 3–5 строк, живым языком.
+Строка 1: Фокус-сегмент — кого выбрал и почему (1 строка).
+Строка 2–6: Диагноз аудитории — 3–5 строк живым языком, что болит, чего хочет, что мешает.
+
+Далее — сами блоки контента:
 
 ${buildFormatInstructions()}`;
 }
@@ -1034,45 +1122,47 @@ const legalDocs = {
   offer: {
     title: 'Публичная оферта',
     body: `<h2 style="font-family:Unbounded,sans-serif;color:var(--accent);font-size:18px;margin-bottom:16px">Публичная оферта на оказание услуг</h2>
-<p style="color:var(--muted);font-size:12px;margin-bottom:16px">Последнее обновление: [дата] · Основание: ГК РФ ст. 435–444</p>
-<p><strong style="color:var(--accent)">1. Стороны.</strong> Исполнитель: ИП [ФИО], ИНН [000000000000], ОГРНИП [000000000000000]. Заказчик: любое физическое лицо, принявшее условия оферты путём оплаты.</p>
-<p><strong style="color:var(--accent)">2. Предмет.</strong> Исполнитель предоставляет доступ к онлайн-сервису «Контент на автопилоте PRO» на условиях выбранного тарифа.</p>
-<p><strong style="color:var(--accent)">3. Акцепт.</strong> Акцептом является факт оплаты. Оплачивая услугу, вы соглашаетесь с условиями настоящей оферты.</p>
-<p><strong style="color:var(--accent)">4. Стоимость и порядок оплаты.</strong> Стоимость указана на странице тарифов. Оплата производится через платёжный сервис Продамус.</p>
-<p><strong style="color:var(--accent)">5. Срок действия.</strong> Генерации зачисляются на баланс и не имеют срока действия — остаток не сгорает.</p>
-<p><strong style="color:var(--accent)">6. Ограничения.</strong> Сервис предоставляется «как есть». Исполнитель не гарантирует конкретных коммерческих результатов от использования контента.</p>
-<p><strong style="color:var(--accent)">7. Возврат.</strong> Условия возврата см. в Политике возврата.</p>
-<p><strong style="color:var(--accent)">8. Контакты.</strong> [email] · [телефон при наличии]</p>`
+<p style="color:var(--muted);font-size:12px;margin-bottom:16px">Последнее обновление: 01.05.2026 · Основание: ГК РФ ст. 435–444</p>
+<p><strong style="color:var(--accent)">1. Стороны.</strong> Исполнитель: Самозанятая Михайлова Светлана Александровна, ИНН 100500176301. Заказчик: любое физическое лицо, принявшее условия оферты путём оплаты.</p>
+<p><strong style="color:var(--accent)">2. Предмет.</strong> Исполнитель предоставляет доступ к онлайн-сервису «Контент на автопилоте PRO» — инструменту для создания контента с помощью искусственного интеллекта — на условиях выбранного тарифа.</p>
+<p><strong style="color:var(--accent)">3. Акцепт.</strong> Акцептом является факт оплаты. Оплачивая услугу, вы подтверждаете, что ознакомились с условиями настоящей оферты и принимаете их в полном объёме.</p>
+<p><strong style="color:var(--accent)">4. Стоимость и порядок оплаты.</strong> Стоимость услуг указана на странице тарифов сервиса. Оплата производится через платёжный сервис Продамус единовременным платежом. Самозанятый применяет специальный налоговый режим «Налог на профессиональный доход».</p>
+<p><strong style="color:var(--accent)">5. Срок действия генераций.</strong> Оплаченные генерации зачисляются на баланс аккаунта и не имеют срока действия — остаток не сгорает.</p>
+<p><strong style="color:var(--accent)">6. Ограничения ответственности.</strong> Сервис предоставляется «как есть». Исполнитель не гарантирует конкретных коммерческих результатов от использования сгенерированного контента. Ответственность за публикуемый контент лежит на Заказчике.</p>
+<p><strong style="color:var(--accent)">7. Возврат.</strong> Условия возврата средств указаны в Политике возврата.</p>
+<p><strong style="color:var(--accent)">8. Контакты.</strong> svetlichok777@gmail.com — по всем вопросам, связанным с услугой.</p>`
   },
   privacy: {
     title: 'Политика конфиденциальности',
     body: `<h2 style="font-family:Unbounded,sans-serif;color:var(--accent);font-size:18px;margin-bottom:16px">Политика конфиденциальности</h2>
-<p style="color:var(--muted);font-size:12px;margin-bottom:16px">Последнее обновление: [дата] · Основание: ФЗ-152 «О персональных данных»</p>
-<p><strong style="color:var(--accent)">1. Оператор.</strong> ИП [ФИО], ИНН [000000000000]. Контакт: [email].</p>
-<p><strong style="color:var(--accent)">2. Какие данные собираем.</strong> Данные, которые вы добровольно вводите при оплате (имя, email) — обрабатываются платёжным сервисом Продамус. Мы не храним платёжные данные. Настройки сервиса хранятся локально в браузере (localStorage).</p>
-<p><strong style="color:var(--accent)">3. Цели обработки.</strong> Исполнение договора (оферты), техническая поддержка, улучшение сервиса.</p>
-<p><strong style="color:var(--accent)">4. Передача третьим лицам.</strong> Данные не передаются третьим лицам, кроме платёжного оператора Продамус в рамках обработки платежа.</p>
-<p><strong style="color:var(--accent)">5. Хранение.</strong> Данные хранятся до момента отзыва согласия или прекращения оказания услуг.</p>
-<p><strong style="color:var(--accent)">6. Права субъекта.</strong> Вы вправе запросить, исправить или удалить свои данные, написав на [email].</p>
-<p><strong style="color:var(--accent)">7. Cookies.</strong> Сервис использует localStorage для хранения настроек и баланса генераций. Данные не передаются на сервер и не используются для рекламы.</p>`
+<p style="color:var(--muted);font-size:12px;margin-bottom:16px">Последнее обновление: 01.05.2026 · Основание: ФЗ-152 «О персональных данных»</p>
+<p><strong style="color:var(--accent)">1. Оператор персональных данных.</strong> Самозанятая Михайлова Светлана Александровна, ИНН 100500176301. Контакт: svetlichok777@gmail.com.</p>
+<p><strong style="color:var(--accent)">2. Какие данные собираем.</strong> При регистрации — email-адрес. При оплате — данные обрабатываются платёжным сервисом Продамус, мы не имеем доступа к платёжным реквизитам. Настройки и баланс генераций хранятся в защищённой базе данных Supabase.</p>
+<p><strong style="color:var(--accent)">3. Цели обработки.</strong> Идентификация пользователя, хранение баланса генераций, техническая поддержка, улучшение качества сервиса.</p>
+<p><strong style="color:var(--accent)">4. Передача третьим лицам.</strong> Персональные данные не передаются третьим лицам, за исключением: платёжного оператора Продамус (в рамках проведения платежа) и сервиса Supabase (хранение данных аккаунта на защищённых серверах в ЕС).</p>
+<p><strong style="color:var(--accent)">5. Хранение данных.</strong> Данные хранятся до момента удаления аккаунта или обращения пользователя с запросом об удалении.</p>
+<p><strong style="color:var(--accent)">6. Права пользователя.</strong> Вы вправе запросить, исправить или удалить свои персональные данные, направив запрос на svetlichok777@gmail.com. Запрос рассматривается в течение 10 рабочих дней.</p>
+<p><strong style="color:var(--accent)">7. Безопасность.</strong> Данные аккаунта защищены шифрованием. Пароли хранятся в зашифрованном виде и недоступны администрации сервиса.</p>`
   },
   refund: {
     title: 'Политика возврата',
     body: `<h2 style="font-family:Unbounded,sans-serif;color:var(--accent);font-size:18px;margin-bottom:16px">Политика возврата средств</h2>
-<p style="color:var(--muted);font-size:12px;margin-bottom:16px">Последнее обновление: [дата] · Основание: ФЗ-2300-1, ст. 26.1</p>
-<p><strong style="color:var(--accent)">1. Общее правило.</strong> Услуга является цифровым продуктом с мгновенным исполнением. Согласно ст. 26.1 Закона о защите прав потребителей и Постановлению Правительства РФ № 2463 (2020), возврат средств за надлежащим образом оказанную цифровую услугу не предусмотрен.</p>
-<p><strong style="color:var(--accent)">2. Исключения.</strong> Возврат возможен, если услуга фактически не была оказана по техническим причинам на стороне Исполнителя (генерации не были зачислены). В этом случае обратитесь на [email] в течение 3 дней с момента оплаты.</p>
-<p><strong style="color:var(--accent)">3. Порядок обращения.</strong> Направьте письмо на [email] с темой «Возврат» и приложите подтверждение оплаты. Рассмотрение — в течение 5 рабочих дней.</p>`
+<p style="color:var(--muted);font-size:12px;margin-bottom:16px">Последнее обновление: 01.05.2026 · Основание: ФЗ-2300-1 «О защите прав потребителей», ст. 26.1</p>
+<p><strong style="color:var(--accent)">1. Общее правило.</strong> Услуга «Контент на автопилоте PRO» является цифровым продуктом с мгновенным исполнением. В соответствии со ст. 26.1 Закона о защите прав потребителей и Постановлением Правительства РФ № 2463 от 31.12.2020, возврат средств за надлежащим образом оказанную цифровую услугу не предусмотрен.</p>
+<p><strong style="color:var(--accent)">2. Исключения (возврат возможен).</strong> Генерации не были зачислены на аккаунт после подтверждённой оплаты по техническим причинам на стороне Исполнителя. В этом случае обратитесь на svetlichok777@gmail.com в течение 3 рабочих дней с момента оплаты.</p>
+<p><strong style="color:var(--accent)">3. Порядок обращения.</strong> Направьте письмо на svetlichok777@gmail.com с темой «Возврат» и приложите: скриншот подтверждения оплаты, дату и время платежа, email аккаунта в сервисе. Обращение рассматривается в течение 5 рабочих дней.</p>
+<p><strong style="color:var(--accent)">4. Чек самозанятого.</strong> Чек об оплате формируется и направляется через приложение «Мой налог» в течение суток после получения платежа.</p>`
   },
   terms: {
     title: 'Условия использования',
     body: `<h2 style="font-family:Unbounded,sans-serif;color:var(--accent);font-size:18px;margin-bottom:16px">Условия использования сервиса</h2>
-<p style="color:var(--muted);font-size:12px;margin-bottom:16px">Последнее обновление: [дата] · Основание: ФЗ-149 «Об информации»</p>
-<p><strong style="color:var(--accent)">1. Использование сервиса.</strong> Сервис предназначен для создания контента в законных целях. Запрещено использование для создания вводящего в заблуждение, незаконного или нарушающего права третьих лиц контента.</p>
-<p><strong style="color:var(--accent)">2. Авторские права на выдачу.</strong> Контент, созданный с помощью сервиса, принадлежит пользователю. Исполнитель не претендует на права на сгенерированные материалы.</p>
-<p><strong style="color:var(--accent)">3. Ответственность.</strong> Пользователь самостоятельно несёт ответственность за публикацию и использование сгенерированного контента.</p>
-<p><strong style="color:var(--accent)">4. Изменения сервиса.</strong> Исполнитель оставляет за собой право изменять функциональность сервиса, уведомляя об этом на сайте.</p>
-<p><strong style="color:var(--accent)">5. Применимое право.</strong> Споры разрешаются в соответствии с законодательством Российской Федерации.</p>`
+<p style="color:var(--muted);font-size:12px;margin-bottom:16px">Последнее обновление: 01.05.2026 · Основание: ФЗ-149 «Об информации, информационных технологиях и о защите информации»</p>
+<p><strong style="color:var(--accent)">1. Назначение сервиса.</strong> Сервис «Контент на автопилоте PRO» предназначен исключительно для создания контента в законных целях. Запрещено использование для создания материалов, вводящих в заблуждение, нарушающих авторские права третьих лиц или противоречащих законодательству РФ.</p>
+<p><strong style="color:var(--accent)">2. Авторские права на выдачу.</strong> Контент, сгенерированный с помощью сервиса, принадлежит пользователю. Исполнитель не претендует на права на созданные с помощью сервиса материалы.</p>
+<p><strong style="color:var(--accent)">3. Ответственность пользователя.</strong> Пользователь самостоятельно несёт ответственность за публикацию и использование сгенерированного контента, включая соблюдение авторских прав, законодательства о рекламе и иных применимых норм.</p>
+<p><strong style="color:var(--accent)">4. Изменения сервиса.</strong> Исполнитель оставляет за собой право изменять функциональность, тарифы и условия использования сервиса, уведомляя об изменениях на сайте не менее чем за 3 дня.</p>
+<p><strong style="color:var(--accent)">5. Применимое право и споры.</strong> Настоящие условия регулируются законодательством Российской Федерации. Все споры решаются путём переговоров, при невозможности — в суде по месту регистрации Исполнителя.</p>
+<p><strong style="color:var(--accent)">6. Контакты.</strong> По всем вопросам: svetlichok777@gmail.com</p>`
   }
 };
 
@@ -1093,12 +1183,170 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('pricingOverlay').addEventListener('click', function(e){ if(e.target===this) closePricingModal(); });
   document.getElementById('videoOverlay').addEventListener('click', function(e){ if(e.target===this) closeVideo(); });
   document.getElementById('legalOverlay').addEventListener('click', function(e){ if(e.target===this) closeLegal(); });
+  document.getElementById('authOverlay').addEventListener('click', function(e){ if(e.target===this) closeAuthModal(); });
 });
 
+// ============================================================
+// АВТОРИЗАЦИЯ SUPABASE
+// ============================================================
+function openAuthModal(tab) {
+  switchAuthTab(tab || 'login');
+  document.getElementById('authOverlay').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('authEmail').focus(), 100);
+}
+function closeAuthModal() {
+  document.getElementById('authOverlay').style.display = 'none';
+  document.body.style.overflow = '';
+  document.getElementById('authErr').textContent = '';
+}
+function switchAuthTab(tab) {
+  const isLogin = tab === 'login';
+  document.getElementById('tabLogin').className = isLogin ? 'on' : '';
+  document.getElementById('tabRegister').className = isLogin ? '' : 'on';
+  document.getElementById('authSubmitBtn').textContent = isLogin ? 'Войти →' : 'Зарегистрироваться →';
+  document.getElementById('authOverlay').dataset.tab = tab;
+  document.getElementById('authErr').textContent = '';
+}
+async function submitAuth() {
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const tab = document.getElementById('authOverlay').dataset.tab || 'login';
+  const btn = document.getElementById('authSubmitBtn');
+  const errEl = document.getElementById('authErr');
+  errEl.textContent = '';
+  if (!email || !password) { errEl.textContent = 'Введи email и пароль'; return; }
+  if (password.length < 6) { errEl.textContent = 'Пароль минимум 6 символов'; return; }
+  btn.disabled = true;
+  btn.textContent = '⏳ Подождите...';
+  try {
+    let result;
+    if (tab === 'login') {
+      result = await sb.auth.signInWithPassword({ email, password });
+    } else {
+      result = await sb.auth.signUp({ email, password });
+    }
+    if (result.error) {
+      errEl.textContent = translateAuthError(result.error.message);
+    } else {
+      closeAuthModal();
+      showCopyToast(tab === 'login' ? '✓ Вход выполнен!' : '✓ Аккаунт создан!');
+    }
+  } catch(e) {
+    errEl.textContent = 'Ошибка: ' + e.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = tab === 'login' ? 'Войти →' : 'Зарегистрироваться →';
+  }
+}
+function translateAuthError(msg) {
+  if (msg.includes('Invalid login')) return 'Неверный email или пароль';
+  if (msg.includes('already registered')) return 'Этот email уже зарегистрирован. Войди.';
+  if (msg.includes('Password should')) return 'Пароль минимум 6 символов';
+  if (msg.includes('Unable to validate')) return 'Неверный email';
+  if (msg.includes('Email rate limit')) return 'Слишком много попыток. Подожди минуту.';
+  return msg;
+}
+function handleAuthBtn() {
+  if (currentUser) {
+    if (confirm('Выйти из аккаунта?')) sb.auth.signOut();
+  } else {
+    openAuthModal('login');
+  }
+}
+
+// ============================================================
+// СИНХРОНИЗАЦИЯ БАЛАНСА С SUPABASE
+// ============================================================
+async function loadUserBalance(userId, email) {
+  try {
+    const { data, error } = await sb.from('user_balance').select('*').eq('id', userId).single();
+    if (error && error.code === 'PGRST116') {
+      // Новый пользователь — создаём запись с 5 бесплатными
+      const localLeft = getGenerationsLeft();
+      const localTier = getUserTier();
+      const gens = localLeft > 0 ? localLeft : FREE_LIMIT;
+      const tier = localTier !== 'free' ? localTier : 'free';
+      await sb.from('user_balance').insert({ id: userId, email, tier, generations_left: gens });
+      // Синхронизируем localStorage
+      setGenerationsLeft(gens);
+      localStorage.setItem('user_tier', tier);
+    } else if (data) {
+      // Пользователь существует — берём данные из базы
+      setGenerationsLeft(data.generations_left);
+      localStorage.setItem('user_tier', data.tier || 'free');
+    }
+    updateStatusBar();
+  } catch(e) { console.error('loadUserBalance error:', e); }
+}
+
+async function saveUserBalance() {
+  if (!currentUser) return;
+  try {
+    await sb.from('user_balance').upsert({
+      id: currentUser.id,
+      email: currentUser.email,
+      tier: getUserTier(),
+      generations_left: getGenerationsLeft(),
+      updated_at: new Date().toISOString()
+    });
+  } catch(e) { console.error('saveUserBalance error:', e); }
+}
+
+// Патчим spendGeneration — после списания сохраняем в базу
+const _origSpend = spendGeneration;
+spendGeneration = function() {
+  const result = _origSpend();
+  if (result) saveUserBalance();
+  return result;
+};
+
+// Обновляем статус-бар с учётом авторизации
+function updateUserBar() {
+  const infoEl = document.getElementById('userBarInfo');
+  const btnEl = document.getElementById('userBarBtn');
+  if (!infoEl || !btnEl) return;
+  const left = getGenerationsLeft();
+  const tier = getUserTier();
+  const tierLabel = {free:'Бесплатно',test:'TEST',start:'START',pro:'PRO',max:'PRO MAX'}[tier] || tier;
+  if (currentUser) {
+    const email = currentUser.email || '';
+    const shortEmail = email.length > 22 ? email.substring(0, 20) + '...' : email;
+    infoEl.innerHTML = `👤 ${escapeHtml(shortEmail)} · <strong>${tierLabel}</strong> · ${left} генераций`;
+    btnEl.textContent = 'Выйти';
+  } else {
+    infoEl.innerHTML = `<strong>${tierLabel}</strong> · ${left} генераций · сохрани прогресс`;
+    btnEl.textContent = 'Войти / Регистрация';
+  }
+}
+
+// ============================================================
+// АКТИВАЦИЯ ТАРИФА — дополнительно сохраняем в Supabase
+// ============================================================
+const _origActivate = activatePaidTier;
+activatePaidTier = function(tier) {
+  _origActivate(tier);
+  saveUserBalance(); // сохраняем в базу после зачисления
+};
+
+// ============================================================
+// ЗАПУСК
+// ============================================================
 init();
 ensureGenerationBalance();
-detectTierFromUrl(); // FIX #3: проверить возврат с оплаты
+detectTierFromUrl();
 updateStatusBar();
+updateUserBar();
+
+// Слушаем изменения авторизации
+sb.auth.onAuthStateChange(async (event, session) => {
+  currentUser = session?.user || null;
+  if (currentUser) {
+    await loadUserBalance(currentUser.id, currentUser.email);
+  }
+  updateStatusBar();
+  updateUserBar();
+});
 </script>
 </body>
 </html>
