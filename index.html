@@ -231,6 +231,16 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   <!-- FIX #2: padding-top:16px on grid container so badge has space -->
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding-top:16px" id="tierGrid">
 
+  <!-- TEST — только для проверки оплаты -->
+    <div class="panel" style="text-align:center;border-color:rgba(255,165,0,.35);grid-column:1/-1">
+      <div style="font-family:Unbounded,sans-serif;font-size:11px;letter-spacing:.15em;color:orange;text-transform:uppercase;margin-bottom:8px">🧪 TEST — только для проверки</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap">
+        <div><span style="font-family:Unbounded,sans-serif;font-size:32px;color:var(--text)">50<span style="font-size:14px">₽</span></span> · <span style="color:var(--muted);font-size:13px">10 генераций</span></div>
+        <button class="btn" style="margin-top:0;width:auto;padding:12px 24px;font-size:12px;background:linear-gradient(135deg,orange,#ffcc00);color:#04110f" onclick="goToPay('test')">Оплатить тест →</button>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px">Реальная оплата 50₽ через Продамус — для проверки что webhook работает</div>
+    </div>
+
     <!-- FREE -->
     <div class="panel" style="text-align:center">
       <div style="font-family:Unbounded,sans-serif;font-size:11px;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:16px">FREE</div>
@@ -659,11 +669,10 @@ function detectTierFromUrl(){
     return;
   }
 
-  // Вариант 4: человек вернулся на сайт без success-параметра после QR/крестика.
-  // Автоматически не начисляем — но показываем кнопку ручного зачисления (MVP-решение).
-  if(pendingRecent&&TIER_PACKS[pendingTier]){
-    setTimeout(()=>showPendingPaymentNotice(pendingTier),600);
-  }
+  // Вариант 4: человек вернулся без success-параметра.
+  // Не показываем кнопку ручной активации — это дыра в безопасности.
+  // Зачисление произойдёт автоматически через webhook Продамуса.
+  // При visibilitychange мы перечитаем баланс из Supabase.
 }
 
 function activatePaidTier(tier){
@@ -748,21 +757,30 @@ function activatePendingPaymentManually(){
   activatePaidTier(tier);
 }
 
-// Ловим возврат на страницу после QR/СБП — Продамус может не делать redirect,
-// если открывает форму в iframe или отдельном окне
-window.addEventListener('pageshow', ()=>{
-  const tier=localStorage.getItem('pending_tier');
-  const ts=Number(localStorage.getItem('pending_tier_ts')||0);
-  if(tier&&TIER_PACKS[tier]&&(Date.now()-ts)<24*60*60*1000&&!document.querySelector('.act-banner')){
-    setTimeout(()=>showPendingPaymentNotice(tier),700);
+// Ловим возврат на страницу после QR/СБП
+// При возврате перечитываем баланс из Supabase — если webhook сработал, баланс уже обновлён
+window.addEventListener('pageshow', async ()=>{
+  if (currentUser && sb) {
+    await loadUserBalance(currentUser.id, currentUser.email);
   }
+  // Больше не показываем кнопку "Я оплатила" — это дыра в безопасности.
+  // Зачисление только через webhook (автоматически) или ?payment=success (редирект Продамуса).
+  localStorage.removeItem('pending_tier');
+  localStorage.removeItem('pending_tier_ts');
+  localStorage.removeItem('pending_payment_started');
 });
-document.addEventListener('visibilitychange', ()=>{
-  if(document.visibilityState==='visible'){
-    const tier=localStorage.getItem('pending_tier');
-    const ts=Number(localStorage.getItem('pending_tier_ts')||0);
-    if(tier&&TIER_PACKS[tier]&&(Date.now()-ts)<24*60*60*1000&&!document.querySelector('.act-banner')){
-      setTimeout(()=>showPendingPaymentNotice(tier),700);
+
+document.addEventListener('visibilitychange', async ()=>{
+  if(document.visibilityState==='visible' && currentUser && sb){
+    // Перечитываем баланс из Supabase — вдруг webhook уже начислил
+    const prevLeft = getGenerationsLeft();
+    await loadUserBalance(currentUser.id, currentUser.email);
+    const newLeft = getGenerationsLeft();
+    // Если баланс вырос — webhook сработал, показываем уведомление
+    if (newLeft > prevLeft) {
+      showPaymentNotice('Генерации зачислены!', 'Оплата прошла. Начислено ' + (newLeft - prevLeft) + ' генераций.', '🎉');
+      localStorage.removeItem('pending_tier');
+      localStorage.removeItem('pending_tier_ts');
     }
   }
 });
