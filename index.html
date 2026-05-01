@@ -1869,8 +1869,31 @@ activatePaidTier = function(tier) {
 init();
 ensureGenerationBalance();
 detectTierFromUrl();
-updateStatusBar();
-updateUserBar();
+
+// Если нет активной сессии — чистим localStorage чтобы не было
+// "кэшированного" баланса от предыдущих тестов
+if (sb) {
+  sb.auth.getSession().then(({ data }) => {
+    if (!data?.session) {
+      // Пользователь не залогинен — сбрасываем локальный баланс
+      localStorage.removeItem('generations_left');
+      localStorage.removeItem('generation_balance_initialized');
+      localStorage.removeItem('user_tier');
+      localStorage.removeItem('pending_tier');
+      localStorage.removeItem('pending_tier_ts');
+      localStorage.removeItem('pending_payment_started');
+    }
+    updateStatusBar();
+    updateUserBar();
+  });
+} else {
+  // Supabase не загружен — всё равно чистим
+  localStorage.removeItem('generations_left');
+  localStorage.removeItem('generation_balance_initialized');
+  localStorage.removeItem('user_tier');
+  updateStatusBar();
+  updateUserBar();
+}
 
 // Слушаем изменения авторизации — только если Supabase загружен
 if (sb) {
