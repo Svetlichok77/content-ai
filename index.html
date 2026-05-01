@@ -770,9 +770,13 @@ document.addEventListener('visibilitychange', ()=>{
 function updateStatusBar(){
   ensureGenerationBalance();
   const tier=getUserTier();
-  const left=getGenerationsLeft();
+  const left = currentUser ? getGenerationsLeft() : 0; // без логина — всегда 0
   const tierLabel={free:'Бесплатно',test:'TEST',start:'START',pro:'PRO',max:'PRO MAX'}[tier]||tier;
   const el=document.getElementById('apiStatus');
+  if(!currentUser){
+    if(el) el.innerHTML = `Зарегистрируйся и получи <strong style="color:var(--lime)">5 генераций бесплатно</strong>`;
+    return;
+  }
   if(el){el.innerHTML=`Тариф: <strong style="color:var(--accent)">${tierLabel}</strong> · Осталось генераций: <strong style="color:var(--lime)">${left}</strong> · не сгорают`;}
   if(left<=0&&tier==='free')document.getElementById('paywall').classList.remove('hidden');
 }
