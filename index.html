@@ -178,6 +178,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 <section class="panel" id="contentPanel">
   <div class="label">Готовый контент</div>
   <div class="api-status" id="apiStatus">Готов к генерации. Заполни поля и нажми кнопку.</div>
+  <div style="margin-top:6px;text-align:right"><button id="resetDemoBtn" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;font-family:Onest,sans-serif;text-decoration:underline;padding:0" title="Сбросить счётчик для тестирования оплаты">↺ Сбросить счётчик</button></div>
   <textarea class="out" id="aiOutput" spellcheck="false" placeholder="Здесь появится готовый контент: пины, посты, заголовки, контент-план или другой выбранный формат."></textarea>
   <div class="copybar"><button class="btn2" onclick="copyText('aiOutput')">Скопировать контент</button><button class="btn2" onclick="clearText('aiOutput')">Очистить</button></div>
   <div class="paywall hidden" id="paywall">
@@ -1498,8 +1499,6 @@ function openPay() { openPricingModal(); }
 
 // Сброс счётчика для тестирования оплаты
 function resetDemo() {
-  if (!confirm('Сбросить баланс генераций до 0 для проверки оплаты?')) return;
-  // Удаляем все ключи, связанные с балансом и активацией
   const keysToRemove = [];
   for (let i = 0; i < localStorage.length; i++) {
     const k = localStorage.key(i);
@@ -1508,14 +1507,18 @@ function resetDemo() {
     }
   }
   keysToRemove.forEach(k => localStorage.removeItem(k));
-  // Инициализируем заново с 0 генерациями
   localStorage.setItem('generation_balance_initialized','1');
   localStorage.setItem('generations_left','0');
   localStorage.setItem('user_tier','free');
+  // Если залогинен — обновляем и в Supabase
+  if (currentUser && sb) {
+    sb.from('user_balance').update({ generations_left: 0, tier: 'free' }).eq('id', currentUser.id).then(() => {});
+  }
   document.getElementById('paywall').classList.remove('hidden');
   document.getElementById('aiOutput').value = '';
   updateStatusBar();
-  showCopyToast('✓ Счётчик сброшен. Баланс: 0');
+  updateUserBar();
+  showCopyToast('✓ Счётчик сброшен до 0');
 }
 function escapeHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
@@ -1611,6 +1614,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Кнопка входа/выхода в шапке
   const userBarBtn = document.getElementById('userBarBtn');
   if (userBarBtn) userBarBtn.addEventListener('click', handleAuthBtn);
+
+  // Кнопка сброса счётчика
+  const resetBtn = document.getElementById('resetDemoBtn');
+  if (resetBtn) resetBtn.addEventListener('click', resetDemo);
 
   // Auth modal кнопки
   const tabLogin = document.getElementById('tabLogin');
