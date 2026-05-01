@@ -629,7 +629,18 @@ function goToPay(tier){
   url.searchParams.set('redirect_url',successUrl);
 
   closePricingModal();
-  window.location.href=url.toString();
+
+  // Открываем в НОВОЙ вкладке — сессия Supabase сохраняется на текущей странице.
+  // После оплаты пользователь возвращается на эту вкладку, visibilitychange
+  // автоматически перечитает баланс из Supabase.
+  window.open(url.toString(), '_blank');
+
+  // Показываем инструкцию
+  showPaymentNotice(
+    'Оплата открыта в новой вкладке 💳',
+    'Оплати и вернись сюда — генерации зачислятся автоматически через несколько секунд.',
+    '💳'
+  );
 }
 
 // ============================================================
