@@ -55,8 +55,8 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   <p class="sub">Сделай пост, пин или сценарий за 30 секунд. Без копирайтинга. Без идей. Без ступора.</p>
   <div class="herochips"><span>SMM в кармане</span><span>5 генераций бесплатно после регистрации</span><span>1 идея → много форматов</span><span>Без ступора</span></div>
   <div class="user-bar" id="userBar">
-    <div class="user-bar-info" id="userBarInfo">⏳ Загрузка...</div>
-    <button class="user-bar-btn" id="userBarBtn">Войти</button>
+    <div class="user-bar-info" id="userBarInfo">🎁 Зарегистрируйся — получи <strong style="color:var(--lime)">5 генераций бесплатно</strong></div>
+    <button class="user-bar-btn" id="userBarBtn">Войти / Регистрация</button>
   </div>
 
   <!-- Социальные сети -->
@@ -1808,28 +1808,54 @@ async function handleAuthBtn() {
 // СИНХРОНИЗАЦИЯ БАЛАНСА С SUPABASE
 // ============================================================
 async function loadUserBalance(userId, email) {
+  if (!sb) return;
   try {
     const { data, error } = await sb.from('user_balance').select('*').eq('id', userId).single();
+
     if (error && error.code === 'PGRST116') {
-      // Новый пользователь — даём 5 бесплатных генераций за регистрацию
-      const newGens = 5;
-      await sb.from('user_balance').insert({
+      // Новый пользователь — даём 5 генераций
+      const { error: insertErr } = await sb.from('user_balance').upsert({
         id: userId,
-        email,
+        email: email,
         tier: 'free',
-        generations_left: newGens
-      });
-      setGenerationsLeft(newGens);
-      localStorage.setItem('user_tier', 'free');
-      showCopyToast('🎉 Аккаунт создан! +5 бесплатных генераций');
+        generations_left: 5,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'id' });
+
+      if (insertErr) {
+        console.error('Insert balance error:', insertErr);
+        // Даём генерации локально даже если база не сработала
+        setGenerationsLeft(5);
+        localStorage.setItem('user_tier', 'free');
+      } else {
+        setGenerationsLeft(5);
+        localStorage.setItem('user_tier', 'free');
+        showCopyToast('🎉 +5 генераций бесплатно!');
+      }
     } else if (data) {
-      // Существующий пользователь — берём данные из базы (не из localStorage!)
+      // Существующий пользователь — данные из базы
       setGenerationsLeft(data.generations_left);
       localStorage.setItem('user_tier', data.tier || 'free');
+    } else if (error) {
+      console.error('loadUserBalance error:', error);
+      // При ошибке базы — даём 5 генераций локально
+      setGenerationsLeft(5);
+      localStorage.setItem('user_tier', 'free');
     }
+
+    // Обновляем generation_balance_initialized
+    localStorage.setItem('generation_balance_initialized', '1');
     updateStatusBar();
     updateUserBar();
-  } catch(e) { console.error('loadUserBalance error:', e); }
+  } catch(e) {
+    console.error('loadUserBalance exception:', e);
+    setGenerationsLeft(5);
+    localStorage.setItem('user_tier', 'free');
+    localStorage.setItem('generation_balance_initialized', '1');
+    updateStatusBar();
+    updateUserBar();
+  }
 }
 
 async function saveUserBalance() {
@@ -1866,9 +1892,11 @@ function updateUserBar() {
     const shortEmail = email.length > 22 ? email.substring(0, 20) + '...' : email;
     infoEl.innerHTML = `👤 ${escapeHtml(shortEmail)} · <strong>${tierLabel}</strong> · ${left} генераций`;
     btnEl.textContent = 'Выйти';
+    btnEl.style.display = 'inline-block';
   } else {
     infoEl.innerHTML = `🎁 Зарегистрируйся — получи <strong style="color:var(--lime)">5 генераций бесплатно</strong>`;
     btnEl.textContent = 'Войти / Регистрация';
+    btnEl.style.display = 'inline-block';
   }
 }
 
@@ -1882,47 +1910,58 @@ activatePaidTier = function(tier) {
 };
 
 // ============================================================
-// ЗАПУСК
+// ЗАПУСК — UI показывается сразу, Supabase проверяется в фоне
 // ============================================================
 init();
 ensureGenerationBalance();
 detectTierFromUrl();
 
-// Если нет активной сессии — чистим localStorage чтобы не было
-// "кэшированного" баланса от предыдущих тестов
+// Показываем UI немедленно — не ждём Supabase
+updateStatusBar();
+updateUserBar();
+
+// Supabase проверяем асинхронно в фоне
 if (sb) {
   sb.auth.getSession().then(({ data }) => {
     if (!data?.session) {
-      // Пользователь не залогинен — сбрасываем локальный баланс
+      // Не залогинен — чистим localStorage
       localStorage.removeItem('generations_left');
       localStorage.removeItem('generation_balance_initialized');
       localStorage.removeItem('user_tier');
       localStorage.removeItem('pending_tier');
       localStorage.removeItem('pending_tier_ts');
       localStorage.removeItem('pending_payment_started');
+      currentUser = null;
+    } else {
+      currentUser = data.session.user;
+    }
+    updateStatusBar();
+    updateUserBar();
+  }).catch(e => {
+    // Supabase недоступен — просто показываем UI без авторизации
+    console.warn('Session check failed:', e.message);
+    updateStatusBar();
+    updateUserBar();
+  });
+
+  // Слушаем изменения авторизации
+  sb.auth.onAuthStateChange(async (event, session) => {
+    currentUser = session?.user || null;
+    if (currentUser) {
+      await loadUserBalance(currentUser.id, currentUser.email);
+    } else {
+      // Вышли — чистим
+      localStorage.removeItem('generations_left');
+      localStorage.removeItem('generation_balance_initialized');
+      localStorage.removeItem('user_tier');
     }
     updateStatusBar();
     updateUserBar();
   });
 } else {
-  // Supabase не загружен — всё равно чистим
-  localStorage.removeItem('generations_left');
-  localStorage.removeItem('generation_balance_initialized');
-  localStorage.removeItem('user_tier');
+  // Supabase CDN не загружен — UI работает без авторизации
   updateStatusBar();
   updateUserBar();
-}
-
-// Слушаем изменения авторизации — только если Supabase загружен
-if (sb) {
-  sb.auth.onAuthStateChange(async (event, session) => {
-    currentUser = session?.user || null;
-    if (currentUser) {
-      await loadUserBalance(currentUser.id, currentUser.email);
-    }
-    updateStatusBar();
-    updateUserBar();
-  });
 }
 </script>
 </body>
