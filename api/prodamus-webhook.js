@@ -18,10 +18,22 @@ const TIER_PACKS = { test: 10, start: 50, pro: 200, max: 500 };
 function detectTierFromProduct(productName) {
   if (!productName) return null;
   const name = productName.toLowerCase();
+  // Проверяем по сумме (надёжнее чем по названию)
   if (name.includes('max') || name.includes('макс') || name.includes('2490')) return 'max';
   if (name.includes('pro') || name.includes('про') || name.includes('990')) return 'pro';
   if (name.includes('start') || name.includes('старт') || name.includes('290')) return 'start';
+  // Test — проверяем несколько вариантов написания
   if (name.includes('test') || name.includes('тест') || name.includes('50')) return 'test';
+  return null;
+}
+
+// Определяем тариф по сумме оплаты (резервный метод)
+function detectTierFromSum(sum) {
+  const s = parseFloat(sum);
+  if (s >= 2490) return 'max';
+  if (s >= 990) return 'pro';
+  if (s >= 290) return 'start';
+  if (s >= 50) return 'test';
   return null;
 }
 
@@ -65,15 +77,25 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'No email found in payment data' });
     }
 
-    // Определяем тариф
+    // Получаем название продукта — Продамус присылает как products[0][name]
+    // В body это может прийти как строка или как вложенный объект
     const productName = (
-      (body.products && body.products[0] && body.products[0].name) ||
+      body['products[0][name]'] ||
+      body.products?.[0]?.name ||
       body.product_name ||
       body.order_name ||
       ''
     );
-    const tier = detectTierFromProduct(productName);
+
+    // Получаем сумму оплаты
+    const paySum = body.sum || body.amount || body.total || '0';
+
+    // Определяем тариф: сначала по названию, потом по сумме
+    let tier = detectTierFromProduct(productName);
+    if (!tier) tier = detectTierFromSum(paySum);
     const generationsToAdd = tier ? TIER_PACKS[tier] : 0;
+
+    console.log(`Product: "${productName}", Sum: ${paySum}, Detected tier: ${tier}`);
 
     if (!tier || !generationsToAdd) {
       console.error('Could not detect tier from product:', productName);
