@@ -2005,51 +2005,43 @@ detectTierFromUrl();
 updateStatusBar();
 updateUserBar();
 
-// Официальный паттерн Supabase:
-// 1. getSession() — восстанавливает сессию из localStorage при загрузке
-// 2. onAuthStateChange — слушает изменения (вход/выход/обновление токена)
-async function initAuth() {
-  try {
-    // Шаг 1: восстанавливаем сессию при загрузке/перезагрузке
-    const { data: { session }, error } = await sb.auth.getSession();
-    if (error) console.warn('getSession error:', error.message);
+// onAuthStateChange регистрируем СИНХРОННО — до любых async операций
+// Иначе PASSWORD_RECOVERY событие уходит раньше чем мы начинаем слушать
+sb.auth.onAuthStateChange(async (event, session) => {
+  console.log('Auth event:', event);
 
+  if (event === 'PASSWORD_RECOVERY') {
+    showResetPasswordForm();
+    return;
+  }
+
+  if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
     if (session?.user) {
       currentUser = session.user;
       await loadUserBalance(currentUser.id, currentUser.email);
-    } else {
-      currentUser = null;
-      // Не чистим localStorage здесь — токен Supabase может быть на обновлении
     }
-    updateStatusBar();
-    updateUserBar();
+  } else if (event === 'SIGNED_OUT') {
+    currentUser = null;
+    clearLocalBalance();
+  }
+
+  updateStatusBar();
+  updateUserBar();
+});
+
+// Восстанавливаем сессию асинхронно
+async function initAuth() {
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session?.user) {
+      currentUser = session.user;
+      await loadUserBalance(currentUser.id, currentUser.email);
+      updateStatusBar();
+      updateUserBar();
+    }
   } catch(e) {
     console.warn('initAuth error:', e.message);
   }
-
-  // Шаг 2: слушаем все изменения сессии
-  sb.auth.onAuthStateChange(async (event, session) => {
-    console.log('Auth event:', event);
-
-    // Сброс пароля — Supabase устанавливает сессию из токена письма
-    if (event === 'PASSWORD_RECOVERY') {
-      showResetPasswordForm();
-      return;
-    }
-
-    if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-      if (session?.user) {
-        currentUser = session.user;
-        await loadUserBalance(currentUser.id, currentUser.email);
-      }
-    } else if (event === 'SIGNED_OUT') {
-      currentUser = null;
-      clearLocalBalance();
-    }
-
-    updateStatusBar();
-    updateUserBar();
-  });
 }
 
 initAuth();
