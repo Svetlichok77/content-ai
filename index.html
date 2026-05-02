@@ -396,8 +396,8 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   </div>
 </div>
 
-<!-- Supabase CDN загружается синхронно в конце body — страница уже отрисована, скрипт гарантированно доступен -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Supabase CDN — фиксированная версия, синхронно перед скриптом -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.js"></script>
 <script>
 // ============================================================
 // КОНФИГ
@@ -405,11 +405,23 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 const API_ENDPOINT = "/api/generate";
 
 // ============================================================
-// SUPABASE — CDN уже загружен синхронно выше
+// SUPABASE — безопасная инициализация
 // ============================================================
 const SUPABASE_URL = 'https://xacasrnthainxjzxhypb.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_7MnL2ZSmLQk7qbsJSBgkqA_lpnoXaWf';
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let sb = null;
+try {
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  });
+  console.log('✅ Supabase OK');
+} catch(e) {
+  console.error('❌ Supabase init error:', e.message);
+}
 let currentUser = null;
 
 // FIX #3: реальные ссылки Продамус
@@ -1997,6 +2009,7 @@ let isRecoveryMode = false;
 
 // Проверяем хэш при загрузке — для password recovery
 (function checkRecoveryHash() {
+  if (!sb) return;
   try {
     const hash = window.location.hash;
     if (!hash || !hash.includes('type=recovery')) return;
@@ -2014,40 +2027,40 @@ let isRecoveryMode = false;
   } catch(e) { console.warn('checkRecoveryHash error:', e.message); }
 })();
 
-// Единственный обработчик авторизации — onAuthStateChange
-// Обрабатывает ВСЕ события включая восстановление сессии при перезагрузке
-sb.auth.onAuthStateChange(async (event, session) => {
-  console.log('Auth event:', event);
+// Единственный обработчик авторизации
+if (sb) {
+  sb.auth.onAuthStateChange(async (event, session) => {
+    console.log('Auth event:', event);
 
-  if (event === 'PASSWORD_RECOVERY') {
-    isRecoveryMode = true;
-    showResetPasswordForm();
-    return;
-  }
+    if (event === 'PASSWORD_RECOVERY') {
+      isRecoveryMode = true;
+      showResetPasswordForm();
+      return;
+    }
 
-  if (isRecoveryMode) return;
+    if (isRecoveryMode) return;
 
-  if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-    if (session?.user) {
-      currentUser = session.user;
-      try {
-        await loadUserBalance(currentUser.id, currentUser.email);
-      } catch(e) {
-        console.warn('loadUserBalance error in auth handler:', e.message);
+    if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+      if (session?.user) {
+        currentUser = session.user;
+        try {
+          await loadUserBalance(currentUser.id, currentUser.email);
+        } catch(e) {
+          console.warn('loadUserBalance error:', e.message);
+        }
+      } else if (event === 'INITIAL_SESSION') {
+        currentUser = null;
+        clearLocalBalance();
       }
-    } else if (event === 'INITIAL_SESSION') {
-      // Точно не залогинен — чистим только если INITIAL_SESSION вернул null
+    } else if (event === 'SIGNED_OUT') {
       currentUser = null;
       clearLocalBalance();
     }
-  } else if (event === 'SIGNED_OUT') {
-    currentUser = null;
-    clearLocalBalance();
-  }
 
-  updateStatusBar();
-  updateUserBar();
-});
+    updateStatusBar();
+    updateUserBar();
+  });
+}
 </script>
 </body>
 </html>
