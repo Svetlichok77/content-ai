@@ -345,8 +345,14 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   <div class="auth-box">
     <div style="font-family:Unbounded,sans-serif;font-size:20px;letter-spacing:-.03em;margin-bottom:6px;text-align:center">Новый пароль</div>
     <div style="color:var(--muted);font-size:13px;text-align:center;margin-bottom:20px">Введи новый пароль для аккаунта</div>
-    <input class="auth-input" id="newPassword" type="password" placeholder="Новый пароль (минимум 6 символов)">
-    <input class="auth-input" id="newPassword2" type="password" placeholder="Повтори пароль">
+    <div style="position:relative;margin-bottom:10px">
+      <input class="auth-input" id="newPassword" type="password" placeholder="Новый пароль (минимум 6 символов)" style="margin-bottom:0;padding-right:44px">
+      <button onclick="togglePwd('newPassword',this)" type="button" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px">👁</button>
+    </div>
+    <div style="position:relative;margin-bottom:10px">
+      <input class="auth-input" id="newPassword2" type="password" placeholder="Повтори пароль" style="margin-bottom:0;padding-right:44px">
+      <button onclick="togglePwd('newPassword2',this)" type="button" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px">👁</button>
+    </div>
     <div class="auth-err" id="resetErr"></div>
     <button class="btn" id="resetSubmitBtn" style="margin-top:0">Сохранить пароль →</button>
   </div>
@@ -1600,6 +1606,12 @@ function escapeHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g
 // ============================================================
 // ВИДЕОИНСТРУКЦИЯ
 // ============================================================
+function togglePwd(id, btn) {
+  const el = document.getElementById(id);
+  if (el.type === 'password') { el.type = 'text'; btn.textContent = '🙈'; }
+  else { el.type = 'password'; btn.textContent = '👁'; }
+}
+
 function showResetPasswordForm() {
   document.getElementById('resetOverlay').style.display = 'flex';
   document.body.style.overflow = 'hidden';
@@ -2018,6 +2030,12 @@ async function initAuth() {
   // Шаг 2: слушаем все изменения сессии
   sb.auth.onAuthStateChange(async (event, session) => {
     console.log('Auth event:', event);
+
+    // Сброс пароля — Supabase устанавливает сессию из токена письма
+    if (event === 'PASSWORD_RECOVERY') {
+      showResetPasswordForm();
+      return;
+    }
 
     if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
       if (session?.user) {
