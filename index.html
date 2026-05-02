@@ -1633,9 +1633,13 @@ async function submitResetPassword() {
     if (error) {
       errEl.textContent = translateAuthError(error.message);
     } else {
+      isRecoveryMode = false;
       document.getElementById('resetOverlay').style.display = 'none';
       document.body.style.overflow = '';
-      showCopyToast('✓ Пароль успешно изменён!');
+      showCopyToast('✓ Пароль успешно изменён! Войди с новым паролем.');
+      // Выходим и предлагаем войти заново
+      await sb.auth.signOut();
+      openAuthModal('login');
     }
   } catch(e) {
     errEl.textContent = 'Ошибка: ' + e.message;
@@ -2005,15 +2009,32 @@ detectTierFromUrl();
 updateStatusBar();
 updateUserBar();
 
-// onAuthStateChange регистрируем СИНХРОННО — до любых async операций
-// Иначе PASSWORD_RECOVERY событие уходит раньше чем мы начинаем слушать
+// onAuthStateChange регистрируем СИНХРОННО
+let isRecoveryMode = false; // флаг сброса пароля
+
+// Проверяем хэш URL сразу при загрузке — самый надёжный способ
+(function checkRecoveryHash() {
+  const hash = window.location.hash;
+  if (hash && hash.includes('type=recovery')) {
+    isRecoveryMode = true;
+    // Чистим хэш из URL
+    window.history.replaceState({}, '', window.location.pathname);
+    // Показываем форму после загрузки DOM
+    setTimeout(() => showResetPasswordForm(), 300);
+  }
+})();
+
 sb.auth.onAuthStateChange(async (event, session) => {
   console.log('Auth event:', event);
 
   if (event === 'PASSWORD_RECOVERY') {
+    isRecoveryMode = true;
     showResetPasswordForm();
     return;
   }
+
+  // Если в режиме сброса пароля — не трогаем UI
+  if (isRecoveryMode) return;
 
   if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
     if (session?.user) {
