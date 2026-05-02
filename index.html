@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Контент на автопилоте PRO</title>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800&family=Onest:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" async></script>
 <style>
 :root{--bg:#030606;--card:#0b1111;--card2:#111d1c;--line:#1d3d3a;--line2:#00ffd155;--accent:#00ffd1;--accent2:#00a7ff;--lime:#c8ff00;--text:#ecfffb;--muted:#89aaa5;--danger:#ff6b6b;--r:24px;--rs:14px;--shadow:0 28px 90px rgba(0,255,209,.13)}
 *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Onest,system-ui,sans-serif;background:radial-gradient(circle at 8% 0%,rgba(0,255,209,.22),transparent 30%),radial-gradient(circle at 96% 8%,rgba(0,167,255,.16),transparent 32%),radial-gradient(circle at 50% 100%,rgba(138,92,255,.13),transparent 35%),linear-gradient(135deg,#020404,#07100f 42%,#030606);color:var(--text);min-height:100vh;line-height:1.55;font-size:15px}.noise:before{content:"";position:fixed;inset:0;background:linear-gradient(120deg,transparent,rgba(0,255,209,.04),transparent),repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 3px);pointer-events:none;mix-blend-mode:screen}.noise:after{content:"";position:fixed;right:6%;bottom:8%;width:280px;height:280px;border-radius:50%;background:rgba(0,255,209,.06);filter:blur(55px);pointer-events:none}
@@ -388,23 +388,37 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 const API_ENDPOINT = "/api/generate";
 
 // ============================================================
-// SUPABASE
+// SUPABASE — ждём загрузки CDN, потом инициализируем
 // ============================================================
 const SUPABASE_URL = 'https://xacasrnthainxjzxhypb.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_7MnL2ZSmLQk7qbsJSBgkqA_lpnoXaWf';
 let sb = null;
 let currentUser = null;
 
-// Инициализация Supabase — безопасная, не роняет весь скрипт если CDN не загрузился
-try {
-  if (window.supabase && window.supabase.createClient) {
-    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    console.log('✅ Supabase initialized');
-  } else {
-    console.warn('⚠️ Supabase CDN не загружен — авторизация недоступна, остальное работает');
+function initSupabase() {
+  try {
+    if (window.supabase && window.supabase.createClient) {
+      sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      console.log('✅ Supabase initialized');
+      return true;
+    }
+  } catch(e) {
+    console.error('Supabase init error:', e);
   }
-} catch(e) {
-  console.error('Supabase init error:', e);
+  return false;
+}
+
+// Ждём загрузки Supabase CDN (максимум 5 секунд)
+function waitForSupabase(callback, attempts) {
+  attempts = attempts || 0;
+  if (initSupabase()) {
+    callback();
+  } else if (attempts < 50) {
+    setTimeout(() => waitForSupabase(callback, attempts + 1), 100);
+  } else {
+    console.warn('⚠️ Supabase не загрузился за 5 сек — работаем без авторизации');
+    callback(); // запускаем всё равно, просто без auth
+  }
 }
 
 // FIX #3: реальные ссылки Продамус
@@ -1802,7 +1816,7 @@ async function handleAuthBtn() {
     try {
       if (sb) await sb.auth.signOut();
       currentUser = null;
-      ensureGenerationBalance();
+      clearLocalBalance();
       updateStatusBar();
       updateUserBar();
       showCopyToast('✓ Вышли из аккаунта');
@@ -1921,35 +1935,46 @@ activatePaidTier = function(tier) {
 };
 
 // ============================================================
-// ЗАПУСК — UI показывается сразу, Supabase проверяется в фоне
+// ЗАПУСК — ждём Supabase, потом стартуем
 // ============================================================
 init();
 ensureGenerationBalance();
 detectTierFromUrl();
-
-// Показываем UI немедленно — не ждём Supabase
 updateStatusBar();
 updateUserBar();
 
-// Supabase проверяем асинхронно в фоне
-if (sb) {
+function clearLocalBalance() {
+  // Чистим ТОЛЬКО наши ключи баланса — НЕ трогаем ключи Supabase (sb-*-auth-token)
+  // иначе сессия слетает при перезагрузке
+  localStorage.removeItem('generations_left');
+  localStorage.removeItem('generation_balance_initialized');
+  localStorage.removeItem('user_tier');
+  localStorage.removeItem('pending_tier');
+  localStorage.removeItem('pending_tier_ts');
+  localStorage.removeItem('pending_payment_started');
+}
+
+waitForSupabase(function() {
+  if (!sb) {
+    updateStatusBar();
+    updateUserBar();
+    return;
+  }
+
+  // Проверяем сессию
   sb.auth.getSession().then(({ data }) => {
     if (!data?.session) {
-      // Не залогинен — чистим localStorage
-      localStorage.removeItem('generations_left');
-      localStorage.removeItem('generation_balance_initialized');
-      localStorage.removeItem('user_tier');
-      localStorage.removeItem('pending_tier');
-      localStorage.removeItem('pending_tier_ts');
-      localStorage.removeItem('pending_payment_started');
+      // Точно не залогинен — чистим только наш баланс
+      clearLocalBalance();
       currentUser = null;
     } else {
       currentUser = data.session.user;
+      // Загружаем баланс из Supabase
+      loadUserBalance(currentUser.id, currentUser.email);
     }
     updateStatusBar();
     updateUserBar();
   }).catch(e => {
-    // Supabase недоступен — просто показываем UI без авторизации
     console.warn('Session check failed:', e.message);
     updateStatusBar();
     updateUserBar();
@@ -1961,19 +1986,12 @@ if (sb) {
     if (currentUser) {
       await loadUserBalance(currentUser.id, currentUser.email);
     } else {
-      // Вышли — чистим
-      localStorage.removeItem('generations_left');
-      localStorage.removeItem('generation_balance_initialized');
-      localStorage.removeItem('user_tier');
+      clearLocalBalance();
     }
     updateStatusBar();
     updateUserBar();
   });
-} else {
-  // Supabase CDN не загружен — UI работает без авторизации
-  updateStatusBar();
-  updateUserBar();
-}
+});
 </script>
 </body>
 </html>
