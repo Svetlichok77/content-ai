@@ -1953,14 +1953,6 @@ async function saveUserBalance() {
   } catch(e) { console.error('saveUserBalance error:', e); }
 }
 
-// Патчим spendGeneration — после списания сохраняем в базу
-const _origSpend = spendGeneration;
-spendGeneration = function() {
-  const result = _origSpend();
-  if (result) saveUserBalance();
-  return result;
-};
-
 // Обновляем статус-бар с учётом авторизации
 function updateUserBar() {
   const infoEl = document.getElementById('userBarInfo');
@@ -1983,15 +1975,6 @@ function updateUserBar() {
 }
 
 // ============================================================
-// АКТИВАЦИЯ ТАРИФА — дополнительно сохраняем в Supabase
-// ============================================================
-const _origActivate = activatePaidTier;
-activatePaidTier = function(tier) {
-  _origActivate(tier);
-  saveUserBalance(); // сохраняем в базу после зачисления
-};
-
-// ============================================================
 // ЗАПУСК
 // ============================================================
 function clearLocalBalance() {
@@ -2009,37 +1992,30 @@ detectTierFromUrl();
 updateStatusBar();
 updateUserBar();
 
-// onAuthStateChange регистрируем СИНХРОННО
-let isRecoveryMode = false; // флаг сброса пароля
+// Флаг режима сброса пароля
+let isRecoveryMode = false;
 
-// Проверяем хэш URL сразу при загрузке — извлекаем токены для recovery
+// Проверяем хэш при загрузке — для password recovery
 (function checkRecoveryHash() {
-  const hash = window.location.hash;
-  if (!hash || !hash.includes('type=recovery')) return;
-
-  // Парсим токены из хэша
-  const params = new URLSearchParams(hash.slice(1));
-  const accessToken = params.get('access_token');
-  const refreshToken = params.get('refresh_token');
-
-  if (!accessToken || !refreshToken) return;
-
-  isRecoveryMode = true;
-  // Чистим хэш из URL чтобы не показывать токены
-  window.history.replaceState({}, '', window.location.pathname);
-
-  // Устанавливаем сессию из токенов — это решает "Auth session missing"
-  sb.auth.setSession({ access_token: accessToken, refresh_token: refreshToken })
-    .then(({ error }) => {
-      if (error) {
-        console.error('setSession error:', error.message);
-        return;
-      }
-      showResetPasswordForm();
-    })
-    .catch(e => console.error('setSession exception:', e));
+  try {
+    const hash = window.location.hash;
+    if (!hash || !hash.includes('type=recovery')) return;
+    const params = new URLSearchParams(hash.slice(1));
+    const accessToken = params.get('access_token');
+    const refreshToken = params.get('refresh_token');
+    if (!accessToken || !refreshToken) return;
+    isRecoveryMode = true;
+    window.history.replaceState({}, '', window.location.pathname);
+    sb.auth.setSession({ access_token: accessToken, refresh_token: refreshToken })
+      .then(({ error }) => {
+        if (!error) showResetPasswordForm();
+        else console.error('setSession error:', error.message);
+      });
+  } catch(e) { console.warn('checkRecoveryHash error:', e.message); }
 })();
 
+// Единственный обработчик авторизации — onAuthStateChange
+// Обрабатывает ВСЕ события включая восстановление сессии при перезагрузке
 sb.auth.onAuthStateChange(async (event, session) => {
   console.log('Auth event:', event);
 
@@ -2049,13 +2025,20 @@ sb.auth.onAuthStateChange(async (event, session) => {
     return;
   }
 
-  // Если в режиме сброса пароля — не трогаем UI
   if (isRecoveryMode) return;
 
-  if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+  if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
     if (session?.user) {
       currentUser = session.user;
-      await loadUserBalance(currentUser.id, currentUser.email);
+      try {
+        await loadUserBalance(currentUser.id, currentUser.email);
+      } catch(e) {
+        console.warn('loadUserBalance error in auth handler:', e.message);
+      }
+    } else if (event === 'INITIAL_SESSION') {
+      // Точно не залогинен — чистим только если INITIAL_SESSION вернул null
+      currentUser = null;
+      clearLocalBalance();
     }
   } else if (event === 'SIGNED_OUT') {
     currentUser = null;
@@ -2065,23 +2048,6 @@ sb.auth.onAuthStateChange(async (event, session) => {
   updateStatusBar();
   updateUserBar();
 });
-
-// Восстанавливаем сессию асинхронно
-async function initAuth() {
-  try {
-    const { data: { session } } = await sb.auth.getSession();
-    if (session?.user) {
-      currentUser = session.user;
-      await loadUserBalance(currentUser.id, currentUser.email);
-      updateStatusBar();
-      updateUserBar();
-    }
-  } catch(e) {
-    console.warn('initAuth error:', e.message);
-  }
-}
-
-initAuth();
 </script>
 </body>
 </html>
