@@ -1802,7 +1802,7 @@ async function showForgotPassword() {
   errEl.textContent = '⏳ Отправляем письмо...';
   try {
     const { error } = await sb.auth.resetPasswordForEmail(email, {
-      redirectTo: window.location.origin + window.location.pathname + '?reset=1'
+      redirectTo: 'https://content-ai-gilt.vercel.app'
     });
     if (error) {
       errEl.style.color = '#ff6b6b';
