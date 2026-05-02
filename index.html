@@ -553,14 +553,15 @@ function goToPay(tier){
   url.searchParams.set('return_url',successUrl);
   url.searchParams.set('redirect_url',successUrl);
   closePricingModal();
-  window.open(url.toString(), '_blank');
-  showPaymentNotice('Оплата открыта в новой вкладке 💳','Оплати и вернись сюда — генерации зачислятся автоматически через несколько секунд.','💳');
+  // Переходим в ТОЙ ЖЕ вкладке: Продамус редиректит обратно на ?payment=success
+  // где currentUser уже загружен через initAuth → activatePaidTier сохраняет в Supabase
+  window.location.href = url.toString();
 }
 
 // ============================================================
 // АКТИВАЦИЯ ТАРИФА ПОСЛЕ ОПЛАТЫ
 // ============================================================
-function detectTierFromUrl(){
+async function detectTierFromUrl(){
   ensureGenerationBalance();
   const params=new URLSearchParams(window.location.search);
   if (params.get('reset') === '1') {
@@ -573,24 +574,40 @@ function detectTierFromUrl(){
   const pendingTier=localStorage.getItem('pending_tier');
   const pendingTs=Number(localStorage.getItem('pending_tier_ts')||0);
   const pendingRecent=pendingTier&&(Date.now()-pendingTs)<24*60*60*1000;
-  if(tierParam&&TIER_PACKS[tierParam]){activatePaidTier(tierParam);cleanPaymentUrl();return;}
-  if(['success','paid','ok','done'].includes(paymentParam)&&pendingRecent&&TIER_PACKS[pendingTier]){activatePaidTier(pendingTier);cleanPaymentUrl();return;}
+  if(tierParam&&TIER_PACKS[tierParam]){await activatePaidTier(tierParam);cleanPaymentUrl();return;}
+  if(['success','paid','ok','done'].includes(paymentParam)&&pendingRecent&&TIER_PACKS[pendingTier]){await activatePaidTier(pendingTier);cleanPaymentUrl();return;}
   if(['fail','failed','error','cancel','canceled'].includes(paymentParam)){
     localStorage.removeItem('pending_tier');localStorage.removeItem('pending_tier_ts');cleanPaymentUrl();
     showPaymentNotice('Оплата не завершена','Если это ошибка — попробуй оплатить ещё раз или напиши в поддержку.','⚠️');return;
   }
 }
 
-function activatePaidTier(tier){
+async function activatePaidTier(tier){
   const pack=TIER_PACKS[tier];if(!pack)return;
   const activationKey='activated_'+tier+'_'+(localStorage.getItem('pending_tier_ts')||'direct');
   if(localStorage.getItem(activationKey)){
     localStorage.removeItem('pending_tier');localStorage.removeItem('pending_tier_ts');
-    showActivationBanner(tier,true);updateStatusBar();return;
+    showActivationBanner(tier,true);updateStatusBar();updateUserBar();return;
   }
-  localStorage.setItem('user_tier',tier);addGenerations(pack);localStorage.setItem(activationKey,'1');
+  localStorage.setItem('user_tier',tier);
+  addGenerations(pack);
+  localStorage.setItem(activationKey,'1');
   localStorage.removeItem('pending_tier');localStorage.removeItem('pending_tier_ts');
-  showActivationBanner(tier,false);updateStatusBar();
+  // КРИТИЧНО: сохраняем в Supabase сразу — иначе следующий loadUserBalance
+  // прочитает старые данные из Supabase и перетрёт только что начисленный баланс
+  if (currentUser && sb) {
+    try {
+      await sb.from('user_balance').upsert({
+        id: currentUser.id,
+        email: currentUser.email,
+        tier: tier,
+        generations_left: getGenerationsLeft(),
+        updated_at: new Date().toISOString()
+      });
+      console.log('✅ Баланс сохранён в Supabase:', tier, getGenerationsLeft());
+    } catch(e) { console.error('activatePaidTier Supabase error:', e); }
+  }
+  showActivationBanner(tier,false);updateStatusBar();updateUserBar();
 }
 
 function cleanPaymentUrl(){window.history.replaceState({},'',window.location.pathname);}
@@ -615,9 +632,14 @@ function showPaymentNotice(title,text,icon){
   document.body.appendChild(b);setTimeout(()=>b.remove&&b.remove(),12000);
 }
 
-window.addEventListener('pageshow', async ()=>{
-  if (currentUser && sb) {await loadUserBalance(currentUser.id, currentUser.email);}
-  localStorage.removeItem('pending_tier');localStorage.removeItem('pending_tier_ts');localStorage.removeItem('pending_payment_started');
+window.addEventListener('pageshow', async (e)=>{
+  // Срабатывает при восстановлении страницы из bfcache (кнопка "Назад")
+  // Обновляем баланс из Supabase на случай если что-то изменилось
+  if (e.persisted && currentUser && sb) {
+    await loadUserBalance(currentUser.id, currentUser.email);
+  }
+  // НЕ удаляем pending_tier здесь — при переходе в той же вкладке
+  // страница перезагружается полностью, detectTierFromUrl обработает ?payment=success
 });
 
 document.addEventListener('visibilitychange', async ()=>{
@@ -1295,7 +1317,6 @@ function clearLocalBalance() {
 
 init();
 ensureGenerationBalance();
-detectTierFromUrl();
 updateStatusBar();
 updateUserBar();
 
@@ -1320,6 +1341,10 @@ async function initAuth() {
   } catch(e) {
     console.warn('getSession error:', e.message);
   }
+
+  // Шаг 2: обрабатываем URL после оплаты — ПОСЛЕ того как currentUser установлен
+  // Только здесь activatePaidTier сможет сохранить баланс в Supabase
+  await detectTierFromUrl();
 
   updateStatusBar();
   updateUserBar();
