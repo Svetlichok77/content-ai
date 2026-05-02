@@ -1927,21 +1927,48 @@ detectTierFromUrl();
 updateStatusBar();
 updateUserBar();
 
-// Supabase onAuthStateChange — единственный надёжный способ отслеживать сессию.
-// Срабатывает автоматически при загрузке (INITIAL_SESSION) и при входе/выходе.
-sb.auth.onAuthStateChange(async (event, session) => {
-  console.log('Auth:', event, session?.user?.email || 'no user');
+// Официальный паттерн Supabase:
+// 1. getSession() — восстанавливает сессию из localStorage при загрузке
+// 2. onAuthStateChange — слушает изменения (вход/выход/обновление токена)
+async function initAuth() {
+  try {
+    // Шаг 1: восстанавливаем сессию при загрузке/перезагрузке
+    const { data: { session }, error } = await sb.auth.getSession();
+    if (error) console.warn('getSession error:', error.message);
 
-  if (session?.user) {
-    currentUser = session.user;
-    await loadUserBalance(currentUser.id, currentUser.email);
-  } else if (event === 'INITIAL_SESSION' || event === 'SIGNED_OUT') {
-    currentUser = null;
-    clearLocalBalance();
+    if (session?.user) {
+      currentUser = session.user;
+      await loadUserBalance(currentUser.id, currentUser.email);
+    } else {
+      currentUser = null;
+      // Не чистим localStorage здесь — токен Supabase может быть на обновлении
+    }
     updateStatusBar();
     updateUserBar();
+  } catch(e) {
+    console.warn('initAuth error:', e.message);
   }
-});
+
+  // Шаг 2: слушаем все изменения сессии
+  sb.auth.onAuthStateChange(async (event, session) => {
+    console.log('Auth event:', event);
+
+    if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+      if (session?.user) {
+        currentUser = session.user;
+        await loadUserBalance(currentUser.id, currentUser.email);
+      }
+    } else if (event === 'SIGNED_OUT') {
+      currentUser = null;
+      clearLocalBalance();
+    }
+
+    updateStatusBar();
+    updateUserBar();
+  });
+}
+
+initAuth();
 </script>
 </body>
 </html>
