@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Контент на автопилоте PRO</title>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800&family=Onest:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" async></script>
 <style>
 :root{--bg:#030606;--card:#0b1111;--card2:#111d1c;--line:#1d3d3a;--line2:#00ffd155;--accent:#00ffd1;--accent2:#00a7ff;--lime:#c8ff00;--text:#ecfffb;--muted:#89aaa5;--danger:#ff6b6b;--r:24px;--rs:14px;--shadow:0 28px 90px rgba(0,255,209,.13)}
 *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Onest,system-ui,sans-serif;background:radial-gradient(circle at 8% 0%,rgba(0,255,209,.22),transparent 30%),radial-gradient(circle at 96% 8%,rgba(0,167,255,.16),transparent 32%),radial-gradient(circle at 50% 100%,rgba(138,92,255,.13),transparent 35%),linear-gradient(135deg,#020404,#07100f 42%,#030606);color:var(--text);min-height:100vh;line-height:1.55;font-size:15px}.noise:before{content:"";position:fixed;inset:0;background:linear-gradient(120deg,transparent,rgba(0,255,209,.04),transparent),repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 3px);pointer-events:none;mix-blend-mode:screen}.noise:after{content:"";position:fixed;right:6%;bottom:8%;width:280px;height:280px;border-radius:50%;background:rgba(0,255,209,.06);filter:blur(55px);pointer-events:none}
@@ -381,6 +380,8 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   </div>
 </div>
 
+<!-- Supabase CDN загружается синхронно в конце body — страница уже отрисована, скрипт гарантированно доступен -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ============================================================
 // КОНФИГ
@@ -388,38 +389,12 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 const API_ENDPOINT = "/api/generate";
 
 // ============================================================
-// SUPABASE — ждём загрузки CDN, потом инициализируем
+// SUPABASE — CDN уже загружен синхронно выше
 // ============================================================
 const SUPABASE_URL = 'https://xacasrnthainxjzxhypb.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_7MnL2ZSmLQk7qbsJSBgkqA_lpnoXaWf';
-let sb = null;
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentUser = null;
-
-function initSupabase() {
-  try {
-    if (window.supabase && window.supabase.createClient) {
-      sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-      console.log('✅ Supabase initialized');
-      return true;
-    }
-  } catch(e) {
-    console.error('Supabase init error:', e);
-  }
-  return false;
-}
-
-// Ждём загрузки Supabase CDN (максимум 5 секунд)
-function waitForSupabase(callback, attempts) {
-  attempts = attempts || 0;
-  if (initSupabase()) {
-    callback();
-  } else if (attempts < 50) {
-    setTimeout(() => waitForSupabase(callback, attempts + 1), 100);
-  } else {
-    console.warn('⚠️ Supabase не загрузился за 5 сек — работаем без авторизации');
-    callback(); // запускаем всё равно, просто без auth
-  }
-}
 
 // FIX #3: реальные ссылки Продамус
 // Настрой "URL успешной оплаты" в дашборде Продамуса:
@@ -1814,7 +1789,7 @@ function translateAuthError(msg) {
 async function handleAuthBtn() {
   if (currentUser) {
     try {
-      if (sb) await sb.auth.signOut();
+      await sb.auth.signOut();
       currentUser = null;
       clearLocalBalance();
       updateStatusBar();
@@ -1935,10 +1910,9 @@ activatePaidTier = function(tier) {
 };
 
 // ============================================================
-// ЗАПУСК — ждём Supabase, потом стартуем
+// ЗАПУСК
 // ============================================================
 function clearLocalBalance() {
-  // Чистим только наши ключи — НЕ трогаем sb-*-auth-token Supabase!
   localStorage.removeItem('generations_left');
   localStorage.removeItem('generation_balance_initialized');
   localStorage.removeItem('user_tier');
@@ -1953,39 +1927,20 @@ detectTierFromUrl();
 updateStatusBar();
 updateUserBar();
 
-waitForSupabase(function() {
-  if (!sb) {
+// Supabase onAuthStateChange — единственный надёжный способ отслеживать сессию.
+// Срабатывает автоматически при загрузке (INITIAL_SESSION) и при входе/выходе.
+sb.auth.onAuthStateChange(async (event, session) => {
+  console.log('Auth:', event, session?.user?.email || 'no user');
+
+  if (session?.user) {
+    currentUser = session.user;
+    await loadUserBalance(currentUser.id, currentUser.email);
+  } else if (event === 'INITIAL_SESSION' || event === 'SIGNED_OUT') {
+    currentUser = null;
+    clearLocalBalance();
     updateStatusBar();
     updateUserBar();
-    return;
   }
-
-  // Не используем getSession() — он возвращает null пока сессия не восстановлена.
-  // Только onAuthStateChange знает точный статус.
-  // При загрузке страницы он сразу стреляет INITIAL_SESSION или SIGNED_IN.
-  sb.auth.onAuthStateChange(async (event, session) => {
-    console.log('Auth event:', event, session?.user?.email);
-
-    if (event === 'SIGNED_OUT') {
-      currentUser = null;
-      clearLocalBalance();
-      updateStatusBar();
-      updateUserBar();
-      return;
-    }
-
-    if (session?.user) {
-      currentUser = session.user;
-      await loadUserBalance(currentUser.id, currentUser.email);
-    } else if (event === 'INITIAL_SESSION' && !session) {
-      // Точно не залогинен при первой загрузке
-      currentUser = null;
-      clearLocalBalance();
-    }
-
-    updateStatusBar();
-    updateUserBar();
-  });
 });
 </script>
 </body>
