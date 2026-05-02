@@ -1810,11 +1810,26 @@ async function handleAuthBtn() {
 async function loadUserBalance(userId, email) {
   if (!sb) return;
   try {
-    const { data, error } = await sb.from('user_balance').select('*').eq('id', userId).single();
+    const { data, error } = await sb
+      .from('user_balance')
+      .select('*')
+      .eq('id', userId)
+      .maybeSingle(); // maybeSingle не даёт 406 если записи нет
 
-    if (error && error.code === 'PGRST116') {
-      // Новый пользователь — даём 5 генераций
-      const { error: insertErr } = await sb.from('user_balance').upsert({
+    if (error) {
+      console.error('loadUserBalance error:', error);
+      // При ошибке даём 5 генераций локально
+      setGenerationsLeft(5);
+      localStorage.setItem('user_tier', 'free');
+      localStorage.setItem('generation_balance_initialized', '1');
+      updateStatusBar();
+      updateUserBar();
+      return;
+    }
+
+    if (!data) {
+      // Новый пользователь — создаём запись
+      const { error: upsertErr } = await sb.from('user_balance').upsert({
         id: userId,
         email: email,
         tier: 'free',
@@ -1823,28 +1838,20 @@ async function loadUserBalance(userId, email) {
         updated_at: new Date().toISOString()
       }, { onConflict: 'id' });
 
-      if (insertErr) {
-        console.error('Insert balance error:', insertErr);
-        // Даём генерации локально даже если база не сработала
+      if (upsertErr) {
+        console.error('upsert error:', upsertErr);
         setGenerationsLeft(5);
-        localStorage.setItem('user_tier', 'free');
       } else {
         setGenerationsLeft(5);
-        localStorage.setItem('user_tier', 'free');
         showCopyToast('🎉 +5 генераций бесплатно!');
       }
-    } else if (data) {
-      // Существующий пользователь — данные из базы
+      localStorage.setItem('user_tier', 'free');
+    } else {
+      // Существующий пользователь
       setGenerationsLeft(data.generations_left);
       localStorage.setItem('user_tier', data.tier || 'free');
-    } else if (error) {
-      console.error('loadUserBalance error:', error);
-      // При ошибке базы — даём 5 генераций локально
-      setGenerationsLeft(5);
-      localStorage.setItem('user_tier', 'free');
     }
 
-    // Обновляем generation_balance_initialized
     localStorage.setItem('generation_balance_initialized', '1');
     updateStatusBar();
     updateUserBar();
