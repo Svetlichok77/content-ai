@@ -1937,15 +1937,8 @@ activatePaidTier = function(tier) {
 // ============================================================
 // ЗАПУСК — ждём Supabase, потом стартуем
 // ============================================================
-init();
-ensureGenerationBalance();
-detectTierFromUrl();
-updateStatusBar();
-updateUserBar();
-
 function clearLocalBalance() {
-  // Чистим ТОЛЬКО наши ключи баланса — НЕ трогаем ключи Supabase (sb-*-auth-token)
-  // иначе сессия слетает при перезагрузке
+  // Чистим только наши ключи — НЕ трогаем sb-*-auth-token Supabase!
   localStorage.removeItem('generations_left');
   localStorage.removeItem('generation_balance_initialized');
   localStorage.removeItem('user_tier');
@@ -1954,6 +1947,12 @@ function clearLocalBalance() {
   localStorage.removeItem('pending_payment_started');
 }
 
+init();
+ensureGenerationBalance();
+detectTierFromUrl();
+updateStatusBar();
+updateUserBar();
+
 waitForSupabase(function() {
   if (!sb) {
     updateStatusBar();
@@ -1961,33 +1960,29 @@ waitForSupabase(function() {
     return;
   }
 
-  // Проверяем сессию
-  sb.auth.getSession().then(({ data }) => {
-    if (!data?.session) {
-      // Точно не залогинен — чистим только наш баланс
-      clearLocalBalance();
-      currentUser = null;
-    } else {
-      currentUser = data.session.user;
-      // Загружаем баланс из Supabase
-      loadUserBalance(currentUser.id, currentUser.email);
-    }
-    updateStatusBar();
-    updateUserBar();
-  }).catch(e => {
-    console.warn('Session check failed:', e.message);
-    updateStatusBar();
-    updateUserBar();
-  });
-
-  // Слушаем изменения авторизации
+  // Не используем getSession() — он возвращает null пока сессия не восстановлена.
+  // Только onAuthStateChange знает точный статус.
+  // При загрузке страницы он сразу стреляет INITIAL_SESSION или SIGNED_IN.
   sb.auth.onAuthStateChange(async (event, session) => {
-    currentUser = session?.user || null;
-    if (currentUser) {
+    console.log('Auth event:', event, session?.user?.email);
+
+    if (event === 'SIGNED_OUT') {
+      currentUser = null;
+      clearLocalBalance();
+      updateStatusBar();
+      updateUserBar();
+      return;
+    }
+
+    if (session?.user) {
+      currentUser = session.user;
       await loadUserBalance(currentUser.id, currentUser.email);
-    } else {
+    } else if (event === 'INITIAL_SESSION' && !session) {
+      // Точно не залогинен при первой загрузке
+      currentUser = null;
       clearLocalBalance();
     }
+
     updateStatusBar();
     updateUserBar();
   });
