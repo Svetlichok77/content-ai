@@ -229,15 +229,6 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding-top:16px" id="tierGrid">
 
-    <div class="panel" style="text-align:center;border-color:rgba(255,165,0,.35);grid-column:1/-1">
-      <div style="font-family:Unbounded,sans-serif;font-size:11px;letter-spacing:.15em;color:orange;text-transform:uppercase;margin-bottom:8px">🧪 TEST — только для проверки</div>
-      <div style="display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap">
-        <div><span style="font-family:Unbounded,sans-serif;font-size:32px;color:var(--text)">50<span style="font-size:14px">₽</span></span> · <span style="color:var(--muted);font-size:13px">10 генераций</span></div>
-        <button class="btn" style="margin-top:0;width:auto;padding:12px 24px;font-size:12px;background:linear-gradient(135deg,orange,#ffcc00);color:#04110f" onclick="goToPay('test')">Оплатить тест →</button>
-      </div>
-      <div style="font-size:11px;color:var(--muted);margin-top:8px">Реальная оплата 50₽ через Продамус — для проверки что webhook работает</div>
-    </div>
-
     <div class="panel" style="text-align:center">
       <div style="font-family:Unbounded,sans-serif;font-size:11px;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:16px">FREE</div>
       <div style="font-family:Unbounded,sans-serif;font-size:40px;color:var(--text);line-height:1;margin-bottom:4px">0<span style="font-size:16px">₽</span></div>
@@ -414,14 +405,13 @@ let currentUser = null;
 
 // FIX #3: реальные ссылки Продамус
 const PAY_URLS = {
-  test:  "https://payform.ru/dvbokMA/",
   start: "https://payform.ru/l6bnEXF/",
   pro:   "https://payform.ru/3ebnF4l/",
   max:   "https://payform.ru/b0bnF8n/"
 };
 
 const FREE_LIMIT  = 0;
-const TIER_PACKS  = { free:5, test:10, start:50, pro:200, max:500 };
+const TIER_PACKS  = { free:5, start:50, pro:200, max:500 };
 
 const appData = {
   platforms: ['Telegram','Pinterest','ВКонтакте','Дзен','Instagram / Reels','YouTube Shorts','TikTok','Threads','TenChat','Одноклассники'],
