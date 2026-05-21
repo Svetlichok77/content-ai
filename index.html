@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -1022,11 +1021,19 @@ CTA: мягкий следующий шаг через результат.`);
 
 function buildPrompt() {
   const project=v('project')||'Проект без названия', role=v('role')||'эксперт',
-        topic=v('topic')||'[тема не указана]', topicBank=v('topicsOutput')||'',
+        topic=v('topic')||'[тема не указана]', topicBankRaw=v('topicsOutput')||'',
+        topicBank=topicBankRaw.length>800?topicBankRaw.substring(0,800)+'...':topicBankRaw,
         product=v('product')||'[продукт]', audience=v('audienceData')||'[ЦА не указана]',
-        details=v('details')||'не указаны', cta=v('cta')||'мягкий следующий шаг',
+        detailsRaw=v('details')||'не указаны',
+        details=detailsRaw.length>600?detailsRaw.substring(0,600)+'...(сокращено)':detailsRaw,
+        cta=v('cta')||'мягкий следующий шаг',
         pf=platformProfiles[S.platform]||platformProfiles['Telegram'],
         extra=extraInstruction();
+
+  // Защита от дублирования: если в тезисах уже есть ЦА-данные — обрезаем до 400 символов
+  const detailsSafe = details.length > 400
+    ? details.substring(0, 400) + '...[обрезано — используй поле ЦА для данных аудитории]'
+    : details;
 
   return `Ты — первоклассный русскоязычный копирайтер, контент-стратег и психолог потребительского поведения проекта «${project}». Твоя суперсила — создавать тексты, которые человек читает и думает "это написано про меня, откуда они знают?"
 
@@ -1075,7 +1082,7 @@ ${audience}
 Форматы: ${S.formats.join(' + ')} | Цель: ${S.goal}
 Тема: ${topic}
 ${topicBank ? 'Банк тем из болей ЦА: ' + topicBank : ''}
-Продукт: ${product} | Тезисы: ${details} | CTA: ${cta}
+Продукт: ${product} | Тезисы: ${detailsSafe} | CTA: ${cta}
 
 ПЛАТФОРМА: ${S.platform}
 ${pf.rules}
