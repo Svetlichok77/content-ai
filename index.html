@@ -44,8 +44,8 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 <header>
   <div class="brand">AI content system · PRO</div>
   <h1>Контент на <span>автопилоте</span> PRO</h1>
-  <p class="sub">Сделай пост, пин или сценарий за 30 секунд. Без копирайтинга. Без идей. Без ступора.</p>
-  <div class="herochips"><span>SMM в кармане</span><span>5 генераций бесплатно после регистрации</span><span>1 идея → много форматов</span><span>Без ступора</span></div>
+  <p class="sub">Пишешь посты, пины и сценарии за 30 секунд — без ступора, без идей с нуля, без копирайтера.</p>
+  <div class="herochips"><span>10 платформ</span><span>5 генераций бесплатно</span><span>1 идея → много форматов</span><span>Психологические техники</span><span>Claude AI внутри</span></div>
   <div class="user-bar" id="userBar">
     <div class="user-bar-info" id="userBarInfo">🎁 Зарегистрируйся — получи <strong style="color:var(--lime)">5 генераций бесплатно</strong></div>
     <button class="user-bar-btn" id="userBarBtn">Войти / Регистрация</button>
@@ -112,6 +112,14 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   </div>
 </section>
 
+<div style="display:flex;gap:10px;margin-bottom:4px;align-items:center">
+  <button id="quickStartBtn" onclick="toggleQuickStart()" data-mode="full"
+    style="display:flex;align-items:center;gap:8px;background:rgba(0,255,209,.08);border:1px solid rgba(0,255,209,.3);color:var(--accent);border-radius:999px;padding:10px 18px;cursor:pointer;font-family:Onest,sans-serif;font-size:13px;font-weight:700;transition:.18s">
+    ⚡ Быстрый старт
+  </button>
+  <span id="quickStartHint" style="color:var(--muted);font-size:12px">— только тема и площадка, без настройки</span>
+</div>
+
 <section class="panel">
   <div class="label">1 · Проект и площадка</div>
   <div class="row"><input id="project" placeholder="Название проекта: Психология отношений / Pinterest без лица"><input id="role" placeholder="Роль автора: психолог, эксперт, SMM, AI-креатор..."></div><br>
@@ -119,28 +127,27 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   <div id="platformInfo" class="platform-card"></div>
 </section>
 
-<section class="panel">
-  <div class="label">2 · Не знаю ЦА · Найти аудиторию</div>
-  <h2 style="font-family:Unbounded,sans-serif;font-size:20px;letter-spacing:-.03em;margin-bottom:8px">Сначала найдём, кому вообще это нужно</h2>
-  <div class="hint warning">⚡ 30 секунд → готовая ЦА с болями, мифами, страхами и живыми фразами. Без этого контент часто стреляет мимо.</div><br>
-  <div class="row"><input id="audFindNiche" placeholder="Ниша / тема: Pinterest, фитнес дома, психология отношений"><input id="audFindProduct" placeholder="Продукт / услуга: курс, консультация, гайд, подписка"></div><br>
-  <div class="row"><input id="audFindKnown" placeholder="Что уже известно: кто покупает, комментарии, наблюдения"><select id="audFindDepth"><option value="deep">Глубоко</option><option value="quick">Быстро</option></select></div><br>
-  <textarea id="audienceFinderOutput" class="textarea-tall" placeholder="Здесь появится ЦА: сегменты, боли, мифы, страхи, триггеры, живые фразы. Потом нажми «Перенести в ЦА»."></textarea>
-  <div class="copybar"><button class="btn2" onclick="findAudience()">🔎 Найти ЦА</button><button class="btn2" onclick="transferAudienceFinder()" title="Перенесёт в блок 3">Перенести в ЦА ↓</button><button class="btn2" onclick="transferAudienceToTopics()" title="Перенесёт в блок 4">Перенести в Темы ↓</button><button class="btn2" onclick="copyText('audienceFinderOutput')">Скопировать</button><button class="btn2" onclick="clearText('audienceFinderOutput')">Очистить</button></div>
+<section class="panel" id="section-audience-finder"> · Найти аудиторию</div>
+  <h2 style="font-family:Unbounded,sans-serif;font-size:20px;letter-spacing:-.03em;margin-bottom:8px">Сначала найдём, кто твой покупатель</h2>
+  <div class="hint warning">⚡ 30 секунд → готовый портрет покупателя: боли, страхи, живые фразы и темы для постов.</div><br>
+  <div class="row"><input id="audFindNiche" placeholder="Твоя тема / ниша: Pinterest, фитнес дома, психология отношений"><input id="audFindProduct" placeholder="Что продаёшь: курс, консультация, гайд, подписка"></div><br>
+  <div class="row"><input id="audFindKnown" placeholder="Что уже знаешь о покупателях: кто пишет, комментарии, наблюдения"><select id="audFindDepth"><option value="deep">Глубоко</option><option value="quick">Быстро</option></select></div><br>
+  <textarea id="audienceFinderOutput" class="textarea-tall" placeholder="Здесь появится портрет покупателя: кто это, боли, страхи, мифы, живые фразы. Потом нажми «Перенести ↓»."></textarea>
+  <div class="copybar"><button class="btn2" onclick="findAudience()">🔎 Найти покупателя</button><button class="btn2" onclick="transferAudienceFinder()" title="Перенесёт в блок 3">Перенести в блок 3 ↓</button><button class="btn2" onclick="transferAudienceToTopics()" title="Перенесёт в блок 4">Перенести в темы ↓</button><button class="btn2" onclick="copyText('audienceFinderOutput')">Скопировать</button><button class="btn2" onclick="clearText('audienceFinderOutput')">Очистить</button></div>
 </section>
 
-<section class="panel">
-  <div class="label">3 · ЦА и смыслы</div>
-  <textarea id="audienceData" class="textarea-tall" placeholder="Вставь сюда готовый блок ЦА или перенеси из блока выше: ФОКУС-СЕГМЕНТ, ТРИГГЕРЫ, БОЛИ, МИФЫ, СТРАХИ, ЖЕЛАНИЯ, ЖИВЫЕ ФРАЗЫ, ТЕМЫ..."></textarea>
-  <div class="hint">🎯 Чем точнее ЦА — тем сильнее контент. Мифы и триггеры особенно важны для хуков!</div>
+<section class="panel" id="section-audience-data">
+  <div class="label">3 · Кому продаёшь</div>
+  <textarea id="audienceData" class="textarea-tall" placeholder="Вставь сюда портрет покупателя или перенеси из блока выше. Что важно: кто это, их боли, страхи, мифы, живые фразы, о чём мечтают..."></textarea>
+  <div class="hint">🎯 Чем точнее опишешь покупателя — тем сильнее контент. Живые фразы и страхи особенно важны для цепляющих заголовков!</div>
 </section>
 
-<section class="panel">
-  <div class="label">4 · Темы из болей ЦА</div>
+<section class="panel" id="section-topics">
+  <div class="label">4 · Темы из болей покупателя</div>
   <h2 style="font-family:Unbounded,sans-serif;font-size:20px;letter-spacing:-.03em;margin-bottom:8px">Не знаешь, о чём писать? Найдём темы из боли</h2>
-  <div class="hint warning">🔥 Темы по 16 проверенным формулам заголовков — из болей, мифов и живых фраз ЦА.</div><br>
+  <div class="hint warning">🔥 Темы по 16 проверенным формулам заголовков — из болей, мифов и живых фраз твоего покупателя.</div><br>
   <textarea id="topicsOutput" class="textarea-tall" placeholder="Здесь появятся темы по формулам: боль, миф, результат, провокация, внутренний монолог и другие. Выдели тему и нажми «Перенести тему ↓»."></textarea>
-  <div class="copybar"><button class="btn2" onclick="findTopics()">🔥 Найти темы из ЦА</button><button class="btn2" onclick="transferSelectedTopic()">Перенести тему ↓</button><button class="btn2" onclick="copyText('topicsOutput')">Скопировать</button><button class="btn2" onclick="clearText('topicsOutput')">Очистить</button></div>
+  <div class="copybar"><button class="btn2" onclick="findTopics()">🔥 Найти темы</button><button class="btn2" onclick="transferSelectedTopic()">Перенести тему ↓</button><button class="btn2" onclick="copyText('topicsOutput')">Скопировать</button><button class="btn2" onclick="clearText('topicsOutput')">Очистить</button></div>
 </section>
 
 <section class="panel">
@@ -151,9 +158,9 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 
 <section class="panel">
   <div class="label">6 · Тема, продукт и тезисы</div>
-  <div class="row"><input id="topic" placeholder="Тема: как получать трафик из Pinterest без лица"><input id="product" placeholder="Продукт / лид-магнит / услуга"></div>
+  <div class="row"><input id="topic" placeholder="Тема поста: как получать трафик из Pinterest без лица"><input id="product" placeholder="Что продаёшь: курс, консультация, бесплатный подарок..."></div>
   <div class="hint" style="margin-top:8px;font-size:12px">💡 Тему можно выбрать из блока 4 кнопкой «Перенести тему ↓» — или написать свою.</div><br>
-  <textarea id="details" placeholder="Исходные тезисы, факты, кейс, что важно учесть. Чем больше конкретики — тем лучше результат."></textarea>
+  <textarea id="details" placeholder="О чём пост: ключевые мысли, факты, личный кейс, что важно передать читателю. Чем конкретнее — тем лучше результат."></textarea>
   <div class="hint" style="margin-top:8px;font-size:12px">💡 Нет мыслей? Скопируй боли и живые фразы из блока 2 и вставь сюда — нейросеть сама выстроит смыслы.</div><br><br>
   <div class="row3"><select id="tone"></select><select id="depth"></select><select id="extraPreset"><option value="clean">Убрать воду и клише</option><option value="viral">Вирусность + конкретика</option><option value="pain">Усиление боли</option><option value="seo">SEO / ключи</option><option value="none">Без дополнений</option></select></div><br>
   <input id="cta" value="мягкий переход к продукту / лид-магниту / следующему шагу">
@@ -215,64 +222,57 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
     <h2 style="font-family:Unbounded,sans-serif;font-size:clamp(26px,4vw,44px);letter-spacing:-.04em;margin-bottom:10px">Контент на <span style="color:var(--accent)">автопилоте</span></h2>
     <p style="color:var(--muted);font-size:15px">Промпты тоже расходуют генерации. Остаток не сгорает.</p>
   </div>
-  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding-top:16px" id="tierGrid">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding-top:16px" id="tierGrid">
+
+    <!-- АВТОПИЛОТ -->
     <div class="panel" style="text-align:center">
-      <div style="font-family:Unbounded,sans-serif;font-size:11px;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:16px">FREE</div>
-      <div style="font-family:Unbounded,sans-serif;font-size:40px;color:var(--text);line-height:1;margin-bottom:4px">0<span style="font-size:16px">₽</span></div>
-      <div style="color:var(--muted);font-size:12px;margin-bottom:18px">при регистрации</div>
-      <div style="background:rgba(0,255,209,.07);border:1px solid var(--line2);border-radius:12px;padding:12px;margin-bottom:16px">
-        <div style="font-family:Unbounded,sans-serif;font-size:26px;color:var(--accent)">5</div>
-        <div style="font-size:12px;color:var(--muted)">генераций</div>
-      </div>
-      <ul style="list-style:none;text-align:left;font-size:13px;color:#b9d6d1;margin-bottom:18px;display:flex;flex-direction:column;gap:8px">
-        <li>✓ Проверить конструктор</li><li>✓ Любые форматы</li><li>✓ Поиск ЦА</li>
-        <li style="color:var(--muted)">✗ После лимита — тариф</li>
-      </ul>
-      <button class="btn" style="margin-top:0;font-size:12px;padding:14px" onclick="closePricingModal()">Начать →</button>
-    </div>
-    <div class="panel" style="text-align:center">
-      <div style="font-family:Unbounded,sans-serif;font-size:11px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;margin-bottom:16px">START</div>
-      <div style="font-family:Unbounded,sans-serif;font-size:40px;color:var(--text);line-height:1;margin-bottom:4px">290<span style="font-size:16px">₽</span></div>
-      <div style="color:var(--muted);font-size:12px;margin-bottom:18px">пакет генераций</div>
-      <div style="background:rgba(0,255,209,.07);border:1px solid var(--line2);border-radius:12px;padding:12px;margin-bottom:16px">
-        <div style="font-family:Unbounded,sans-serif;font-size:26px;color:var(--accent)">50</div>
-        <div style="font-size:12px;color:var(--muted)">генераций</div>
-      </div>
-      <ul style="list-style:none;text-align:left;font-size:13px;color:#b9d6d1;margin-bottom:18px;display:flex;flex-direction:column;gap:8px">
-        <li>✓ Все форматы</li><li>✓ Все площадки</li><li>✓ Поиск ЦА</li><li>✓ Не сгорают</li>
-      </ul>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">~5,8 ₽ за генерацию</div>
-      <button class="btn" style="margin-top:0;font-size:12px;padding:14px" onclick="goToPay('start')">Купить START →</button>
-    </div>
-    <div class="panel tier-popular" style="text-align:center">
-      <div class="popular-badge">✦ ПОПУЛЯРНЫЙ</div>
-      <div style="font-family:Unbounded,sans-serif;font-size:11px;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:16px">PRO</div>
+      <div style="font-family:Unbounded,sans-serif;font-size:11px;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:16px">АВТОПИЛОТ</div>
       <div style="font-family:Unbounded,sans-serif;font-size:40px;color:var(--text);line-height:1;margin-bottom:4px">990<span style="font-size:16px">₽</span></div>
-      <div style="color:var(--muted);font-size:12px;margin-bottom:18px">контент на месяц</div>
-      <div style="background:rgba(0,255,209,.12);border:1px solid var(--accent);border-radius:12px;padding:12px;margin-bottom:16px">
-        <div style="font-family:Unbounded,sans-serif;font-size:26px;color:var(--accent)">200</div>
-        <div style="font-size:12px;color:var(--muted)">генераций</div>
-      </div>
-      <ul style="list-style:none;text-align:left;font-size:13px;color:#b9d6d1;margin-bottom:18px;display:flex;flex-direction:column;gap:8px">
-        <li>✓ Все форматы</li><li>✓ Все площадки</li><li>✓ Поиск ЦА</li><li>✓ Не сгорают</li>
+      <div style="color:var(--muted);font-size:12px;margin-bottom:20px">в месяц</div>
+      <ul style="list-style:none;text-align:left;font-size:13px;color:#b9d6d1;margin-bottom:24px;display:flex;flex-direction:column;gap:10px">
+        <li>✓ Контент для 10 платформ</li>
+        <li>✓ 18 форматов контента</li>
+        <li>✓ Поиск ЦА и тем</li>
+        <li>✓ Психологические техники</li>
+        <li>✓ Вирусные заголовки</li>
       </ul>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">~4,95 ₽ за генерацию</div>
-      <button class="btn" style="margin-top:0;font-size:12px;padding:14px" onclick="goToPay('pro')">Купить PRO →</button>
+      <button class="btn" style="margin-top:0;font-size:12px;padding:14px" onclick="goToPay('monthly')">Подключить АВТОПИЛОТ →</button>
     </div>
-    <div class="panel" style="text-align:center;border-color:rgba(200,255,0,.35)">
-      <div style="font-family:Unbounded,sans-serif;font-size:11px;letter-spacing:.15em;color:var(--lime);text-transform:uppercase;margin-bottom:16px">PRO MAX</div>
-      <div style="font-family:Unbounded,sans-serif;font-size:40px;color:var(--text);line-height:1;margin-bottom:4px">2490<span style="font-size:16px">₽</span></div>
-      <div style="color:var(--muted);font-size:12px;margin-bottom:18px">для потока контента</div>
-      <div style="background:rgba(200,255,0,.08);border:1px solid rgba(200,255,0,.38);border-radius:12px;padding:12px;margin-bottom:16px">
-        <div style="font-family:Unbounded,sans-serif;font-size:26px;color:var(--lime)">500</div>
-        <div style="font-size:12px;color:var(--muted)">генераций</div>
-      </div>
-      <ul style="list-style:none;text-align:left;font-size:13px;color:#b9d6d1;margin-bottom:18px;display:flex;flex-direction:column;gap:8px">
-        <li>✓ Все форматы</li><li>✓ Все площадки</li><li>✓ Поиск ЦА</li><li>✓ Не сгорают</li>
+
+    <!-- ТУРБО (popular) -->
+    <div class="panel tier-popular" style="text-align:center">
+      <div class="popular-badge">✦ ВЫГОДНЕЕ</div>
+      <div style="font-family:Unbounded,sans-serif;font-size:11px;letter-spacing:.15em;color:var(--lime);text-transform:uppercase;margin-bottom:16px">ТУРБО</div>
+      <div style="font-family:Unbounded,sans-serif;font-size:40px;color:var(--text);line-height:1;margin-bottom:4px">7990<span style="font-size:16px">₽</span></div>
+      <div style="color:var(--muted);font-size:12px;margin-bottom:6px">в год</div>
+      <div style="background:rgba(200,255,0,.12);border:1px solid rgba(200,255,0,.35);border-radius:10px;padding:8px;margin-bottom:16px;color:#eaffbd;font-size:12px;font-weight:700">Экономия 3 890₽ · как 4 месяца в подарок</div>
+      <ul style="list-style:none;text-align:left;font-size:13px;color:#b9d6d1;margin-bottom:24px;display:flex;flex-direction:column;gap:10px">
+        <li>✓ Всё из тарифа АВТОПИЛОТ</li>
+        <li>✓ Год без перерывов</li>
+        <li>✓ Приоритет при обновлениях</li>
+        <li>✓ Оплата раз в год</li>
+        <li style="color:var(--lime)">✓ Всего 666₽ в месяц</li>
       </ul>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:12px">~5 ₽ за генерацию</div>
-      <button class="btn" style="margin-top:0;font-size:12px;padding:14px;background:linear-gradient(135deg,var(--lime),#9fff00);color:#04100a" onclick="goToPay('max')">Купить MAX →</button>
+      <button class="btn" style="margin-top:0;font-size:12px;padding:14px;background:linear-gradient(135deg,var(--lime),#9fff00);color:#04100a" onclick="goToPay('annual')">Подключить ТУРБО →</button>
     </div>
+
+    <!-- ТОПЛИВО -->
+    <div class="panel" style="text-align:center;border-color:rgba(0,167,255,.3)">
+      <div style="font-family:Unbounded,sans-serif;font-size:11px;letter-spacing:.15em;color:#00a7ff;text-transform:uppercase;margin-bottom:16px">ТОПЛИВО</div>
+      <div style="font-family:Unbounded,sans-serif;font-size:40px;color:var(--text);line-height:1;margin-bottom:4px">590<span style="font-size:16px">₽</span></div>
+      <div style="color:var(--muted);font-size:12px;margin-bottom:20px">разовый пакет</div>
+      <div style="background:rgba(0,167,255,.1);border:1px solid rgba(0,167,255,.3);border-radius:12px;padding:12px;margin-bottom:16px">
+        <div style="font-family:Unbounded,sans-serif;font-size:26px;color:#00a7ff">30</div>
+        <div style="font-size:12px;color:var(--muted)">дополнительных генераций</div>
+      </div>
+      <ul style="list-style:none;text-align:left;font-size:13px;color:#b9d6d1;margin-bottom:24px;display:flex;flex-direction:column;gap:10px">
+        <li>✓ Для активных месяцев</li>
+        <li>✓ Генерации не сгорают</li>
+        <li>✓ Нужна активная подписка</li>
+      </ul>
+      <button class="btn btn-blue" style="margin-top:0;font-size:12px;padding:14px" onclick="goToPay('boost')">Добавить ТОПЛИВО →</button>
+    </div>
+
   </div>
   <div class="hint warning" style="margin-top:16px;text-align:center">♻️ Генерации не сгорают: всё, что не использовали сейчас, остаётся на балансе.</div>
   <div class="panel" style="margin-top:16px">
@@ -366,13 +366,13 @@ try {
 let currentUser = null;
 
 const PAY_URLS = {
-  start: "https://payform.ru/l6bnEXF/",
-  pro:   "https://payform.ru/3ebnF4l/",
-  max:   "https://payform.ru/b0bnF8n/"
+  monthly: "https://payform.ru/a2bytMw/",
+  boost:   "https://payform.ru/e5bytOH/",
+  annual:  "https://payform.ru/i9bytQT/"
 };
 
 const FREE_LIMIT  = 0;
-const TIER_PACKS  = { free:5, start:50, pro:200, max:500 };
+const TIER_PACKS  = { free:5, monthly:50, annual:600, boost:30 };
 
 const appData = {
   platforms: ['Telegram','Pinterest','ВКонтакте','Дзен','Instagram / Reels','YouTube Shorts','TikTok','Threads','TenChat','Одноклассники'],
@@ -595,7 +595,7 @@ async function activatePaidTier(tier){
 function cleanPaymentUrl(){window.history.replaceState({},'',window.location.pathname);}
 
 function showActivationBanner(tier,alreadyActivated){
-  const labels={free:'Бесплатно',test:'TEST',start:'START',pro:'PRO',max:'PRO MAX'};
+  const labels={free:'Бесплатно',test:'TEST',monthly:'АВТОПИЛОТ',annual:'ТУРБО',boost:'ТОПЛИВО'};
   const count=TIER_PACKS[tier];
   showPaymentNotice(
     alreadyActivated?'Тариф уже активирован':'Тариф '+(labels[tier]||tier)+' активирован!',
@@ -634,11 +634,16 @@ function updateStatusBar(){
   ensureGenerationBalance();
   const tier=getUserTier();
   const left = currentUser ? getGenerationsLeft() : 0;
-  const tierLabel={free:'Бесплатно',test:'TEST',start:'START',pro:'PRO',max:'PRO MAX'}[tier]||tier;
+  const tierLabel={free:'Бесплатно',monthly:'АВТОПИЛОТ',annual:'ТУРБО',boost:'ТОПЛИВО'}[tier]||tier;
   const el=document.getElementById('apiStatus');
   if(!currentUser){if(el) el.innerHTML = `Зарегистрируйся и получи <strong style="color:var(--lime)">5 генераций бесплатно</strong>`;return;}
-  if(el){el.innerHTML=`Тариф: <strong style="color:var(--accent)">${tierLabel}</strong> · Осталось генераций: <strong style="color:var(--lime)">${left}</strong> · не сгорают`;}
-  if(left<=0&&tier==='free')document.getElementById('paywall').classList.remove('hidden');
+  const subTiers = ['monthly','annual'];
+  if(subTiers.includes(tier)){
+    if(el){el.innerHTML=`Тариф: <strong style="color:var(--accent)">${tierLabel}</strong> · <span style="color:var(--lime)">Активна ✓</span>`;}
+  } else {
+    if(el){el.innerHTML=`Тариф: <strong style="color:var(--accent)">${tierLabel}</strong> · Осталось: <strong style="color:var(--lime)">${left}</strong> генераций`;}
+  }
+  if(left<=0&&!subTiers.includes(tier))document.getElementById('paywall').classList.remove('hidden');
 }
 
 function canUsePrompt() {
@@ -1211,7 +1216,33 @@ async function generateAI() {
 }
 
 // МОДАЛЬНЫЕ ОКНА
-function openPricingModal()  { document.getElementById('pricingOverlay').style.display='block'; document.body.style.overflow='hidden'; }
+function toggleQuickStart() {
+  const btn = document.getElementById('quickStartBtn');
+  const hint = document.getElementById('quickStartHint');
+  const isQuick = btn.dataset.mode === 'quick';
+  const newMode = isQuick ? 'full' : 'quick';
+  btn.dataset.mode = newMode;
+  const sections = ['section-audience-finder','section-audience-data','section-topics'];
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.style.display = newMode === 'quick' ? 'none' : '';
+  });
+  if(newMode === 'quick'){
+    btn.innerHTML = '⚙️ Расширенный режим';
+    btn.style.background = 'rgba(200,255,0,.1)';
+    btn.style.borderColor = 'rgba(200,255,0,.4)';
+    btn.style.color = 'var(--lime)';
+    hint.textContent = '— блоки 2, 3, 4 скрыты';
+  } else {
+    btn.innerHTML = '⚡ Быстрый старт';
+    btn.style.background = 'rgba(0,255,209,.08)';
+    btn.style.borderColor = 'rgba(0,255,209,.3)';
+    btn.style.color = 'var(--accent)';
+    hint.textContent = '— только тема и площадка, без настройки';
+  }
+}
+
+  { document.getElementById('pricingOverlay').style.display='block'; document.body.style.overflow='hidden'; }
 function closePricingModal() { document.getElementById('pricingOverlay').style.display='none'; document.body.style.overflow=''; }
 
 // УТИЛИТЫ
@@ -1516,7 +1547,7 @@ function updateUserBar() {
   if (!infoEl || !btnEl) return;
   const left = getGenerationsLeft();
   const tier = getUserTier();
-  const tierLabel = {free:'Бесплатно',test:'TEST',start:'START',pro:'PRO',max:'PRO MAX'}[tier] || tier;
+  const tierLabel = {free:'Бесплатно',monthly:'АВТОПИЛОТ',annual:'ТУРБО',boost:'ТОПЛИВО'}[tier] || tier;
   if (currentUser) {
     const email = currentUser.email || '';
     const shortEmail = email.length > 22 ? email.substring(0, 20) + '...' : email;
