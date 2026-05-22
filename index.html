@@ -7,10 +7,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800&family=Onest:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#030606;--card:#0b1111;--card2:#111d1c;--line:#1d3d3a;--line2:#00ffd155;--accent:#00ffd1;--accent2:#00a7ff;--lime:#c8ff00;--text:#ecfffb;--muted:#89aaa5;--danger:#ff6b6b;--r:24px;--rs:14px;--shadow:0 28px 90px rgba(0,255,209,.13)}
-*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Onest,system-ui,sans-serif;background:radial-gradient(circle at 8% 0%,rgba(0,255,209,.22),transparent 30%),radial-gradient(circle at 96% 8%,rgba(0,167,255,.16),transparent 32%),radial-gradient(circle at 50% 100%,rgba(138,92,255,.13),transparent 35%),linear-gradient(135deg,#020404,#07100f 42%,#030606);color:var(--text);min-height:100vh;line-height:1.55;font-size:15px}.noise:before{content:"";position:fixed;inset:0;background:linear-gradient(120deg,transparent,rgba(0,255,209,.04),transparent),repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 3px);pointer-events:none;mix-blend-mode:screen}.noise:after{content:"";position:fixed;right:6%;bottom:8%;width:280px;height:280px;border-radius:50%;background:rgba(0,255,209,.06);filter:blur(55px);pointer-events:none}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Onest,system-ui,sans-serif;background:radial-gradient(ellipse 60% 40% at 12% 0%,rgba(0,255,209,.14),transparent),radial-gradient(ellipse 50% 35% at 88% 6%,rgba(0,120,255,.10),transparent),radial-gradient(ellipse 70% 50% at 50% 100%,rgba(80,40,200,.09),transparent),radial-gradient(ellipse 40% 60% at 50% 45%,rgba(0,20,18,.6),transparent),linear-gradient(160deg,#010303 0%,#040c0a 30%,#030809 55%,#020505 80%,#010202 100%);color:var(--text);min-height:100vh;line-height:1.55;font-size:15px}.noise:before{content:"";position:fixed;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(0,255,209,.025),transparent 60%),repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 1px,transparent 1px 4px);pointer-events:none;mix-blend-mode:screen}.noise:after{content:"";position:fixed;right:4%;bottom:6%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(0,255,209,.07),rgba(0,120,255,.04),transparent 70%);filter:blur(60px);pointer-events:none}
 header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--line);position:relative;overflow:hidden}header:before{content:'PRO';position:absolute;right:5%;top:8px;font-family:Unbounded,sans-serif;font-size:112px;font-weight:800;color:transparent;-webkit-text-stroke:1px rgba(0,255,209,.12);letter-spacing:-.08em;pointer-events:none}.brand{font-family:Unbounded,sans-serif;color:var(--accent);font-size:12px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:18px}h1{font-family:Unbounded,sans-serif;font-size:clamp(30px,5vw,58px);line-height:1.02;letter-spacing:-.05em;margin-bottom:18px}h1 span{color:var(--accent);text-shadow:0 0 30px rgba(0,255,209,.42)}.sub{max-width:880px;margin:0 auto;color:var(--muted);font-size:16px}.herochips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:24px}.herochips span{border:1px solid rgba(0,255,209,.24);background:rgba(0,255,209,.055);color:#b7fff6;border-radius:999px;padding:8px 13px;font-size:12px;box-shadow:0 0 24px rgba(0,255,209,.08)}
 .wrap{max-width:1260px;margin:0 auto;padding:30px 20px 82px}.grid{display:grid;grid-template-columns:minmax(0,1fr) 520px;gap:22px;align-items:start}
-.panel{background:linear-gradient(180deg,rgba(13,22,22,.92),rgba(7,11,11,.96));border:1px solid rgba(0,255,209,.16);border-radius:var(--r);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.035);padding:24px;margin-bottom:16px;backdrop-filter:blur(14px);position:relative;overflow:visible}.panel::before{content:'';position:absolute;inset:0;border-radius:var(--r);background:linear-gradient(135deg,rgba(0,255,209,.06),transparent 38%,rgba(0,167,255,.035));pointer-events:none;z-index:0}.panel>*{position:relative;z-index:1}
+.panel{background:linear-gradient(160deg,rgba(12,20,20,.95),rgba(6,10,10,.97));border:1px solid rgba(0,255,209,.16);border-radius:var(--r);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.035);padding:24px;margin-bottom:16px;backdrop-filter:blur(14px);position:relative;overflow:visible}.panel::before{content:'';position:absolute;inset:0;border-radius:var(--r);background:linear-gradient(135deg,rgba(0,255,209,.06),transparent 38%,rgba(0,167,255,.035));pointer-events:none;z-index:0}.panel>*{position:relative;z-index:1}
 .sticky{position:sticky;top:18px}.label{font-family:Unbounded,sans-serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px}.label:after{content:"";height:1px;background:var(--line);flex:1}.hint{background:rgba(0,255,209,.07);border:1px solid var(--line2);border-radius:14px;padding:13px 15px;color:#aefdf0;font-size:13px;margin-top:12px}.warning{background:rgba(200,255,0,.08);border:1px solid rgba(200,255,0,.38);color:#eaffbd}.muted{color:var(--muted)}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}textarea,input,select{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--text);border-radius:var(--rs);padding:13px 15px;font-family:Onest,sans-serif;font-size:14px;outline:none}textarea:focus,input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,255,209,.07)}textarea{min-height:104px;resize:vertical}.textarea-tall{min-height:170px}
 .pills{display:flex;flex-wrap:wrap;gap:8px}.pill{border:1px solid rgba(136,170,165,.18);background:linear-gradient(180deg,#081312,#06100f);color:#a7c4c0;border-radius:999px;padding:9px 15px;cursor:pointer;transition:.18s;font-family:Onest,sans-serif;font-size:13px}.pill:hover{border-color:var(--line2);color:#fff;background:#0b1d1b;transform:translateY(-1px)}.pill.on{background:linear-gradient(135deg,var(--accent),#66fff0);color:#02100e;border-color:var(--accent);font-weight:800;box-shadow:0 0 26px rgba(0,255,209,.24),0 8px 24px rgba(0,255,209,.12)}
@@ -101,14 +101,32 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 
 <div class="wrap"><div class="grid"><main>
 
-<section class="panel">
-  <div class="label">Начни здесь</div>
-  <h2 style="font-family:Unbounded,sans-serif;font-size:24px;letter-spacing:-.03em">4 шага — и контент готов</h2>
+<section class="panel" style="border-color:rgba(0,255,209,.22);background:linear-gradient(135deg,rgba(0,255,209,.04),rgba(0,167,255,.02),transparent)">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+    <div style="width:4px;height:22px;background:linear-gradient(180deg,var(--accent),#67fff0);border-radius:2px"></div>
+    <div style="font-family:Unbounded,sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent)">Быстрый старт — 4 шага</div>
+  </div>
   <div class="start-list">
-    <div><b>1</b><span>Если ЦА неизвестна — нажми «Найти ЦА». Если известна — вставь готовый блок.</span></div>
-    <div><b>2</b><span>Выбери площадку, цель и 1–3 формата результата.</span></div>
-    <div><b>3</b><span>Напиши тему и продукт, добавь тезисы.</span></div>
-    <div><b>4</b><span>Нажми «Сгенерировать контент».</span></div>
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-title">Площадка и цель</div>
+      <div class="step-desc">Выбери где публикуешь: Telegram, Pinterest, Instagram. Укажи цель и формат контента.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-title">Кому продаёшь (ЦА)</div>
+      <div class="step-desc">Опиши своего покупателя — или нажми «Найти покупателя» и нейросеть сделает это за тебя.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-title">Тема и продукт</div>
+      <div class="step-desc">Напиши о чём пост и что продаёшь. Нет темы? Нажми «Найти темы» — получишь 60+ идей из болей покупателя.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">4</div>
+      <div class="step-title">Нажми «Сгенерировать»</div>
+      <div class="step-desc">Через 5–10 секунд получишь готовый контент. Скопировал — опубликовал.</div>
+    </div>
   </div>
 </section>
 
@@ -120,7 +138,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 </section>
 
 <section class="panel" id="section-audience-finder">
-  <div class="label">2 · Не знаю кому продаю <span style="background:rgba(0,255,209,.07);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0;font-family:Onest,sans-serif;font-weight:400;margin-left:4px">необязательно — пропусти если уже знаешь покупателя</span></div>
+  <div class="label">2 · Найти покупателя&nbsp;<span style="color:var(--muted);font-size:10px;font-family:Onest,sans-serif;font-weight:400;letter-spacing:0;text-transform:none">(ЦА)</span>&nbsp;<span style="background:rgba(0,255,209,.07);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0;font-family:Onest,sans-serif;font-weight:400;margin-left:4px">необязательно — пропусти если знаешь покупателя</span></div>
   <h2 style="font-family:Unbounded,sans-serif;font-size:20px;letter-spacing:-.03em;margin-bottom:8px">Сначала найдём, кто твой покупатель</h2>
   <div class="hint warning">⚡ 30 секунд → готовый портрет покупателя: боли, страхи, живые фразы и темы для постов.</div><br>
   <div class="row"><input id="audFindNiche" placeholder="Твоя тема / ниша: Pinterest, фитнес дома, психология отношений"><input id="audFindProduct" placeholder="Что продаёшь: курс, консультация, гайд, подписка"></div><br>
@@ -130,13 +148,13 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 </section>
 
 <section class="panel" id="section-audience-data">
-  <div class="label">3 · Кому продаёшь <span style="background:rgba(0,255,209,.07);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0;font-family:Onest,sans-serif;font-weight:400;margin-left:4px">необязательно — но с этим контент точнее</span></div>
+  <div class="label">3 · Портрет покупателя&nbsp;<span style="color:var(--muted);font-size:10px;font-family:Onest,sans-serif;font-weight:400;letter-spacing:0;text-transform:none">(ЦА)</span>&nbsp;<span style="background:rgba(0,255,209,.07);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0;font-family:Onest,sans-serif;font-weight:400;margin-left:4px">необязательно — но с этим контент точнее</span></div>
   <textarea id="audienceData" class="textarea-tall" placeholder="Вставь сюда портрет покупателя или перенеси из блока выше. Что важно: кто это, их боли, страхи, мифы, живые фразы, о чём мечтают..."></textarea>
   <div class="hint">🎯 Чем точнее опишешь покупателя — тем сильнее контент. Живые фразы и страхи особенно важны для цепляющих заголовков!</div>
 </section>
 
 <section class="panel" id="section-topics">
-  <div class="label">4 · Темы для постов <span style="background:rgba(0,255,209,.07);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0;font-family:Onest,sans-serif;font-weight:400;margin-left:4px">необязательно — пропусти если есть тема</span></div>
+  <div class="label">4 · Темы из болей покупателя&nbsp;<span style="background:rgba(0,255,209,.07);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0;font-family:Onest,sans-serif;font-weight:400;margin-left:4px">необязательно — пропусти если есть тема</span></div>
   <h2 style="font-family:Unbounded,sans-serif;font-size:20px;letter-spacing:-.03em;margin-bottom:8px">Не знаешь, о чём писать? Найдём темы из боли</h2>
   <div class="hint warning">🔥 Темы по 16 проверенным формулам заголовков — из болей, мифов и живых фраз твоего покупателя.</div><br>
   <textarea id="topicsOutput" class="textarea-tall" placeholder="Здесь появятся темы по формулам: боль, миф, результат, провокация, внутренний монолог и другие. Выдели тему и нажми «Перенести тему ↓»."></textarea>
@@ -144,58 +162,54 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 </section>
 
 
-<section class="panel" style="border-color:rgba(200,255,0,.4);background:linear-gradient(180deg,rgba(13,22,13,.95),rgba(7,11,7,.97))">
-  <div class="label" style="color:var(--lime)">&#9733; Нейроворонка <span style="background:rgba(200,255,0,.1);border:1px solid rgba(200,255,0,.3);border-radius:999px;padding:2px 9px;font-size:10px;color:#c8ff00;text-transform:none;letter-spacing:0;font-family:Onest,sans-serif;font-weight:700;margin-left:4px">новый инструмент</span></div>
-  <h2 style="font-family:Unbounded,sans-serif;font-size:20px;letter-spacing:-.03em;margin-bottom:8px">Система постов, которая прогревает и продаёт</h2>
-  <div class="hint" style="background:rgba(200,255,0,.08);border-color:rgba(200,255,0,.35);color:#eaffbd;margin-bottom:16px">&#128293; Готовая воронка: от знакомства до продажи. Каждый пост — шаг по психологической лестнице доверия.</div>
-  <div class="row3" style="margin-bottom:12px">
-    <select id="funnelType">
-      <option value="warmup7">Прогрев к продаже · 7 дней</option>
-      <option value="leadmagnet14">С лид-магнитом · 14 дней</option>
-      <option value="fast5">Быстрая продажа · 5 дней</option>
-      <option value="tripwire21">С трипвайером · 21 день</option>
-    </select>
-    <select id="funnelPrice">
-      <option value="low">Продукт до 3 000&#8381;</option>
-      <option value="mid">Продукт 3 000–15 000&#8381;</option>
-      <option value="high">Продукт от 15 000&#8381;</option>
-    </select>
-    <select id="funnelPlatform">
-      <option value="Telegram">Telegram</option>
-      <option value="Instagram">Instagram / Reels</option>
-      <option value="ВКонтакте">ВКонтакте</option>
-      <option value="Pinterest">Pinterest</option>
-      <option value="TikTok">TikTok</option>
-    </select>
-  </div>
-  <input id="funnelProduct" placeholder="Что продаёшь: курс, консультация, наставничество, гайд..." style="margin-bottom:12px">
-  <textarea id="funnelAudience" style="min-height:80px;margin-bottom:12px" placeholder="Кому продаёшь: боли, страхи, мифы, живые фразы (можно скопировать из блока 3 выше)"></textarea>
-  <textarea id="funnelOutput" class="textarea-tall" style="min-height:280px" placeholder="Здесь появится готовая нейроворонка: темы, хуки, тезисы и CTA для каждого поста по этапам."></textarea>
-  <div class="copybar" style="margin-top:10px">
-    <button class="btn2" onclick="transferAudienceToFunnel()">Взять покупателя из блока 3 &#8593;</button>
-    <button class="btn2" onclick="copyText('funnelOutput')">Скопировать</button>
-    <button class="btn2" onclick="clearText('funnelOutput')">Очистить</button>
-  </div>
-  <button class="btn" style="background:linear-gradient(135deg,#c8ff00,#9fff00);color:#04100a;margin-top:10px" id="btnFunnel" onclick="generateFunnel()">&#9733; Создать нейроворонку</button>
-</section>
 
 <section class="panel">
-  <div class="label">5 · Форматы результата</div>
+  <div class="label">5 · Что генерировать</div>
   <div class="hint">⚡ 1 идея → сразу в нескольких форматах: пост, пины, видео, заголовки или контент-план.</div><br>
   <div class="pills" id="formats"></div>
 </section>
 
 <section class="panel">
-  <div class="label">6 · Тема, продукт и тезисы</div>
-  <div class="row"><input id="topic" placeholder="Тема поста: как получать трафик из Pinterest без лица"><input id="product" placeholder="Что продаёшь: курс, консультация, бесплатный подарок..."></div>
-  <div class="hint" style="margin-top:8px;font-size:12px">💡 Тему можно выбрать из блока 4 кнопкой «Перенести тему ↓» — или написать свою.</div><br>
-  <textarea id="details" placeholder="О чём пост: ключевые мысли, факты, личный кейс, что важно передать читателю. Чем конкретнее — тем лучше результат."></textarea>
-  <div class="hint" style="margin-top:8px;font-size:12px">💡 Нет мыслей? Скопируй боли и живые фразы из блока 2 и вставь сюда — нейросеть сама выстроит смыслы.</div><br><br>
-  <div class="row3"><select id="tone"></select><select id="depth"></select><select id="extraPreset"><option value="clean">Убрать воду и клише</option><option value="viral">Вирусность + конкретика</option><option value="pain">Усиление боли</option><option value="seo">SEO / ключи</option><option value="none">Без дополнений</option></select></div><br>
-  <input id="cta" value="мягкий переход к продукту / лид-магниту / следующему шагу">
+  <div class="label">6 · Тема и детали</div>
+  <div class="row" style="margin-bottom:4px">
+    <div>
+      <div class="field-label">О чём пост <span>→</span></div>
+      <input id="topic" placeholder="Тема: как получать трафик из Pinterest без лица">
+    </div>
+    <div>
+      <div class="field-label">Что продаёшь <span>→</span></div>
+      <input id="product" placeholder="Курс, консультация, бесплатный гайд...">
+    </div>
+  </div>
+  <div class="hint" style="margin-top:8px;font-size:12px">💡 Тему можно перенести из блока 4 — или написать свою.</div><br>
+  <div class="field-label">Ключевые мысли для поста <span>→</span> <span style="color:var(--muted);font-weight:400">необязательно</span></div>
+  <textarea id="details" placeholder="Факты, личный кейс, что важно передать. Нет мыслей? Вставь сюда боли покупателя из блока 2 — нейросеть сама выстроит смыслы."></textarea>
+  <br>
+  <div class="row3" style="margin-bottom:4px">
+    <div>
+      <div class="field-label">Тон <span>→</span></div>
+      <select id="tone"></select>
+    </div>
+    <div>
+      <div class="field-label">Глубина <span>→</span></div>
+      <select id="depth"></select>
+    </div>
+    <div>
+      <div class="field-label">Доп. настройка <span>→</span></div>
+      <select id="extraPreset">
+        <option value="clean">Убрать воду и клише</option>
+        <option value="viral">Вирусность + конкретика</option>
+        <option value="pain">Усиление боли</option>
+        <option value="seo">SEO / ключи</option>
+        <option value="none">Без дополнений</option>
+      </select>
+    </div>
+  </div><br>
+  <div class="field-label">Куда вести читателя в конце поста <span>→</span> <span style="color:var(--muted);font-weight:400">(призыв к действию)</span></div>
+  <input id="cta" placeholder="Например: написать в директ / скачать бесплатный гайд / подписаться на канал / записаться на разбор">
   <div class="hint warning">⚡ То, что вручную занимает 2–3 часа — здесь делается за 30 секунд.</div>
   <button class="btn btn-blue" id="btnGenerate" onclick="generateAI()">🔥 Сгенерировать контент</button>
-  <button class="btn" onclick="generatePromptOnly()">Собрать промпт без генерации →</button>
+
 </section>
 
 </main>
@@ -228,6 +242,54 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   </div>
 </section>
 
+<section class="panel" style="border-color:rgba(200,255,0,.35);background:linear-gradient(160deg,rgba(10,18,10,.97),rgba(5,10,5,.99));margin-top:16px">
+  <div class="label" style="color:var(--lime)">&#9733; Нейроворонка <span style="background:rgba(200,255,0,.1);border:1px solid rgba(200,255,0,.3);border-radius:999px;padding:2px 9px;font-size:10px;color:#c8ff00;text-transform:none;letter-spacing:0;font-family:Onest,sans-serif;font-weight:700;margin-left:4px">следующий шаг</span></div>
+  <h3 style="font-family:Unbounded,sans-serif;font-size:15px;letter-spacing:-.02em;margin-bottom:6px;color:#eaffbd">Серия постов, которая продаёт</h3>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5">Готовая система: пост за постом ведёт читателя от знакомства до покупки. Заполни один раз — получи план на недели вперёд.</p>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
+    <div>
+      <div class="field-label">Тип воронки <span>→</span></div>
+      <select id="funnelType" style="width:100%">
+        <option value="fast5">Быстрая продажа · 5 постов</option>
+        <option value="warmup7">Прогрев и продажа · 7 постов</option>
+        <option value="leadmagnet14">С бесплатным подарком (лид-магнит) · 14 постов</option>
+        <option value="tripwire21">Полная система · 21 пост</option>
+      </select>
+    </div>
+    <div>
+      <div class="field-label">Цена продукта <span>→</span></div>
+      <select id="funnelPrice" style="width:100%">
+        <option value="low">До 3 000 ₽ — покупают быстро</option>
+        <option value="mid">3 000–15 000 ₽ — нужно прогреть</option>
+        <option value="high">От 15 000 ₽ — длинный путь к покупке</option>
+      </select>
+    </div>
+    <div>
+      <div class="field-label">Площадка <span>→</span></div>
+      <select id="funnelPlatform" style="width:100%">
+        <option value="Telegram">Telegram</option>
+        <option value="Instagram">Instagram / Reels</option>
+        <option value="ВКонтакте">ВКонтакте</option>
+        <option value="Pinterest">Pinterest</option>
+        <option value="TikTok">TikTok</option>
+      </select>
+    </div>
+  </div>
+  <div class="field-label">Что продаёшь <span>→</span></div>
+  <input id="funnelProduct" placeholder="Игрушки на заказ / курс по вязанию / консультация..." style="margin-bottom:10px">
+  <div class="field-label">Кому продаёшь (ЦА) <span>→</span> <span style="color:var(--muted);font-weight:400">можно перенести из блока 3</span></div>
+  <textarea id="funnelAudience" style="min-height:70px;margin-bottom:10px" placeholder="Боли, страхи, живые фразы покупателя..."></textarea>
+  <textarea id="funnelOutput" class="out" style="min-height:220px;margin-bottom:10px" placeholder="Здесь появится план воронки: для каждого поста — тема, первая строка и что писать внутри."></textarea>
+  <div class="copybar">
+    <button class="btn2" onclick="transferAudienceToFunnel()">Взять из блока 3 ↑</button>
+    <button class="btn2" onclick="copyText('funnelOutput')">Скопировать</button>
+    <button class="btn2" onclick="clearText('funnelOutput')">Очистить</button>
+  </div>
+  <div class="hint" style="background:rgba(200,255,0,.07);border-color:rgba(200,255,0,.3);color:#c8e8a0;font-size:12px;margin-bottom:10px">
+    💡 Лид-магнит = бесплатный подарок (чеклист, гайд). Трипвайер = недорогой продукт-вход (мини-курс, шаблон).
+  </div>
+  <button class="btn" style="background:linear-gradient(135deg,#c8ff00,#9fff00);color:#04100a;margin-top:0" id="btnFunnel" onclick="generateFunnel()">&#9733; Создать воронку</button>
+</section>
 <section class="panel" style="background:linear-gradient(135deg,rgba(0,167,255,.12),rgba(0,167,255,.04));border-color:rgba(0,167,255,.3)">
   <div style="display:flex;gap:14px;align-items:flex-start">
     <div style="font-size:32px;flex-shrink:0">✈️</div>
@@ -406,7 +468,7 @@ const TIER_PACKS  = { free:5, monthly:50, annual:600, boost:30 };
 const appData = {
   platforms: ['Telegram','Pinterest','ВКонтакте','Дзен','Instagram / Reels','YouTube Shorts','TikTok','Threads','TenChat','Одноклассники'],
   goals:     ['Охват','Сохранения','Комментарии','Диалог с аудиторией','Переход в Telegram','Подписка','Продажа','Прогрев доверия','Объяснить ценность','Показать экспертность','Запуск продукта'],
-  audiences: ['Эксперт / фрилансер','Контент-мейкер / блогер','SMM-специалист','Нейроассистент / AI-креатор','Онлайн-школа','Малый бизнес','Новичок в нейросетях','Женский проект / лайфстайл','Продавец цифрового продукта'],
+  audiences: ['Мастер / Хендмейд','Лайфстайл-блогер','Бьюти-мастер','Эксперт / фрилансер','Контент-мейкер / блогер','SMM-специалист','Нейроассистент / AI-креатор','Онлайн-школа','Малый бизнес','Продавец цифрового продукта'],
   formats:   ['Просто пост','Рассуждение эксперта','Эмоциональный пост','Пост с юмором','Полезный пост / инструкция','Вовлекающий пост','Продающий пост','Пост-прогрев','Контент-план','Pinterest-пины','Pinterest-карусель 5 слайдов','Threads-ветка','Вирусные заголовки','Описание к пинам','Сценарий Reels/Shorts','Разбор кейса','Серия из 10 постов','Контент-воронка'],
   tone:      ['Живой разговорный','Короткий','Эмоциональный','С юмором','Рассуждения эксперта','Дерзкий, но умный','Мягкий и заботливый','Продажный без впаривания'],
   depth:     ['Быстро и по делу','Экспертно','Максимально глубоко','С дерзким крючком','Мягко и человечно','Продажно, но без впаривания']
@@ -1179,10 +1241,10 @@ function buildFunnelPrompt() {
   const audience = document.getElementById('funnelAudience')?.value?.trim() || '[покупатель не указан]';
 
   const typeNames = {
-    warmup7: 'Прогрев к продаже (7 дней)',
-    leadmagnet14: 'С лид-магнитом (14 дней)',
-    fast5: 'Быстрая продажа (5 дней)',
-    tripwire21: 'С трипвайером (21 день)'
+    warmup7: 'Прогрев и продажа — 7 постов',
+    leadmagnet14: 'С бесплатным подарком — 14 постов',
+    fast5: 'Быстрая продажа — 5 постов',
+    tripwire21: 'Полная система — 21 пост'
   };
 
   const priceContext = {
@@ -1192,14 +1254,14 @@ function buildFunnelPrompt() {
   };
 
   const structures = {
-    fast5: `СТРУКТУРА ВОРОНКИ — 5 дней (Быстрая продажа):
+    fast5: `СТРУКТУРА — 5 постов (Быстрая продажа):
 ДЕНЬ 1 — БОЛЬ (Охват): Острая ситуация из жизни покупателя — он узнаёт себя. Никакой продажи.
 ДЕНЬ 2 — МИФ (Экспертность): Разрушаем главное заблуждение ЦА. "Ты думаешь что [миф] — но на самом деле..."
 ДЕНЬ 3 — МЕТОД (Доверие): Показываем правильный путь. Конкретный инструмент или принцип, который работает.
 ДЕНЬ 4 — ДОКАЗАТЕЛЬСТВО (Прогрев): Кейс или история трансформации. Было → стало. Конкретные цифры.
 ДЕНЬ 5 — ОФФЕР (Продажа): Мягкое предложение через результат. Без давления, с ограничением.`,
 
-    warmup7: `СТРУКТУРА ВОРОНКИ — 7 дней (Прогрев к продаже):
+    warmup7: `СТРУКТУРА — 7 постов (Прогрев и продажа):
 ДЕНЬ 1 — БОЛЬ (Охват): Ситуация-зеркало. Читатель думает "это про меня".
 ДЕНЬ 2 — ПОЧЕМУ ТАК (Экспертность): Причина проблемы, о которой никто не говорит.
 ДЕНЬ 3 — МИФ (Экспертность): Разбиваем главное заблуждение ЦА.
@@ -1208,7 +1270,7 @@ function buildFunnelPrompt() {
 ДЕНЬ 6 — ВОЗРАЖЕНИЕ (Прогрев): Закрываем главный страх перед покупкой.
 ДЕНЬ 7 — ОФФЕР (Продажа): Приглашение. Через результат, без "купи".`,
 
-    leadmagnet14: `СТРУКТУРА ВОРОНКИ — 14 дней (С лид-магнитом):
+    leadmagnet14: `СТРУКТУРА — 14 постов (С бесплатным подарком):
 ДНИ 1-2 — ОХВАТ: Боль через конкретную ситуацию. Читатель узнаёт себя.
 ДНИ 3-4 — ЭКСПЕРТНОСТЬ: Почему так происходит. Метод который работает.
 ДЕНЬ 5 — МИФ: Разрушаем главное заблуждение ЦА.
@@ -1217,16 +1279,16 @@ function buildFunnelPrompt() {
 ДНИ 9-10 — ПРОГРЕВ: Результаты тех кто применил. Работа с сомнениями.
 ДЕНЬ 11 — СТРАХ: Закрываем главный страх ("а вдруг не получится у меня").
 ДНИ 12-13 — ЖЕЛАНИЕ: Рисуем картину результата. Что изменится в жизни.
-ДЕНЬ 14 — ОФФЕР + КЭВ: Приглашение на консультацию/разбор или покупка.`,
+ДЕНЬ 14 — ОФФЕР + КОНСУЛЬТАЦИЯ: Приглашение на консультацию/разбор или покупка.`,
 
-    tripwire21: `СТРУКТУРА ВОРОНКИ — 21 день (С трипвайером):
+    tripwire21: `СТРУКТУРА — 21 пост (Полная система):
 ДНИ 1-3 — ОХВАТ: Боли, ситуации, мифы. Холодная аудитория начинает узнавать себя.
 ДНИ 4-6 — ЭКСПЕРТНОСТЬ: Метод, принципы, "почему так". Строим авторитет.
 ДНИ 7-8 — МИФ х2: Два главных заблуждения ЦА — развенчиваем с доказательствами.
 ДНИ 9-11 — ДОВЕРИЕ: Кейсы, истории, трансформации. Читатель начинает верить.
 ДЕНЬ 12 — ЛИД-МАГНИТ: Бесплатный ценный материал. Максимальная польза.
 ДНИ 13-15 — ПРОГРЕВ: Результаты, социальное доказательство, работа с возражениями.
-ДЕНЬ 16 — ТРИПВАЙЕР: Недорогой продукт-вход (мини-курс, гайд, шаблон). Первая продажа.
+ДЕНЬ 16 — НЕДОРОГОЙ ПРОДУКТ-ВХОД: Недорогой продукт-вход (мини-курс, гайд, шаблон). Первая продажа.
 ДНИ 17-18 — ЖЕЛАНИЕ: Контент о трансформации. Жизнь до и после продукта.
 ДНИ 19-20 — ЗАКРЫТИЕ СТРАХОВ: Отвечаем на главные возражения перед основной покупкой.
 ДЕНЬ 21 — ОФФЕР: Основной продукт. Через результат и ограничение.`
