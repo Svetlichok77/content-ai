@@ -137,6 +137,71 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   <div id="platformInfo" class="platform-card"></div>
 </section>
 
+<section class="panel" style="border-color:rgba(0,167,255,.35);background:linear-gradient(160deg,rgba(0,20,40,.96),rgba(0,10,25,.98))">
+  <div class="label" style="color:#00a7ff">★ Голос бренда <span style="background:rgba(0,167,255,.1);border:1px solid rgba(0,167,255,.3);border-radius:999px;padding:2px 9px;font-size:10px;color:#00a7ff;text-transform:none;letter-spacing:0;font-family:Onest,sans-serif;font-weight:700;margin-left:4px">заполни один раз — работает везде</span></div>
+  <h2 style="font-family:Unbounded,sans-serif;font-size:18px;letter-spacing:-.03em;margin-bottom:6px">Чтобы контент звучал как ты, а не как робот</h2>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5">Ответь на 5 вопросов → нажми «Определить голос» → AI создаст описание твоего стиля и будет использовать его в каждой генерации.</p>
+
+  <div class="row" style="margin-bottom:12px">
+    <div>
+      <div class="field-label">Как обращаешься к читателям <span>→</span></div>
+      <select id="tovAddress" style="width:100%">
+        <option value="на ты — близко и неформально">На «ты» — близко и неформально</option>
+        <option value="на вы — уважительно и официально">На «вы» — уважительно</option>
+        <option value="по-разному — зависит от темы">По-разному, зависит от темы</option>
+      </select>
+    </div>
+    <div>
+      <div class="field-label">Тон общения <span>→</span></div>
+      <select id="tovTone" style="width:100%">
+        <option value="тёплый и душевный, как разговор с подругой">Тёплый и душевный 🤍</option>
+        <option value="с юмором и лёгкостью, умею посмеяться над собой">С юмором и лёгкостью 😄</option>
+        <option value="дерзкий и прямой, говорю как есть без прикрас">Дерзкий и прямой 🔥</option>
+        <option value="экспертный и уверенный, без лишних слов">Экспертный и уверенный 💼</option>
+        <option value="мягкий и заботливый, поддерживаю и вдохновляю">Мягкий и заботливый 🌸</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row" style="margin-bottom:12px">
+    <div>
+      <div class="field-label">Эмодзи в текстах <span>→</span></div>
+      <select id="tovEmoji" style="width:100%">
+        <option value="активно использую эмодзи — они часть моего стиля">Активно использую 😊🧶✨</option>
+        <option value="иногда добавляю эмодзи — только по смыслу">Иногда, по смыслу</option>
+        <option value="почти не использую эмодзи">Почти не использую</option>
+      </select>
+    </div>
+    <div>
+      <div class="field-label">Длина постов <span>→</span></div>
+      <select id="tovLength" style="width:100%">
+        <option value="короткие и ёмкие — ценю время читателя">Короткие и ёмкие</option>
+        <option value="средние — раскрываю мысль полностью">Средние — раскрываю мысль</option>
+        <option value="длинные с историями и деталями">Длинные с историями</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field-label">Мои фирменные слова и фразы <span style="color:var(--muted);font-weight:400">необязательно</span></div>
+  <input id="tovPhrases" placeholder="Например: девочки, ловите, чики-брики, красотки, сохраняй..." style="margin-bottom:12px">
+
+  <div class="field-label">Что никогда не напишу <span style="color:var(--muted);font-weight:400">необязательно</span></div>
+  <input id="tovNever" placeholder="Например: умные термины, давление купи-купи, пафос, канцелярит..." style="margin-bottom:12px">
+
+  <div class="field-label">Пример моего текста <span style="color:var(--muted);font-weight:400">необязательно — но сильно улучшает точность</span></div>
+  <textarea id="tovExample" style="min-height:80px;margin-bottom:12px" placeholder="Вставь 1-2 своих поста или подписи к фото — AI подхватит твой настоящий стиль"></textarea>
+
+  <div id="tovResult" style="display:none" class="hint" style="margin-bottom:10px"></div>
+  <div class="field-label" id="tovDescLabel" style="display:none">Голос бренда (используется в каждой генерации) <span>→</span></div>
+  <textarea id="tovDescription" style="min-height:90px;margin-bottom:10px;display:none" placeholder="Здесь появится описание твоего голоса..."></textarea>
+
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <button class="btn btn-blue" id="btnTov" onclick="generateTOV()" style="margin-top:0;max-width:280px;padding:14px">✦ Определить мой голос</button>
+    <button id="btnTovClear" onclick="clearTOV()" style="display:none;background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:8px 14px;cursor:pointer;font-family:Onest,sans-serif;font-size:12px">Сбросить</button>
+    <span id="tovStatus" style="font-size:12px;color:var(--muted)"></span>
+  </div>
+</section>
+
 <section class="panel" id="section-audience-finder">
   <div class="label">2 · Найти покупателя&nbsp;<span style="color:var(--muted);font-size:10px;font-family:Onest,sans-serif;font-weight:400;letter-spacing:0;text-transform:none">(ЦА)</span>&nbsp;<span style="background:rgba(0,255,209,.07);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0;font-family:Onest,sans-serif;font-weight:400;margin-left:4px">необязательно — пропусти если знаешь покупателя</span></div>
   <h2 style="font-family:Unbounded,sans-serif;font-size:20px;letter-spacing:-.03em;margin-bottom:8px">Сначала найдём, кто твой покупатель</h2>
@@ -1235,6 +1300,7 @@ function buildPrompt() {
 
 ПРОЕКТ И КОНТЕКСТ
 Проект: ${project} | Роль автора: ${role} | Площадка: ${S.platform} | Тип проекта: ${S.audience}
+${v('tovDescription') ? '\nГОЛОС БРЕНДА — соблюдай этот стиль строго во всех текстах:\n' + v('tovDescription') : ''}
 
 ЦА — ГЛАВНЫЙ ОРИЕНТИР (боли, мифы, триггеры, живые фразы)
 ${audience}
@@ -1429,6 +1495,116 @@ async function generateFunnel() {
   } finally {
     btn.disabled = false;
     btn.innerHTML = '&#9733; Создать нейроворонку';
+  }
+}
+
+
+// ============================================================
+// ГОЛОС БРЕНДА (TOV)
+// ============================================================
+
+function buildTOVPrompt() {
+  const address = document.getElementById('tovAddress')?.value || '';
+  const tone    = document.getElementById('tovTone')?.value || '';
+  const emoji   = document.getElementById('tovEmoji')?.value || '';
+  const length  = document.getElementById('tovLength')?.value || '';
+  const phrases = v('tovPhrases');
+  const never   = v('tovNever');
+  const example = v('tovExample');
+
+  return `Ты — эксперт по созданию Tone of Voice для блогеров и малого бизнеса.
+
+Проанализируй данные автора и создай краткое описание его уникального голоса.
+
+ДАННЫЕ АВТОРА:
+— Обращение к читателям: ${address}
+— Тон общения: ${tone}
+— Эмодзи: ${emoji}
+— Длина постов: ${length}
+— Фирменные слова и фразы: ${phrases || 'не указаны'}
+— Никогда не пишет: ${never || 'не указано'}
+${example ? '— Пример текста автора:\n' + example : ''}
+
+ЗАДАЧА: Напиши описание голоса автора в 5-7 предложениях.
+Это описание будет использоваться как инструкция для AI при генерации контента.
+
+Формат — готовая инструкция, начиная с "Голос автора:":
+— Как обращается к читателям и каким тоном
+— Какие слова и фразы использует, а каких избегает
+— Особенности подачи (длина, эмодзи, структура)
+— 2-3 конкретных примера его фирменных оборотов (если есть в примере текста)
+
+Только чистый текст без markdown. Пиши конкретно, не абстрактно.`;
+}
+
+async function generateTOV() {
+  const btn = document.getElementById('btnTov');
+  const result = document.getElementById('tovResult');
+  const desc = document.getElementById('tovDescription');
+  const label = document.getElementById('tovDescLabel');
+  const status = document.getElementById('tovStatus');
+  const clearBtn = document.getElementById('btnTovClear');
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Анализирую стиль...';
+  status.textContent = '';
+
+  try {
+    const prompt = buildTOVPrompt();
+    const text = await callAPIRaw(prompt, 'topics');
+
+    desc.value = text;
+    desc.style.display = 'block';
+    label.style.display = 'flex';
+    clearBtn.style.display = 'inline-block';
+
+    result.style.display = 'block';
+    result.style.background = 'rgba(0,167,255,.08)';
+    result.style.borderColor = 'rgba(0,167,255,.3)';
+    result.style.color = '#b9d6d1';
+    result.textContent = '✓ Голос бренда определён! Теперь все посты будут звучать как ты.';
+
+    // Сохраняем в localStorage
+    localStorage.setItem('tov_description', text);
+    status.textContent = '✓ Сохранено';
+    status.style.color = 'var(--accent)';
+
+    showCopyToast('✓ Голос бренда готов — будет в каждой генерации!');
+  } catch(e) {
+    result.style.display = 'block';
+    result.textContent = 'Ошибка: ' + e.message;
+    result.style.background = 'rgba(255,100,100,.08)';
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '✦ Определить мой голос';
+  }
+}
+
+function clearTOV() {
+  document.getElementById('tovDescription').value = '';
+  document.getElementById('tovDescription').style.display = 'none';
+  document.getElementById('tovDescLabel').style.display = 'none';
+  document.getElementById('tovResult').style.display = 'none';
+  document.getElementById('btnTovClear').style.display = 'none';
+  document.getElementById('tovStatus').textContent = '';
+  localStorage.removeItem('tov_description');
+  showCopyToast('Голос бренда сброшен');
+}
+
+function loadTOV() {
+  const saved = localStorage.getItem('tov_description');
+  if (!saved) return;
+  const desc = document.getElementById('tovDescription');
+  const label = document.getElementById('tovDescLabel');
+  const clearBtn = document.getElementById('btnTovClear');
+  const status = document.getElementById('tovStatus');
+  if (desc) {
+    desc.value = saved;
+    desc.style.display = 'block';
+    label.style.display = 'flex';
+    clearBtn.style.display = 'inline-block';
+    status.textContent = '✓ Загружен из памяти';
+    status.style.color = 'var(--muted)';
   }
 }
 
@@ -1865,6 +2041,7 @@ init();
 ensureGenerationBalance();
 updateStatusBar();
 updateUserBar();
+loadTOV();
 
 let isRecoveryMode = false;
 
