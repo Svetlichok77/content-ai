@@ -35,6 +35,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 .user-bar-info{background:rgba(0,255,209,.08);border:1px solid rgba(0,255,209,.2);border-radius:999px;padding:7px 14px;font-size:13px;color:var(--accent)}
 .user-bar-btn{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:7px 14px;cursor:pointer;font-family:Onest,sans-serif;font-size:12px}
 .user-bar-btn:hover{border-color:var(--line2);color:var(--text)}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(200,255,0,.4)}50%{opacity:.8;box-shadow:0 0 0 4px rgba(200,255,0,.0)}}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,255,209,.3);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}@keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:960px){.grid{grid-template-columns:1fr}.sticky{position:static}.row,.row3,.check,.start-list{grid-template-columns:1fr}header{padding-top:42px}header:before{font-size:82px}.copyguide{align-items:flex-start;flex-direction:column}#tierGrid,#featGrid{grid-template-columns:1fr!important}}
 </style>
@@ -251,8 +252,14 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
     </div>
   </div>
   <div class="hint" style="margin-top:8px;font-size:12px">💡 Тему можно перенести из блока 4 — или написать свою.</div><br>
-  <div class="field-label">Ключевые мысли для поста <span>→</span> <span style="color:var(--muted);font-weight:400">необязательно</span></div>
-  <textarea id="details" placeholder="Факты, личный кейс, что важно передать. Нет мыслей? Вставь сюда боли покупателя из блока 2 — нейросеть сама выстроит смыслы."></textarea>
+  <div class="field-label" style="align-items:flex-start;flex-direction:column;gap:4px">
+    <div style="display:flex;align-items:center;gap:8px">
+      Ключевые мысли, факты, выгоды <span>→</span>
+      <span id="detailsHint" style="background:rgba(200,255,0,.15);border:1px solid rgba(200,255,0,.5);border-radius:999px;padding:2px 10px;font-size:10px;color:#c8ff00;font-weight:700;animation:pulse 2s infinite">⚡ заполни — выдача будет сильнее</span>
+    </div>
+    <div style="font-size:11px;color:var(--muted)">Пример: 8-10 часов работы · гипоаллергенная пряжа · глазки вышиты · уникальная в мире</div>
+  </div>
+  <textarea id="details" placeholder="Конкретные факты и выгоды твоего продукта. Без этого AI пишет общие слова — с этим пишет про ТВОЙ продукт. Пример: 8-10 часов работы, гипоаллергенная пряжа с сертификатами, глазки вышиты нитками (не оторвать), каждая деталь отдельно..." oninput="document.getElementById('detailsHint').style.display=this.value?'none':'inline'"></textarea>
   <br>
   <div class="row3" style="margin-bottom:4px">
     <div>
@@ -1123,6 +1130,38 @@ function buildFormatInstructions() {
   const f=S.formats, blocks=[], has=n=>f.includes(n);
   const posts=['Просто пост','Рассуждение эксперта','Эмоциональный пост','Пост с юмором','Полезный пост / инструкция','Вовлекающий пост','Продающий пост','Пост-прогрев'];
   const chosen=f.filter(x=>posts.includes(x));
+
+  // ДЗЕН: особый формат — статья, не посты
+  if (S.platform === 'Дзен' && chosen.length > 0) {
+    blocks.push(`СТАТЬЯ ДЛЯ ДЗЕН
+
+ОБЯЗАТЕЛЬНАЯ СТРУКТУРА — строго в таком порядке:
+
+ЗАГОЛОВОК: [Напиши заголовок 40-70 символов. НЕ кликбейт, но интригующий. Формулы: "Почему [неожиданный факт]", "Я [сделала X] — вот что вышло", "[Цифра] причин почему [результат]"]
+
+[ТЕКСТ СТАТЬИ — МИНИМУМ 3500 символов. Структура:]
+
+[Лид — 1 абзац: цепляющая ситуация или парадокс. Читатель должен хотеть читать дальше.]
+
+[Подзаголовок 1]
+[Блок текста 400-600 символов с конкретикой и личным опытом]
+
+[Подзаголовок 2]
+[Блок текста 400-600 символов]
+
+[Подзаголовок 3]
+[Блок текста 400-600 символов]
+
+[Подзаголовок 4 — если нужно]
+[Блок текста 400-600 символов]
+
+[Финал: вывод + вовлекающий вопрос к читателям — не риторический, а требующий ответа]
+
+[Хэштеги: #ниша #тема #ключевое_слово #дача #рукоделие — 5-7 штук]
+
+ЗАПРЕЩЕНО: "Сохрани этот пост", "Узнайте", markdown-форматирование (**, ##).`);
+    return blocks.join('\n\n');
+  }
 
   const postRules = {
     'Просто пост': `Структура: ситуация-крючок (1–2 предложения) → суть мысли / наблюдение (2–4 абзаца) → финал под цель. Голос: как пишешь подруге. Без вступлений.`,
