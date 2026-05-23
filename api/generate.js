@@ -5,7 +5,6 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
-    // Все запросы идут через GPT-4o-mini (OpenAI via ProxyAPI)
     const systemPrompt = mode === 'audience' || mode === 'topics'
       ? `Ты — маркетинговый аналитик и психолог потребительского поведения с опытом 20 лет. Ты думаешь КАК клиент — знаешь его внутренний монолог, страхи которые он никогда не скажет вслух, мечты которые стесняется признать. Пишешь на русском языке, конкретно и психологически точно. Никогда не используй markdown (**, *, ##). Только чистый текст.`
       : `Ты — первоклассный русскоязычный копирайтер, контент-стратег и психолог потребительского поведения с 20-летним опытом.
@@ -32,6 +31,17 @@ export default async function handler(req, res) {
 — Запрещены рекламные слова: узнайте, попробуйте, не упустите шанс, успейте
 — Запрещены банальности: создавай качественный контент, будь регулярным, будь собой`;
 
+    // Умный лимит токенов — Дзен и длинные форматы получают больше
+    const promptLower = (prompt || '').toLowerCase();
+    const isLongFormat = [
+      'дзен', 'минимум 3500', 'контент-план', 'серия из 10',
+      'контент-воронка', 'разбор кейса', 'серия из', 'threads-ветка'
+    ].some(f => promptLower.includes(f));
+
+    const maxTokens = mode === 'audience' || mode === 'topics'
+      ? 2500
+      : isLongFormat ? 3500 : 2000;
+
     const response = await fetch("https://api.proxyapi.ru/openai/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -45,7 +55,7 @@ export default async function handler(req, res) {
           { role: "user", content: prompt }
         ],
         temperature: 0.85,
-        max_tokens: mode === 'audience' || mode === 'topics' ? 2500 : 2000,
+        max_tokens: maxTokens,
       }),
     });
 
