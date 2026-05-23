@@ -9,9 +9,9 @@
 :root{--bg:#030606;--card:#0b1111;--card2:#111d1c;--line:#1d3d3a;--line2:#00ffd155;--accent:#00ffd1;--accent2:#00a7ff;--lime:#c8ff00;--text:#ecfffb;--muted:#89aaa5;--danger:#ff6b6b;--r:24px;--rs:14px;--shadow:0 28px 90px rgba(0,255,209,.13)}
 *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Onest,system-ui,sans-serif;background:radial-gradient(ellipse 60% 40% at 12% 0%,rgba(0,255,209,.14),transparent),radial-gradient(ellipse 50% 35% at 88% 6%,rgba(0,120,255,.10),transparent),radial-gradient(ellipse 70% 50% at 50% 100%,rgba(80,40,200,.09),transparent),radial-gradient(ellipse 40% 60% at 50% 45%,rgba(0,20,18,.6),transparent),linear-gradient(160deg,#010303 0%,#040c0a 30%,#030809 55%,#020505 80%,#010202 100%);color:var(--text);min-height:100vh;line-height:1.55;font-size:15px}.noise:before{content:"";position:fixed;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(0,255,209,.025),transparent 60%),repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 1px,transparent 1px 4px);pointer-events:none;mix-blend-mode:screen}.noise:after{content:"";position:fixed;right:4%;bottom:6%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(0,255,209,.07),rgba(0,120,255,.04),transparent 70%);filter:blur(60px);pointer-events:none}
 header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--line);position:relative;overflow:hidden}header:before{content:'PRO';position:absolute;right:5%;top:8px;font-family:Unbounded,sans-serif;font-size:112px;font-weight:800;color:transparent;-webkit-text-stroke:1px rgba(0,255,209,.12);letter-spacing:-.08em;pointer-events:none}.brand{font-family:Unbounded,sans-serif;color:var(--accent);font-size:12px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:18px}h1{font-family:Unbounded,sans-serif;font-size:clamp(30px,5vw,58px);line-height:1.02;letter-spacing:-.05em;margin-bottom:18px}h1 span{color:var(--accent);text-shadow:0 0 30px rgba(0,255,209,.42)}.sub{max-width:880px;margin:0 auto;color:var(--muted);font-size:16px}.herochips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:24px}.herochips span{border:1px solid rgba(0,255,209,.24);background:rgba(0,255,209,.055);color:#b7fff6;border-radius:999px;padding:8px 13px;font-size:12px;box-shadow:0 0 24px rgba(0,255,209,.08)}
-.wrap{max-width:1260px;margin:0 auto;padding:30px 20px 82px}.grid{display:grid;grid-template-columns:minmax(0,1fr) 520px;gap:22px;align-items:start}
+.wrap{max-width:1260px;margin:0 auto;padding:30px 20px 82px}.grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:22px;align-items:start}
 .panel{background:linear-gradient(160deg,rgba(12,20,20,.95),rgba(6,10,10,.97));border:1px solid rgba(0,255,209,.16);border-radius:var(--r);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.035);padding:24px;margin-bottom:16px;backdrop-filter:blur(14px);position:relative;overflow:visible}.panel::before{content:'';position:absolute;inset:0;border-radius:var(--r);background:linear-gradient(135deg,rgba(0,255,209,.06),transparent 38%,rgba(0,167,255,.035));pointer-events:none;z-index:0}.panel>*{position:relative;z-index:1}
-.sticky{position:sticky;top:18px}.label{font-family:Unbounded,sans-serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px}.label:after{content:"";height:1px;background:var(--line);flex:1}.hint{background:rgba(0,255,209,.07);border:1px solid var(--line2);border-radius:14px;padding:13px 15px;color:#aefdf0;font-size:13px;margin-top:12px}.warning{background:rgba(200,255,0,.08);border:1px solid rgba(200,255,0,.38);color:#eaffbd}.muted{color:var(--muted)}
+.sticky{position:sticky;top:18px;display:flex;flex-direction:column;gap:0}.label{font-family:Unbounded,sans-serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px}.label:after{content:"";height:1px;background:var(--line);flex:1}.hint{background:rgba(0,255,209,.07);border:1px solid var(--line2);border-radius:14px;padding:13px 15px;color:#aefdf0;font-size:13px;margin-top:12px}.warning{background:rgba(200,255,0,.08);border:1px solid rgba(200,255,0,.38);color:#eaffbd}.muted{color:var(--muted)}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}textarea,input,select{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--text);border-radius:var(--rs);padding:13px 15px;font-family:Onest,sans-serif;font-size:14px;outline:none}textarea:focus,input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,255,209,.07)}textarea{min-height:104px;resize:vertical}.textarea-tall{min-height:170px}
 .pills{display:flex;flex-wrap:wrap;gap:8px}.pill{border:1px solid rgba(136,170,165,.18);background:linear-gradient(180deg,#081312,#06100f);color:#a7c4c0;border-radius:999px;padding:9px 15px;cursor:pointer;transition:.18s;font-family:Onest,sans-serif;font-size:13px}.pill:hover{border-color:var(--line2);color:#fff;background:#0b1d1b;transform:translateY(-1px)}.pill.on{background:linear-gradient(135deg,var(--accent),#66fff0);color:#02100e;border-color:var(--accent);font-weight:800;box-shadow:0 0 26px rgba(0,255,209,.24),0 8px 24px rgba(0,255,209,.12)}
 .btn{border:0;border-radius:18px;background:linear-gradient(135deg,var(--accent),#67fff0 55%,var(--lime));color:#04110f;font-family:Unbounded,sans-serif;font-weight:800;font-size:13px;letter-spacing:.04em;padding:18px;width:100%;cursor:pointer;transition:.18s;box-shadow:0 18px 54px rgba(0,255,209,.18);margin-top:12px}.btn:hover{transform:translateY(-2px);box-shadow:0 24px 66px rgba(0,255,209,.23)}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}.btn-blue{background:linear-gradient(135deg,#00a7ff,#00ffd1 55%,var(--lime))}.btn2{background:transparent;color:var(--accent);border:1px solid var(--line2);padding:11px 14px;border-radius:999px;cursor:pointer;font-weight:700;font-family:Onest,sans-serif;font-size:13px}.btn2:hover{background:rgba(0,255,209,.08)}
@@ -281,18 +281,18 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 
 </section>
 
-</main>
-
-<aside class="sticky">
-<section class="panel" id="contentPanel">
+<section class="panel" id="contentPanel" style="border-color:rgba(0,255,209,.25)">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
-    <div class="label" style="margin-bottom:0">Готовый контент</div>
+    <div class="label" style="margin-bottom:0;color:var(--accent)">★ Готовый контент</div>
     <button id="resetDemoBtn" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;font-family:Onest,sans-serif;text-decoration:underline;padding:0" title="Сбросить счётчик">↺ Сбросить счётчик</button>
   </div>
-  <div id="summary" style="margin-bottom:8px"></div>
-  <div class="api-status" id="apiStatus" style="margin-bottom:6px">Готов к генерации. Заполни поля и нажми кнопку.</div>
-  <textarea class="out" id="aiOutput" spellcheck="false" style="min-height:420px;max-height:82vh" placeholder="Здесь появится готовый контент: пины, посты, заголовки, контент-план или другой выбранный формат."></textarea>
-  <div class="copybar"><button class="btn2" onclick="copyText('aiOutput')">Скопировать контент</button><button class="btn2" onclick="clearText('aiOutput')">Очистить</button></div>
+  <div id="summary" style="margin-bottom:10px"></div>
+  <div class="api-status" id="apiStatus" style="margin-bottom:8px">Готов к генерации. Заполни поля и нажми кнопку.</div>
+  <textarea class="out" id="aiOutput" spellcheck="false" style="min-height:520px;max-height:90vh" placeholder="Здесь появится готовый контент: пины, посты, заголовки, контент-план или другой выбранный формат."></textarea>
+  <div class="copybar" style="margin-top:12px">
+    <button class="btn2" onclick="copyText('aiOutput')">Скопировать контент</button>
+    <button class="btn2" onclick="clearText('aiOutput')">Очистить</button>
+  </div>
   <div class="paywall hidden" id="paywall">
     <h3>Генерации закончились</h3>
     <ul>
@@ -302,6 +302,11 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
     <button class="btn" onclick="openPricingModal()">Выбрать тариф →</button>
   </div>
 </section>
+
+</main>
+
+<aside class="sticky">
+
 
 <textarea id="promptOut" style="display:none" spellcheck="false"></textarea>
 
