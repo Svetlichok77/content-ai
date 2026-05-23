@@ -783,7 +783,7 @@ document.addEventListener('visibilitychange', async ()=>{
     const prevLeft = getGenerationsLeft();
     await loadUserBalance(currentUser.id, currentUser.email);
     const newLeft = getGenerationsLeft();
-    if (newLeft > prevLeft) {
+    if (newLeft > prevLeft && (newLeft - prevLeft) >= 5) {
       showPaymentNotice('Генерации зачислены!', 'Оплата прошла. Начислено ' + (newLeft - prevLeft) + ' генераций.', '🎉');
       localStorage.removeItem('pending_tier');localStorage.removeItem('pending_tier_ts');
     }
