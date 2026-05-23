@@ -284,13 +284,14 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 </main>
 
 <aside class="sticky">
-<section class="panel"><div class="label">Выбрано</div><div id="summary"></div></section>
-
 <section class="panel" id="contentPanel">
-  <div class="label">Готовый контент</div>
-  <div class="api-status" id="apiStatus">Готов к генерации. Заполни поля и нажми кнопку.</div>
-  <div style="margin-top:6px;text-align:right"><button id="resetDemoBtn" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;font-family:Onest,sans-serif;text-decoration:underline;padding:0" title="Сбросить счётчик">↺ Сбросить счётчик</button></div>
-  <textarea class="out" id="aiOutput" spellcheck="false" placeholder="Здесь появится готовый контент: пины, посты, заголовки, контент-план или другой выбранный формат."></textarea>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+    <div class="label" style="margin-bottom:0">Готовый контент</div>
+    <button id="resetDemoBtn" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;font-family:Onest,sans-serif;text-decoration:underline;padding:0" title="Сбросить счётчик">↺ Сбросить счётчик</button>
+  </div>
+  <div id="summary" style="margin-bottom:8px"></div>
+  <div class="api-status" id="apiStatus" style="margin-bottom:6px">Готов к генерации. Заполни поля и нажми кнопку.</div>
+  <textarea class="out" id="aiOutput" spellcheck="false" style="min-height:420px;max-height:82vh" placeholder="Здесь появится готовый контент: пины, посты, заголовки, контент-план или другой выбранный формат."></textarea>
   <div class="copybar"><button class="btn2" onclick="copyText('aiOutput')">Скопировать контент</button><button class="btn2" onclick="clearText('aiOutput')">Очистить</button></div>
   <div class="paywall hidden" id="paywall">
     <h3>Генерации закончились</h3>
@@ -302,14 +303,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   </div>
 </section>
 
-<section class="panel hidden" id="promptPanel">
-  <div class="tabs"><div class="tab on">Мастер-промпт</div></div>
-  <textarea class="out" id="promptOut" spellcheck="false"></textarea>
-  <div class="copyguide">
-    <div>Готово: промпт можно скопировать<small>Вставь в ChatGPT, Claude, Gemini, YandexGPT.</small></div>
-    <button onclick="copyText('promptOut')">Скопировать →</button>
-  </div>
-</section>
+<textarea id="promptOut" style="display:none" spellcheck="false"></textarea>
 
 <section class="panel" style="border-color:rgba(200,255,0,.35);background:linear-gradient(160deg,rgba(10,18,10,.97),rgba(5,10,5,.99));margin-top:16px">
   <div class="label" style="color:var(--lime)">&#9733; Нейроворонка <span style="background:rgba(200,255,0,.1);border:1px solid rgba(200,255,0,.3);border-radius:999px;padding:2px 9px;font-size:10px;color:#c8ff00;text-transform:none;letter-spacing:0;font-family:Onest,sans-serif;font-weight:700;margin-left:4px">следующий шаг</span></div>
@@ -835,8 +829,8 @@ function generatePromptOnly() {
   if (!canUsePrompt()) {document.getElementById('paywall').classList.remove('hidden');openPricingModal();return;}
   const prompt = buildPrompt();
   document.getElementById('promptOut').value = prompt;
-  document.getElementById('promptPanel').classList.remove('hidden');
-  document.getElementById('promptPanel').scrollIntoView({ behavior:'smooth', block:'start' });
+  // promptPanel removed
+  
 }
 
 // ИНИЦИАЛИЗАЦИЯ UI
@@ -1090,11 +1084,11 @@ function buildFormatInstructions() {
   };
 
   if(chosen.length) {
-    let postBlock = `ПОСТЫ\n\nСделай по 2 варианта для каждого формата. Варианты должны отличаться хуком и углом — не просто переформулировка.\n\nДля каждого поста:\n— Заголовок / первая строка (хук — самое важное)\n— Готовый текст\n— Финал строго под цель: ${S.goal}\n— Визуальная идея\n\n`;
+    let postBlock = `Сделай 2 поста — разные углы, разные хуки.\n\nЖЕЛЕЗНОЕ ПРАВИЛО: Если хук обещает ("вот где ошиблась", "вот что изменило всё") — внутри поста это раскрывается конкретно. Пообещал — выполни.\n\nЗАПРЕЩЕНО писать: "не так ли?", "звучит знакомо?", "не правда ли?", "доступ к информации", "результат превзойдёт ожидания", "все через это проходили", "немного терпения", "шаг за шагом".\nГРАММАТИКА: "смотря на" → заменяй на "глядя на" или "смотришь на".\n\nФОРМАТ КАЖДОГО ПОСТА:\n[Хук — первая строка]\n[Конкретная ситуация → реальная проблема → конкретный инсайт или шаги. Без воды.]\n[Финал под цель: ${S.goal}]\n📸 Идея для картинки: [конкретно что изображено]\n\n`;
     chosen.forEach(fmt => {
       postBlock += `ФОРМАТ: ${fmt}\n${postRules[fmt] || 'Сделай живой, конкретный пост по теме.'}\n\n`;
     });
-    postBlock += `ПРАВИЛА ДЛЯ ВСЕХ ПОСТОВ:\n— Не повторяй хуки между вариантами\n— Используй живые фразы и мифы из блока ЦА\n— Добавь 1–2 живые неровности: короткая фраза, обрыв, разговорная вставка`;
+    postBlock += `ПРАВИЛА:\n— Разные хуки в постах 1 и 2\n— Используй живые фразы и мифы покупателя из ЦА\n— 1–2 живые неровности: короткая фраза, обрыв, разговорная вставка\n— Не пиши технических меток внутри текста`;
     blocks.push(postBlock);
   }
 
@@ -1707,7 +1701,7 @@ async function generateAI() {
   }
   const prompt = buildPrompt();
   document.getElementById('promptOut').value = prompt;
-  document.getElementById('promptPanel').classList.remove('hidden');
+  // promptPanel removed
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Генерирую...';
   out.value = '⏳ Генерирую контент с психологическими техниками...';
   try {
