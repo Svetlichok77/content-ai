@@ -1821,7 +1821,7 @@ async function generateAI() {
     document.getElementById('paywall').classList.remove('hidden');out.value = 'Генерации закончились. Выбери тариф.';openPricingModal();return;
   }
   const prompt = buildPrompt();
-  document.getElementById('promptOut').value = prompt;
+  const pOut = document.getElementById('promptOut'); if(pOut) pOut.value = prompt;
   // promptPanel removed
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Генерирую...';
   out.value = '⏳ Генерирую контент с психологическими техниками...';
