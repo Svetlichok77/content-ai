@@ -687,7 +687,25 @@ function getUserTier(){ensureGenerationBalance();return localStorage.getItem('us
 function getGenerationsLeft(){ensureGenerationBalance();return Math.max(0,Number(localStorage.getItem('generations_left')||0));}
 function setGenerationsLeft(n){localStorage.setItem('generations_left',String(Math.max(0,Number(n)||0)));}
 function addGenerations(amount){const current=Number(localStorage.getItem('generations_left')||0);setGenerationsLeft(current+Number(amount||0));}
-function spendGeneration(){const left=getGenerationsLeft();if(left<=0)return false;setGenerationsLeft(left-1);return true;}
+function spendGeneration(){
+  const left=getGenerationsLeft();
+  if(left<=0) return false;
+  setGenerationsLeft(left-1);
+  syncGenerationsToSupabase();
+  return true;
+}
+
+async function syncGenerationsToSupabase() {
+  if (!currentUser || !sb) return;
+  try {
+    await sb.from('user_balance').update({
+      generations_left: getGenerationsLeft(),
+      updated_at: new Date().toISOString()
+    }).eq('id', currentUser.id);
+  } catch(e) {
+    console.error('Sync generations error:', e.message);
+  }
+}
 
 function goToPay(tier){
   const baseUrl=PAY_URLS[tier];
