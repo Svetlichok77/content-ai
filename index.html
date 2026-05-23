@@ -9,9 +9,9 @@
 :root{--bg:#030606;--card:#0b1111;--card2:#111d1c;--line:#1d3d3a;--line2:#00ffd155;--accent:#00ffd1;--accent2:#00a7ff;--lime:#c8ff00;--text:#ecfffb;--muted:#89aaa5;--danger:#ff6b6b;--r:24px;--rs:14px;--shadow:0 28px 90px rgba(0,255,209,.13)}
 *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Onest,system-ui,sans-serif;background:radial-gradient(ellipse 60% 40% at 12% 0%,rgba(0,255,209,.14),transparent),radial-gradient(ellipse 50% 35% at 88% 6%,rgba(0,120,255,.10),transparent),radial-gradient(ellipse 70% 50% at 50% 100%,rgba(80,40,200,.09),transparent),radial-gradient(ellipse 40% 60% at 50% 45%,rgba(0,20,18,.6),transparent),linear-gradient(160deg,#010303 0%,#040c0a 30%,#030809 55%,#020505 80%,#010202 100%);color:var(--text);min-height:100vh;line-height:1.55;font-size:15px}.noise:before{content:"";position:fixed;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(0,255,209,.025),transparent 60%),repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 1px,transparent 1px 4px);pointer-events:none;mix-blend-mode:screen}.noise:after{content:"";position:fixed;right:4%;bottom:6%;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(0,255,209,.07),rgba(0,120,255,.04),transparent 70%);filter:blur(60px);pointer-events:none}
 header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--line);position:relative;overflow:hidden}header:before{content:'PRO';position:absolute;right:5%;top:8px;font-family:Unbounded,sans-serif;font-size:112px;font-weight:800;color:transparent;-webkit-text-stroke:1px rgba(0,255,209,.12);letter-spacing:-.08em;pointer-events:none}.brand{font-family:Unbounded,sans-serif;color:var(--accent);font-size:12px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:18px}h1{font-family:Unbounded,sans-serif;font-size:clamp(30px,5vw,58px);line-height:1.02;letter-spacing:-.05em;margin-bottom:18px}h1 span{color:var(--accent);text-shadow:0 0 30px rgba(0,255,209,.42)}.sub{max-width:880px;margin:0 auto;color:var(--muted);font-size:16px}.herochips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:24px}.herochips span{border:1px solid rgba(0,255,209,.24);background:rgba(0,255,209,.055);color:#b7fff6;border-radius:999px;padding:8px 13px;font-size:12px;box-shadow:0 0 24px rgba(0,255,209,.08)}
-.wrap{max-width:1260px;margin:0 auto;padding:30px 20px 82px}.grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:22px;align-items:start}
+.wrap{max-width:1260px;margin:0 auto;padding:30px 20px 82px}.grid{display:grid;grid-template-columns:1fr;gap:0}
 .panel{background:linear-gradient(160deg,rgba(12,20,20,.95),rgba(6,10,10,.97));border:1px solid rgba(0,255,209,.16);border-radius:var(--r);box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.035);padding:24px;margin-bottom:16px;backdrop-filter:blur(14px);position:relative;overflow:visible}.panel::before{content:'';position:absolute;inset:0;border-radius:var(--r);background:linear-gradient(135deg,rgba(0,255,209,.06),transparent 38%,rgba(0,167,255,.035));pointer-events:none;z-index:0}.panel>*{position:relative;z-index:1}
-.sticky{position:sticky;top:18px;display:flex;flex-direction:column;gap:0}.label{font-family:Unbounded,sans-serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px}.label:after{content:"";height:1px;background:var(--line);flex:1}.hint{background:rgba(0,255,209,.07);border:1px solid var(--line2);border-radius:14px;padding:13px 15px;color:#aefdf0;font-size:13px;margin-top:12px}.warning{background:rgba(200,255,0,.08);border:1px solid rgba(200,255,0,.38);color:#eaffbd}.muted{color:var(--muted)}
+.label{font-family:Unbounded,sans-serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);display:flex;gap:10px;align-items:center;margin-bottom:14px}.label:after{content:"";height:1px;background:var(--line);flex:1}.hint{background:rgba(0,255,209,.07);border:1px solid var(--line2);border-radius:14px;padding:13px 15px;color:#aefdf0;font-size:13px;margin-top:12px}.warning{background:rgba(200,255,0,.08);border:1px solid rgba(200,255,0,.38);color:#eaffbd}.muted{color:var(--muted)}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}textarea,input,select{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--text);border-radius:var(--rs);padding:13px 15px;font-family:Onest,sans-serif;font-size:14px;outline:none}textarea:focus,input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,255,209,.07)}textarea{min-height:104px;resize:vertical}.textarea-tall{min-height:170px}
 .pills{display:flex;flex-wrap:wrap;gap:8px}.pill{border:1px solid rgba(136,170,165,.18);background:linear-gradient(180deg,#081312,#06100f);color:#a7c4c0;border-radius:999px;padding:9px 15px;cursor:pointer;transition:.18s;font-family:Onest,sans-serif;font-size:13px}.pill:hover{border-color:var(--line2);color:#fff;background:#0b1d1b;transform:translateY(-1px)}.pill.on{background:linear-gradient(135deg,var(--accent),#66fff0);color:#02100e;border-color:var(--accent);font-weight:800;box-shadow:0 0 26px rgba(0,255,209,.24),0 8px 24px rgba(0,255,209,.12)}
 .btn{border:0;border-radius:18px;background:linear-gradient(135deg,var(--accent),#67fff0 55%,var(--lime));color:#04110f;font-family:Unbounded,sans-serif;font-weight:800;font-size:13px;letter-spacing:.04em;padding:18px;width:100%;cursor:pointer;transition:.18s;box-shadow:0 18px 54px rgba(0,255,209,.18);margin-top:12px}.btn:hover{transform:translateY(-2px);box-shadow:0 24px 66px rgba(0,255,209,.23)}.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}.btn-blue{background:linear-gradient(135deg,#00a7ff,#00ffd1 55%,var(--lime))}.btn2{background:transparent;color:var(--accent);border:1px solid var(--line2);padding:11px 14px;border-radius:999px;cursor:pointer;font-weight:700;font-family:Onest,sans-serif;font-size:13px}.btn2:hover{background:rgba(0,255,209,.08)}
@@ -37,7 +37,40 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 .user-bar-btn:hover{border-color:var(--line2);color:var(--text)}
 @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(200,255,0,.4)}50%{opacity:.8;box-shadow:0 0 0 4px rgba(200,255,0,.0)}}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,255,209,.3);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}@keyframes spin{to{transform:rotate(360deg)}}
-@media(max-width:960px){.grid{grid-template-columns:1fr}.sticky{position:static}.row,.row3,.check,.start-list{grid-template-columns:1fr}header{padding-top:42px}header:before{font-size:82px}.copyguide{align-items:flex-start;flex-direction:column}#tierGrid,#featGrid{grid-template-columns:1fr!important}}
+@media(max-width:960px){
+  .grid{grid-template-columns:1fr}
+  .sticky{position:static}
+  .row,.row3,.start-list{grid-template-columns:1fr}
+  header{padding-top:32px}
+  header:before{font-size:60px}
+  .copyguide{align-items:flex-start;flex-direction:column}
+  #tierGrid,#featGrid{grid-template-columns:1fr!important}
+  .wrap{padding:16px 12px 60px}
+  .panel{padding:16px}
+  .btn{font-size:12px;padding:15px}
+  h1{font-size:clamp(24px,6vw,40px)}
+  .out{min-height:300px;font-size:13px}
+  .field-label{font-size:11px}
+  .herochips{gap:6px}
+  .herochips span{font-size:11px;padding:6px 10px}
+  .start-list{grid-template-columns:1fr 1fr}
+  .step-card{padding:12px}
+  .step-num{width:28px;height:28px;font-size:11px}
+  .step-title{font-size:11px}
+  .step-desc{font-size:11px}
+  .user-bar{gap:6px}
+  .user-bar-info{font-size:11px;padding:5px 10px}
+  .tabs{overflow-x:auto}
+  .copybar{gap:6px}
+  .btn2{padding:8px 11px;font-size:12px}
+  #tierGrid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  .start-list{grid-template-columns:1fr}
+  h1{font-size:clamp(22px,7vw,32px)}
+  .wrap{padding:12px 10px 60px}
+  header:before{display:none}
+}
 </style>
 </head>
 <body class="noise">
@@ -100,7 +133,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   </div>
 </div>
 
-<div class="wrap"><div class="grid"><main>
+<div class="wrap"><div class="grid">
 
 <section class="panel" style="border-color:rgba(0,255,209,.22);background:linear-gradient(135deg,rgba(0,255,209,.04),rgba(0,167,255,.02),transparent)">
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
@@ -291,7 +324,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 <section class="panel" id="contentPanel" style="border-color:rgba(0,255,209,.25)">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
     <div class="label" style="margin-bottom:0;color:var(--accent)">★ Готовый контент</div>
-    <button id="resetDemoBtn" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;font-family:Onest,sans-serif;text-decoration:underline;padding:0" title="Сбросить счётчик">↺ Сбросить счётчик</button>
+    <button id="resetDemoBtn" style="display:none;background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;font-family:Onest,sans-serif;text-decoration:underline;padding:0" title="Сбросить счётчик">↺ Сбросить счётчик</button>
   </div>
   <div id="summary" style="margin-bottom:10px"></div>
   <div class="api-status" id="apiStatus" style="margin-bottom:8px">Готов к генерации. Заполни поля и нажми кнопку.</div>
@@ -310,75 +343,17 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   </div>
 </section>
 
-</main>
-
-<aside class="sticky">
-
-
-<textarea id="promptOut" style="display:none" spellcheck="false"></textarea>
-
-<section class="panel" style="border-color:rgba(200,255,0,.35);background:linear-gradient(160deg,rgba(10,18,10,.97),rgba(5,10,5,.99));margin-top:16px">
-  <div class="label" style="color:var(--lime)">&#9733; Нейроворонка <span style="background:rgba(200,255,0,.1);border:1px solid rgba(200,255,0,.3);border-radius:999px;padding:2px 9px;font-size:10px;color:#c8ff00;text-transform:none;letter-spacing:0;font-family:Onest,sans-serif;font-weight:700;margin-left:4px">следующий шаг</span></div>
-  <h3 style="font-family:Unbounded,sans-serif;font-size:15px;letter-spacing:-.02em;margin-bottom:6px;color:#eaffbd">Серия постов, которая продаёт</h3>
-  <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5">Готовая система: пост за постом ведёт читателя от знакомства до покупки. Заполни один раз — получи план на недели вперёд.</p>
-  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
-    <div>
-      <div class="field-label">Тип воронки <span>→</span></div>
-      <select id="funnelType" style="width:100%">
-        <option value="fast5">Быстрая продажа · 5 постов</option>
-        <option value="warmup7">Прогрев и продажа · 7 постов</option>
-        <option value="leadmagnet14">С бесплатным подарком (лид-магнит) · 14 постов</option>
-        <option value="tripwire21">Полная система · 21 пост</option>
-      </select>
-    </div>
-    <div>
-      <div class="field-label">Цена продукта <span>→</span></div>
-      <select id="funnelPrice" style="width:100%">
-        <option value="low">До 3 000 ₽ — покупают быстро</option>
-        <option value="mid">3 000–15 000 ₽ — нужно прогреть</option>
-        <option value="high">От 15 000 ₽ — длинный путь к покупке</option>
-      </select>
-    </div>
-    <div>
-      <div class="field-label">Площадка <span>→</span></div>
-      <select id="funnelPlatform" style="width:100%">
-        <option value="Telegram">Telegram</option>
-        <option value="Instagram">Instagram / Reels</option>
-        <option value="ВКонтакте">ВКонтакте</option>
-        <option value="Pinterest">Pinterest</option>
-        <option value="TikTok">TikTok</option>
-      </select>
-    </div>
+<section class="panel" style="margin-top:4px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <div class="label" style="margin-bottom:0">📋 История генераций</div>
+    <button onclick="clearHistory()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;font-family:Onest,sans-serif;text-decoration:underline;padding:0">Очистить</button>
   </div>
-  <div class="field-label">Что продаёшь <span>→</span></div>
-  <input id="funnelProduct" placeholder="Игрушки на заказ / курс по вязанию / консультация..." style="margin-bottom:10px">
-  <div class="field-label">Кому продаёшь (ЦА) <span>→</span> <span style="color:var(--muted);font-weight:400">можно перенести из блока 3</span></div>
-  <textarea id="funnelAudience" style="min-height:70px;margin-bottom:10px" placeholder="Боли, страхи, живые фразы покупателя..."></textarea>
-  <textarea id="funnelOutput" class="out" style="min-height:220px;margin-bottom:10px" placeholder="Здесь появится план воронки: для каждого поста — тема, первая строка и что писать внутри."></textarea>
-  <div class="copybar">
-    <button class="btn2" onclick="transferAudienceToFunnel()">Взять из блока 3 ↑</button>
-    <button class="btn2" onclick="copyText('funnelOutput')">Скопировать</button>
-    <button class="btn2" onclick="clearText('funnelOutput')">Очистить</button>
-  </div>
-  <div class="hint" style="background:rgba(200,255,0,.07);border-color:rgba(200,255,0,.3);color:#c8e8a0;font-size:12px;margin-bottom:10px">
-    💡 Лид-магнит = бесплатный подарок (чеклист, гайд). Трипвайер = недорогой продукт-вход (мини-курс, шаблон).
-  </div>
-  <button class="btn" style="background:linear-gradient(135deg,#c8ff00,#9fff00);color:#04100a;margin-top:0" id="btnFunnel" onclick="generateFunnel()">&#9733; Создать воронку</button>
-</section>
-<section class="panel" style="background:linear-gradient(135deg,rgba(0,167,255,.12),rgba(0,167,255,.04));border-color:rgba(0,167,255,.3)">
-  <div style="display:flex;gap:14px;align-items:flex-start">
-    <div style="font-size:32px;flex-shrink:0">✈️</div>
-    <div>
-      <div style="font-family:Unbounded,sans-serif;font-size:13px;color:#00a7ff;margin-bottom:6px">Telegram · neurohack_life</div>
-      <div style="font-size:13px;color:#b9d6d1;line-height:1.5;margin-bottom:12px">Подпишись — там выходят готовые контент-идеи, разборы, фишки по AI и эксклюзивные материалы.</div>
-      <a href="https://t.me/neurohack_life" target="_blank" rel="noopener"
-         style="display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#00a7ff,#0088cc);color:#fff;border-radius:999px;padding:10px 18px;text-decoration:none;font-family:Unbounded,sans-serif;font-size:11px;font-weight:800;letter-spacing:.04em;box-shadow:0 8px 24px rgba(0,167,255,.3)">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.04 9.613c-.152.67-.548.835-1.11.52l-3.07-2.262-1.482 1.427c-.163.163-.3.3-.617.3l.22-3.11 5.667-5.118c.247-.22-.053-.34-.382-.12L6.91 14.41 3.887 13.47c-.66-.206-.673-.66.138-.976l10.88-4.194c.55-.198 1.032.134.657.948z"/></svg>
-        Подписаться на канал
-      </a>
-    </div>
+  <div id="historyList" style="display:flex;flex-direction:column;gap:8px;max-height:320px;overflow-y:auto">
+    <div style="color:var(--muted);font-size:13px;text-align:center;padding:20px 0">История пуста — сгенерируй первый контент</div>
   </div>
 </section>
+
+
 </div></div>
 <!-- PRICING MODAL -->
 <div id="pricingOverlay" style="display:none;position:fixed;inset:0;background:rgba(2,4,4,.92);backdrop-filter:blur(14px);z-index:1000;overflow-y:auto;padding:32px 16px">
@@ -741,11 +716,12 @@ function getUserTier(){ensureGenerationBalance();return localStorage.getItem('us
 function getGenerationsLeft(){ensureGenerationBalance();return Math.max(0,Number(localStorage.getItem('generations_left')||0));}
 function setGenerationsLeft(n){localStorage.setItem('generations_left',String(Math.max(0,Number(n)||0)));}
 function addGenerations(amount){const current=Number(localStorage.getItem('generations_left')||0);setGenerationsLeft(current+Number(amount||0));}
-function spendGeneration(){
+async function spendGeneration(){
   const left=getGenerationsLeft();
   if(left<=0) return false;
   setGenerationsLeft(left-1);
-  syncGenerationsToSupabase();
+  updateStatusBar();
+  try { await syncGenerationsToSupabase(); } catch(e) { console.error('Sync error:', e); }
   return true;
 }
 
@@ -875,6 +851,9 @@ function updateStatusBar(){
   } else {
     if(el){el.innerHTML=`Тариф: <strong style="color:var(--accent)">${tierLabel}</strong> · Осталось: <strong style="color:var(--lime)">${left}</strong> генераций`;}
   }
+  // Показываем сброс только для free тира (для тестирования)
+  const resetBtn = document.getElementById('resetDemoBtn');
+  if(resetBtn) resetBtn.style.display = (tier === 'free') ? 'inline' : 'none';
   // Paywall показываем только когда юзер пытается что-то сгенерировать, не на загрузке
 }
 
@@ -883,15 +862,6 @@ function canUsePrompt() {
   return getGenerationsLeft() > 0;
 }
 
-function generatePromptOnly() {
-  ensureGenerationBalance();
-  if (!currentUser) {openAuthModal('register');showCopyToast('Зарегистрируйся — получишь 5 генераций бесплатно');return;}
-  if (!canUsePrompt()) {document.getElementById('paywall').classList.remove('hidden');openPricingModal();return;}
-  const prompt = buildPrompt();
-  document.getElementById('promptOut').value = prompt;
-  // promptPanel removed
-  
-}
 
 // ИНИЦИАЛИЗАЦИЯ UI
 function fillSelect(id, arr, def) {
@@ -1464,149 +1434,207 @@ ${buildFormatInstructions()}`;
 }
 
 
+
+
 // ============================================================
-// НЕЙРОВОРОНКА
+// АВТОСОХРАНЕНИЕ ПРОЕКТА
 // ============================================================
 
-function transferAudienceToFunnel() {
-  const aud = document.getElementById('audienceData')?.value?.trim();
-  if (!aud) { showCopyToast('Сначала заполни блок 3 — кому продаёшь'); return; }
-  document.getElementById('funnelAudience').value = aud;
-  document.getElementById('funnelAudience').scrollIntoView({behavior:'smooth',block:'center'});
+const SAVE_FIELDS = ['project','role','audFindNiche','audFindProduct','audFindKnown',
+  'audienceData','topic','product','cta','tovDescription','tovPhrases','tovNever'];
+
+function saveProject() {
+  const data = {};
+  SAVE_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) data[id] = el.value;
+  });
+  // Сохраняем выбранные форматы и настройки
+  data._platform = S.platform;
+  data._goal = S.goal;
+  data._audience = S.audience;
+  data._formats = S.formats.join('|||');
+  data._tone = S.tone;
+  data._depth = S.depth;
+  try { localStorage.setItem('project_autosave', JSON.stringify(data)); } catch(e) {}
 }
 
-function buildFunnelPrompt() {
-  const type = document.getElementById('funnelType')?.value || 'warmup7';
-  const price = document.getElementById('funnelPrice')?.value || 'mid';
-  const platform = document.getElementById('funnelPlatform')?.value || 'Telegram';
-  const product = document.getElementById('funnelProduct')?.value?.trim() || '[продукт не указан]';
-  const audience = document.getElementById('funnelAudience')?.value?.trim() || '[покупатель не указан]';
-
-  const typeNames = {
-    warmup7: 'Прогрев и продажа — 7 постов',
-    leadmagnet14: 'С бесплатным подарком — 14 постов',
-    fast5: 'Быстрая продажа — 5 постов',
-    tripwire21: 'Полная система — 21 пост'
-  };
-
-  const priceContext = {
-    low: 'Продукт недорогой (до 3000₽) — покупают импульсивно, прогрев короткий, акцент на быстром результате и низком риске',
-    mid: 'Продукт среднего чека (3000-15000₽) — нужны доверие и экспертность, покупатель думает 3-7 дней',
-    high: 'Продукт дорогой (от 15000₽) — длинный прогрев, нужны кейсы, снятие страхов, личный контакт'
-  };
-
-  const structures = {
-    fast5: `СТРУКТУРА — 5 постов (Быстрая продажа):
-ДЕНЬ 1 — БОЛЬ (Охват): Острая ситуация из жизни покупателя — он узнаёт себя. Никакой продажи.
-ДЕНЬ 2 — МИФ (Экспертность): Разрушаем главное заблуждение ЦА. "Ты думаешь что [миф] — но на самом деле..."
-ДЕНЬ 3 — МЕТОД (Доверие): Показываем правильный путь. Конкретный инструмент или принцип, который работает.
-ДЕНЬ 4 — ДОКАЗАТЕЛЬСТВО (Прогрев): Кейс или история трансформации. Было → стало. Конкретные цифры.
-ДЕНЬ 5 — ОФФЕР (Продажа): Мягкое предложение через результат. Без давления, с ограничением.`,
-
-    warmup7: `СТРУКТУРА — 7 постов (Прогрев и продажа):
-ДЕНЬ 1 — БОЛЬ (Охват): Ситуация-зеркало. Читатель думает "это про меня".
-ДЕНЬ 2 — ПОЧЕМУ ТАК (Экспертность): Причина проблемы, о которой никто не говорит.
-ДЕНЬ 3 — МИФ (Экспертность): Разбиваем главное заблуждение ЦА.
-ДЕНЬ 4 — ИСТОРИЯ (Доверие): Личная история или кейс клиента. Трансформация.
-ДЕНЬ 5 — МЕТОД (Прогрев): Конкретный инструмент/подход. Мини-польза прямо внутри поста.
-ДЕНЬ 6 — ВОЗРАЖЕНИЕ (Прогрев): Закрываем главный страх перед покупкой.
-ДЕНЬ 7 — ОФФЕР (Продажа): Приглашение. Через результат, без "купи".`,
-
-    leadmagnet14: `СТРУКТУРА — 14 постов (С бесплатным подарком):
-ДНИ 1-2 — ОХВАТ: Боль через конкретную ситуацию. Читатель узнаёт себя.
-ДНИ 3-4 — ЭКСПЕРТНОСТЬ: Почему так происходит. Метод который работает.
-ДЕНЬ 5 — МИФ: Разрушаем главное заблуждение ЦА.
-ДНИ 6-7 — ДОВЕРИЕ: Кейсы. Трансформации. Социальное доказательство.
-ДЕНЬ 8 — ЛИД-МАГНИТ: Анонс бесплатного материала/чеклиста/гайда. Ценность, без продажи.
-ДНИ 9-10 — ПРОГРЕВ: Результаты тех кто применил. Работа с сомнениями.
-ДЕНЬ 11 — СТРАХ: Закрываем главный страх ("а вдруг не получится у меня").
-ДНИ 12-13 — ЖЕЛАНИЕ: Рисуем картину результата. Что изменится в жизни.
-ДЕНЬ 14 — ОФФЕР + КОНСУЛЬТАЦИЯ: Приглашение на консультацию/разбор или покупка.`,
-
-    tripwire21: `СТРУКТУРА — 21 пост (Полная система):
-ДНИ 1-3 — ОХВАТ: Боли, ситуации, мифы. Холодная аудитория начинает узнавать себя.
-ДНИ 4-6 — ЭКСПЕРТНОСТЬ: Метод, принципы, "почему так". Строим авторитет.
-ДНИ 7-8 — МИФ х2: Два главных заблуждения ЦА — развенчиваем с доказательствами.
-ДНИ 9-11 — ДОВЕРИЕ: Кейсы, истории, трансформации. Читатель начинает верить.
-ДЕНЬ 12 — ЛИД-МАГНИТ: Бесплатный ценный материал. Максимальная польза.
-ДНИ 13-15 — ПРОГРЕВ: Результаты, социальное доказательство, работа с возражениями.
-ДЕНЬ 16 — НЕДОРОГОЙ ПРОДУКТ-ВХОД: Недорогой продукт-вход (мини-курс, гайд, шаблон). Первая продажа.
-ДНИ 17-18 — ЖЕЛАНИЕ: Контент о трансформации. Жизнь до и после продукта.
-ДНИ 19-20 — ЗАКРЫТИЕ СТРАХОВ: Отвечаем на главные возражения перед основной покупкой.
-ДЕНЬ 21 — ОФФЕР: Основной продукт. Через результат и ограничение.`
-  };
-
-  return `Ты — архитектор нейроворонок и контент-стратег с 20-летним опытом.
-В тебе воплощён синтез лучших подходов: Алекс Хормози (ценностные лестницы), Рассел Брансон (воронки), Дэн Кеннеди (психология продаж), Гари Бенчивенга (удержание внимания).
-
-Ты создаёшь контент-воронки — системы постов, где каждый пост психологически подготавливает читателя к следующему шагу и в итоге к покупке. Читатель проходит путь: незнакомец → заинтересованный → доверяющий → покупатель.
-
-АБСОЛЮТНЫЕ ПРАВИЛА:
-— Только чистый текст. Никакого markdown (**, *, ##).
-— Начни сразу с воронки, без вводных объяснений.
-— Каждый пост готов к публикации: хук можно скопировать напрямую.
-— Никаких рекламных слов (узнайте, попробуйте, не упустите).
-— Голос живого человека, не бренда.
-
-ПАРАМЕТРЫ ВОРОНКИ:
-Тип: ${typeNames[type]}
-Платформа: ${platform}
-Продукт: ${product}
-Контекст цены: ${priceContext[price]}
-
-ПОКУПАТЕЛЬ (боли, страхи, мифы, живые фразы):
-${audience}
-
-${structures[type]}
-
-ТРЕБОВАНИЯ К КАЖДОМУ ПОСТУ В ВОРОНКЕ:
-
-Для каждого дня/этапа дай строго по структуре:
-
-ДЕНЬ [N] — [ЭТАП]: [Название]
-Задача: что должен подумать/почувствовать читатель после этого поста
-Хук (первая строка — готова к публикации):
-Ключевые тезисы (3-4 пункта — о чём писать внутри):
-CTA: что делает читатель в конце (не "купи" — действие или вопрос)
-Тип публикации: [пост / карусель / сторис / reels]
-
-ПСИХОЛОГИЧЕСКИЕ ПРИНЦИПЫ которые применяй:
-— Каждый пост-боль: читатель узнаёт себя физически ("это написано про меня")
-— Каждый пост-экспертность: читатель думает "этот человек реально разбирается"
-— Каждый пост-кейс: конкретный результат, цифры, до/после
-— Каждый пост-возражение: закрывай страхи изнутри, не снаружи
-— Финал воронки: покупка как логичный следующий шаг, а не давление
-
-ВАЖНО: Используй живые фразы и мифы покупателя прямо в хуках. Пусть читатель в первой строке думает "стоп, это про меня".`;
-}
-
-async function generateFunnel() {
-  ensureGenerationBalance();
-  const out = document.getElementById('funnelOutput');
-  const btn = document.getElementById('btnFunnel');
-  if (!currentUser) { openAuthModal('register'); showCopyToast('Зарегистрируйся — получишь 5 генераций бесплатно'); return; }
-  if (getGenerationsLeft() <= 0) { document.getElementById('paywall').classList.remove('hidden'); out.value = 'Генерации закончились. Выбери тариф.'; openPricingModal(); return; }
-  if (!document.getElementById('funnelProduct')?.value?.trim()) { showCopyToast('Укажи что продаёшь'); return; }
-
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>Строю воронку...';
-  out.value = '⏳ Строю нейроворонку по этапам психологии продаж...';
-
+function loadProject() {
   try {
-    const prompt = buildFunnelPrompt();
-    const type = document.getElementById('funnelType')?.value || 'warmup7';
-    const isLong = type === 'tripwire21' || type === 'leadmagnet14';
-    const result = await callAPIRaw(prompt, 'content');
-    out.value = result;
-    if (!result.startsWith('__TEST_MODE__')) { spendGeneration(); updateStatusBar(); showCopyToast('✓ Контент готов — смотри ниже!'); }
+    const saved = localStorage.getItem('project_autosave');
+    if (!saved) return;
+    const data = JSON.parse(saved);
+
+    // Восстанавливаем текстовые поля
+    SAVE_FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && data[id]) {
+        el.value = data[id];
+        // Скрываем подсказку если поле заполнено
+        if (id === 'details') {
+          const hint = document.getElementById('detailsHint');
+          if (hint && data[id]) hint.style.display = 'none';
+        }
+      }
+    });
+
+    // Восстанавливаем настройки
+    if (data._platform) {
+      S.platform = data._platform;
+      const sel = document.getElementById('platform');
+      if (sel) sel.value = data._platform;
+    }
+    if (data._goal) {
+      S.goal = data._goal;
+      const sel = document.getElementById('goal');
+      if (sel) sel.value = data._goal;
+    }
+    if (data._audience) {
+      S.audience = data._audience;
+      const sel = document.getElementById('audienceType');
+      if (sel) sel.value = data._audience;
+    }
+    if (data._tone) {
+      S.tone = data._tone;
+      const sel = document.getElementById('tone');
+      if (sel) sel.value = data._tone;
+    }
+    if (data._depth) {
+      S.depth = data._depth;
+      const sel = document.getElementById('depth');
+      if (sel) sel.value = data._depth;
+    }
+    if (data._formats) {
+      S.formats = data._formats.split('|||').filter(Boolean);
+      renderFormats(); // перерисуем форматы с правильными выбранными
+    }
+
+    updatePlatform();
+    sum();
   } catch(e) {
-    out.value = 'Ошибка: ' + e.message;
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '&#9733; Создать нейроворонку';
+    console.warn('loadProject error:', e.message);
   }
 }
 
+// Автосохранение при изменении любого поля
+function initAutosave() {
+  // Сохраняем с дебаунсом 1.5 секунды
+  let saveTimer;
+  const debouncedSave = () => {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveProject, 1500);
+  };
+
+  SAVE_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', debouncedSave);
+  });
+
+  // Слушаем изменения селектов
+  ['platform','goal','audienceType','tone','depth','extraPreset','audFindDepth'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('change', debouncedSave);
+  });
+}
+
+
+
+// ============================================================
+// ОНБОРДИНГ
+// ============================================================
+
+function showOnboarding() {
+  const el = document.getElementById('onboardingOverlay');
+  if (el) { el.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+}
+function closeOnboarding() {
+  const el = document.getElementById('onboardingOverlay');
+  if (el) { el.style.display = 'none'; document.body.style.overflow = ''; }
+  localStorage.setItem('onboarding_done', '1');
+}
+
+// ============================================================
+// ИСТОРИЯ ГЕНЕРАЦИЙ
+// ============================================================
+
+const MAX_HISTORY = 15;
+
+function saveToHistory(result) {
+  if (!result || result.startsWith('__TEST_MODE__')) return;
+  try {
+    const history = getHistory();
+    const entry = {
+      id: Date.now(),
+      date: new Date().toLocaleString('ru-RU', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}),
+      platform: S.platform,
+      formats: S.formats.join(' + '),
+      topic: v('topic') || '—',
+      preview: result.substring(0, 120) + (result.length > 120 ? '...' : ''),
+      full: result
+    };
+    history.unshift(entry);
+    if (history.length > MAX_HISTORY) history.pop();
+    localStorage.setItem('generation_history', JSON.stringify(history));
+    renderHistory();
+  } catch(e) {
+    console.warn('saveToHistory error:', e);
+  }
+}
+
+function getHistory() {
+  try {
+    return JSON.parse(localStorage.getItem('generation_history') || '[]');
+  } catch(e) { return []; }
+}
+
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  if (!list) return;
+  const history = getHistory();
+
+  if (history.length === 0) {
+    list.innerHTML = '<div style="color:var(--muted);font-size:13px;text-align:center;padding:20px 0">История пуста — сгенерируй первый контент</div>';
+    return;
+  }
+
+  list.innerHTML = history.map(entry => `
+    <div style="background:#071010;border:1px solid var(--line);border-radius:14px;padding:12px;cursor:pointer;transition:.15s"
+         onmouseenter="this.style.borderColor='var(--line2)'" onmouseleave="this.style.borderColor='var(--line)'"
+         onclick="restoreFromHistory(${entry.id})">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:8px;flex-wrap:wrap">
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <span style="background:rgba(0,255,209,.1);border:1px solid var(--line2);border-radius:999px;padding:2px 8px;font-size:11px;color:var(--accent)">${escapeHtml(entry.platform)}</span>
+          <span style="color:var(--muted);font-size:11px">${escapeHtml(entry.formats)}</span>
+        </div>
+        <span style="color:var(--muted);font-size:11px;white-space:nowrap">${entry.date}</span>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Тема: ${escapeHtml(entry.topic)}</div>
+      <div style="font-size:13px;color:#b9d6d1;line-height:1.4">${escapeHtml(entry.preview)}</div>
+      <div style="margin-top:8px;text-align:right">
+        <span style="font-size:11px;color:var(--accent)">Нажми чтобы восстановить →</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function restoreFromHistory(id) {
+  const history = getHistory();
+  const entry = history.find(h => h.id === id);
+  if (!entry) return;
+  const out = document.getElementById('aiOutput');
+  if (out) {
+    out.value = entry.full;
+    out.scrollIntoView({behavior:'smooth', block:'start'});
+    showCopyToast('✓ Контент восстановлен из истории');
+  }
+}
+
+function clearHistory() {
+  if (!confirm('Очистить всю историю генераций?')) return;
+  localStorage.removeItem('generation_history');
+  renderHistory();
+  showCopyToast('История очищена');
+}
 
 // ============================================================
 // ГОЛОС БРЕНДА (TOV)
@@ -1632,18 +1660,17 @@ function buildTOVPrompt() {
 — Длина постов: ${length}
 — Фирменные слова и фразы: ${phrases || 'не указаны'}
 — Никогда не пишет: ${never || 'не указано'}
-${example ? '— Пример текста автора:\n' + example : ''}
+${example ? '— Пример текста:\n' + example : ''}
 
-ЗАДАЧА: Напиши описание голоса автора в 5-7 предложениях.
-Это описание будет использоваться как инструкция для AI при генерации контента.
+ЗАДАЧА: Напиши описание голоса автора в 5-7 предложениях для использования как инструкция для AI.
 
-Формат — готовая инструкция, начиная с "Голос автора:":
+Формат — начни с "Голос автора:":
 — Как обращается к читателям и каким тоном
-— Какие слова и фразы использует, а каких избегает
+— Какие слова использует, а каких избегает
 — Особенности подачи (длина, эмодзи, структура)
-— 2-3 конкретных примера его фирменных оборотов (если есть в примере текста)
+— 2-3 конкретных примера оборотов (если есть в примере текста)
 
-Только чистый текст без markdown. Пиши конкретно, не абстрактно.`;
+Только чистый текст без markdown.`;
 }
 
 async function generateTOV() {
@@ -1673,16 +1700,16 @@ async function generateTOV() {
     result.style.color = '#b9d6d1';
     result.textContent = '✓ Голос бренда определён! Теперь все посты будут звучать как ты.';
 
-    // Сохраняем в localStorage
     localStorage.setItem('tov_description', text);
     status.textContent = '✓ Сохранено';
     status.style.color = 'var(--accent)';
 
     showCopyToast('✓ Голос бренда готов — будет в каждой генерации!');
   } catch(e) {
-    result.style.display = 'block';
-    result.textContent = 'Ошибка: ' + e.message;
-    result.style.background = 'rgba(255,100,100,.08)';
+    if(result) {
+      result.style.display = 'block';
+      result.textContent = 'Ошибка: ' + e.message;
+    }
   } finally {
     btn.disabled = false;
     btn.innerHTML = '✦ Определить мой голос';
@@ -1690,12 +1717,16 @@ async function generateTOV() {
 }
 
 function clearTOV() {
-  document.getElementById('tovDescription').value = '';
-  document.getElementById('tovDescription').style.display = 'none';
-  document.getElementById('tovDescLabel').style.display = 'none';
-  document.getElementById('tovResult').style.display = 'none';
-  document.getElementById('btnTovClear').style.display = 'none';
-  document.getElementById('tovStatus').textContent = '';
+  const desc = document.getElementById('tovDescription');
+  const label = document.getElementById('tovDescLabel');
+  const result = document.getElementById('tovResult');
+  const clearBtn = document.getElementById('btnTovClear');
+  const status = document.getElementById('tovStatus');
+  if(desc) { desc.value = ''; desc.style.display = 'none'; }
+  if(label) label.style.display = 'none';
+  if(result) result.style.display = 'none';
+  if(clearBtn) clearBtn.style.display = 'none';
+  if(status) status.textContent = '';
   localStorage.removeItem('tov_description');
   showCopyToast('Голос бренда сброшен');
 }
@@ -1710,10 +1741,9 @@ function loadTOV() {
   if (desc) {
     desc.value = saved;
     desc.style.display = 'block';
-    label.style.display = 'flex';
-    clearBtn.style.display = 'inline-block';
-    status.textContent = '✓ Загружен из памяти';
-    status.style.color = 'var(--muted)';
+    if(label) label.style.display = 'flex';
+    if(clearBtn) clearBtn.style.display = 'inline-block';
+    if(status) { status.textContent = '✓ Загружен из памяти'; status.style.color = 'var(--muted)'; }
   }
 }
 
@@ -1752,7 +1782,7 @@ async function findAudience() {
   try {
     const result = await callAPIRaw(buildAudiencePrompt(), 'audience');
     out.value = result;
-    if (!result.startsWith('__TEST_MODE__')) spendGeneration();
+    if (!result.startsWith('__TEST_MODE__')) await spendGeneration();
     updateStatusBar();
   } catch(e) { out.value = 'Ошибка: ' + e.message; }
 }
@@ -1774,7 +1804,7 @@ async function findTopics() {
   try {
     const result = await callAPIRaw(buildTopicsPrompt(), 'topics');
     out.value = result;
-    if (!result.startsWith('__TEST_MODE__')) spendGeneration();
+    if (!result.startsWith('__TEST_MODE__')) await spendGeneration();
     updateStatusBar();
   } catch(e) { out.value = 'Ошибка: ' + e.message; }
 }
@@ -1798,7 +1828,8 @@ async function generateAI() {
   try {
     const result = await callAPIRaw(prompt, 'content');
     out.value = result;
-    if (!result.startsWith('__TEST_MODE__')) { spendGeneration(); updateStatusBar(); showCopyToast('✓ Контент готов — смотри ниже!'); }
+    if (!result.startsWith('__TEST_MODE__')) { await spendGeneration(); showCopyToast('✓ Контент готов — смотри ниже!');
+    saveToHistory(result); }
     // Всегда скроллим к результату + подсвечиваем поле
     setTimeout(() => {
       const panel = document.getElementById('contentPanel');
@@ -2067,7 +2098,13 @@ async function submitAuth() {
     if (tab === 'login') { result = await sb.auth.signInWithPassword({ email, password }); }
     else { result = await sb.auth.signUp({ email, password }); }
     if (result.error) { errEl.textContent = translateAuthError(result.error.message); }
-    else { closeAuthModal(); showCopyToast(tab === 'login' ? '✓ Вход выполнен!' : '✓ Аккаунт создан!'); }
+    else { closeAuthModal();
+    if (tab === 'login') {
+      showCopyToast('✓ Вход выполнен!');
+    } else {
+      showCopyToast('✓ Аккаунт создан!');
+      if (!localStorage.getItem('onboarding_done')) setTimeout(showOnboarding, 800);
+    } }
   } catch(e) { errEl.textContent = 'Ошибка: ' + e.message; }
   finally { btn.disabled = false; btn.textContent = tab === 'login' ? 'Войти →' : 'Зарегистрироваться →'; }
 }
@@ -2151,6 +2188,9 @@ ensureGenerationBalance();
 updateStatusBar();
 updateUserBar();
 loadTOV();
+loadProject();
+setTimeout(initAutosave, 500);
+renderHistory();
 
 let isRecoveryMode = false;
 
@@ -2205,5 +2245,35 @@ async function initAuth() {
 
 initAuth();
 </script>
+
+<!-- ОНБОРДИНГ ПОСЛЕ РЕГИСТРАЦИИ -->
+<div id="onboardingOverlay" style="display:none;position:fixed;inset:0;background:rgba(2,4,4,.94);backdrop-filter:blur(16px);z-index:4500;align-items:center;justify-content:center;padding:20px">
+  <div style="background:linear-gradient(180deg,rgba(13,22,22,.98),rgba(7,11,11,.99));border:1px solid rgba(0,255,209,.25);border-radius:28px;padding:36px 32px;width:100%;max-width:480px;box-shadow:0 32px 80px rgba(0,255,209,.15);text-align:center">
+    <div style="font-size:48px;margin-bottom:16px">🎉</div>
+    <div style="font-family:Unbounded,sans-serif;font-size:22px;letter-spacing:-.03em;margin-bottom:8px">Добро пожаловать!</div>
+    <div style="color:var(--muted);font-size:14px;margin-bottom:24px;line-height:1.6">На твоём балансе <strong style="color:var(--lime);font-size:18px">5 генераций бесплатно</strong>.<br>Вот как получить лучший результат:</div>
+
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px;text-align:left">
+      <div style="background:rgba(0,255,209,.07);border:1px solid var(--line2);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:20px;flex-shrink:0">1️⃣</span>
+        <div><div style="font-weight:700;margin-bottom:3px">Выбери площадку и формат</div><div style="font-size:12px;color:var(--muted)">Telegram, Pinterest, Instagram — каждая даёт разный формат выдачи</div></div>
+      </div>
+      <div style="background:rgba(0,255,209,.07);border:1px solid var(--line2);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:20px;flex-shrink:0">2️⃣</span>
+        <div><div style="font-weight:700;margin-bottom:3px">Заполни «Ключевые мысли»</div><div style="font-size:12px;color:var(--muted)">Конкретные факты → сильный контент. Без них — общие слова</div></div>
+      </div>
+      <div style="background:rgba(0,255,209,.07);border:1px solid var(--line2);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:20px;flex-shrink:0">3️⃣</span>
+        <div><div style="font-weight:700;margin-bottom:3px">Настрой Голос бренда</div><div style="font-size:12px;color:var(--muted)">5 вопросов — и все посты будут звучать как ты, а не как робот</div></div>
+      </div>
+    </div>
+
+    <button class="btn" onclick="closeOnboarding()" style="margin-top:0;max-width:300px">Начать генерировать →</button>
+    <div style="margin-top:12px">
+      <button onclick="closeOnboarding()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;font-family:Onest,sans-serif">Пропустить</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
