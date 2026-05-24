@@ -1,9 +1,12 @@
 export default async function handler(req, res) {
-  const SUPABASE_URL = 'https://xacasrnthainxjzxhypb.supabase.co';
-  const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9';
+  const SUPABASE_URL = process.env.SUPABASE_URL;
+  const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY;
+
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
+    return res.status(500).json({ ok: false, error: 'Missing env vars' });
+  }
 
   try {
-    // Делаем простой запрос к Supabase чтобы он не засыпал
     const response = await fetch(
       `${SUPABASE_URL}/rest/v1/user_balance?select=id&limit=1`,
       {
@@ -21,7 +24,7 @@ export default async function handler(req, res) {
       ok: true,
       timestamp,
       supabase_status: response.status,
-      message: 'Supabase is alive'
+      message: response.status === 200 ? '✅ Supabase alive and authorized' : `Status: ${response.status}`
     });
 
   } catch (error) {
