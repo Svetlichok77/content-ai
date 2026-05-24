@@ -423,7 +423,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
     </div>
 
   </div>
-  <div class="hint warning" style="margin-top:16px;text-align:center">♻️ Генерации не сгорают: всё, что не использовали сейчас, остаётся на балансе.</div>
+  <div class="hint warning" style="margin-top:16px;text-align:center">♻️ Генерации зачислены на баланс.</div>
   <div class="panel" style="margin-top:16px">
     <div class="label">Что получаешь в любом тарифе</div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:4px" id="featGrid">
@@ -521,7 +521,7 @@ const PAY_URLS = {
 };
 
 const FREE_LIMIT  = 0;
-const TIER_PACKS  = { free:5, monthly:100, annual:1200, boost:100 };
+const TIER_PACKS = { free:5, monthly:100, annual:1200, boost:100, toplivо:100, топливо:100, автопилот:100 };
 
 const appData = {
   platforms: ['Telegram','Pinterest','ВКонтакте','Дзен','Instagram / Reels','YouTube Shorts','TikTok','Threads','TenChat','Одноклассники'],
@@ -824,11 +824,11 @@ async function activatePaidTier(tier){
 function cleanPaymentUrl(){window.history.replaceState({},'',window.location.pathname);}
 
 function showActivationBanner(tier,alreadyActivated){
-  const labels={free:'Бесплатно',test:'TEST',monthly:'АВТОПИЛОТ',annual:'ТУРБО',boost:'ТОПЛИВО'};
+  const labels={free:'Бесплатно',test:'TEST',monthly:'ПОТОК',annual:'ТУРБО',boost:'БУСТ',toplivо:'БУСТ',топливо:'БУСТ',автопилот:'ПОТОК'};
   const count=TIER_PACKS[tier];
   showPaymentNotice(
     alreadyActivated?'Тариф уже активирован':'Тариф '+(labels[tier]||tier)+' активирован!',
-    alreadyActivated?'Генерации уже были начислены ранее.':'Начислено '+count+' генераций. Они не сгорают.',
+    alreadyActivated?'Генерации уже были начислены ранее.':`Начислено ${count} генераций на баланс.`,
     alreadyActivated?'✅':'🎉'
   );
 }
@@ -863,7 +863,7 @@ function updateStatusBar(){
   ensureGenerationBalance();
   const tier=getUserTier();
   const left = currentUser ? getGenerationsLeft() : 0;
-  const tierLabel={free:'Бесплатно',monthly:'АВТОПИЛОТ',annual:'ТУРБО',boost:'ТОПЛИВО'}[tier]||tier;
+  const tierLabel={free:'Бесплатно',test:'TEST',monthly:'ПОТОК',annual:'ТУРБО',boost:'БУСТ',toplivо:'БУСТ',топливо:'БУСТ',автопилот:'ПОТОК'}[tier]||tier;
   const el=document.getElementById('apiStatus');
   if(!currentUser){if(el) el.innerHTML = `Зарегистрируйся и получи <strong style="color:var(--lime)">5 генераций бесплатно</strong>`;return;}
   if(el){
@@ -2231,7 +2231,7 @@ function updateUserBar() {
   if (!infoEl || !btnEl) return;
   const left = getGenerationsLeft();
   const tier = getUserTier();
-  const tierLabel = {free:'Бесплатно',monthly:'АВТОПИЛОТ',annual:'ТУРБО',boost:'ТОПЛИВО'}[tier] || tier;
+  const tierLabel = {free:'Бесплатно',test:'TEST',monthly:'ПОТОК',annual:'ТУРБО',boost:'БУСТ',toplivо:'БУСТ',топливо:'БУСТ',автопилот:'ПОТОК'}[tier] || tier;
   if (currentUser) {
     const email = currentUser.email || '';
     const shortEmail = email.length > 22 ? email.substring(0, 20) + '...' : email;
