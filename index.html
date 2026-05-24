@@ -350,7 +350,10 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 <section class="panel" style="margin-top:4px">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
     <div class="label" style="margin-bottom:0">📋 История генераций</div>
-    <button onclick="clearHistory()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;font-family:Onest,sans-serif;text-decoration:underline;padding:0">Очистить</button>
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="color:var(--muted);font-size:11px">💾 Сохраняется на этом устройстве</span>
+      <button onclick="clearHistory()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;font-family:Onest,sans-serif;text-decoration:underline;padding:0">Очистить</button>
+    </div>
   </div>
   <div id="historyList" style="display:flex;flex-direction:column;gap:8px;max-height:320px;overflow-y:auto">
     <div style="color:var(--muted);font-size:13px;text-align:center;padding:20px 0">История пуста — сгенерируй первый контент</div>
@@ -533,6 +536,7 @@ let S = {platform:'Pinterest', goal:'Охват', audience:'SMM-специали
 
 const platformProfiles = {
   'Telegram': {
+    recommend: '💡 Лучшие форматы: Эмоциональный пост · Вовлекающий пост · Просто пост',
     output: '⚡ Готовый пост · без заголовка · без хэштегов · 800-1500 символов · идея для картинки',
     mission: 'Доверие, удержание и диалог. Человек подписан — значит уже доверяет.',
     tags: ['живой пост','диалог','пересылки','прогрев'],
@@ -544,6 +548,7 @@ const platformProfiles = {
 После поста: 📸 Идея для картинки: [что на фото]`
   },
   'Pinterest': {
+    recommend: '💡 Лучшие форматы: Pinterest-пины · Описание к пинам · Вирусные заголовки',
     output: '📌 10 пинов · вирусный заголовок · описание 800 символов · ключевые слова · визуал',
     mission: 'Поиск, сохранения и холодный трафик. Человек не знает тебя — он ищет решение.',
     tags: ['SEO','сохранения','холодный трафик','вечный контент'],
@@ -555,6 +560,7 @@ const platformProfiles = {
 БЕЗ слов: узнайте, наш, купите, попробуйте.`
   },
   'ВКонтакте': {
+    recommend: '💡 Лучшие форматы: Вовлекающий пост · Полезный пост / инструкция · Разбор кейса',
     output: '📝 Готовый пост · хук в первых строках · 3-5 хэштегов в конце · вопрос для комментариев',
     mission: 'Охват через алгоритм + живое обсуждение.',
     tags: ['алгоритм','комментарии','репосты','польза'],
@@ -566,6 +572,7 @@ const platformProfiles = {
 После хэштегов: 📸 Идея для картинки: [описание]`
   },
   'Дзен': {
+    recommend: '💡 Лучшие форматы: Просто пост · Эмоциональный пост · Полезный пост / инструкция',
     output: '📖 Статья · заголовок отдельно · 3500+ символов · подзаголовки · вопрос в конце · 5-7 хэштегов',
     mission: 'Клик по заголовку + дочитывание. Яндекс ранжирует по времени на странице.',
     tags: ['SEO','дочитывание','рекомендации','статья'],
@@ -584,6 +591,7 @@ const platformProfiles = {
 В конце обязательно хэштеги: #ниша #тема #ключевое_слово #дача #огород (5-7 штук)`
   },
   'Instagram / Reels': {
+    recommend: '💡 Лучшие форматы: Сценарий Reels/Shorts · Вовлекающий пост',
     output: '🎬 Сценарий с таймкодами · текст на экране · совет по съёмке · подпись + 15-20 хэштегов',
     mission: 'Удержание в первые 3 секунды и досмотр до конца.',
     tags: ['Reels','хук','досмотр','виральность'],
@@ -606,6 +614,7 @@ const platformProfiles = {
 Пиши "директ", не "лс".`
   },
   'YouTube Shorts': {
+    recommend: '💡 Лучшие форматы: Сценарий Reels/Shorts',
     output: '🎥 Сценарий 30-59 сек · таймкоды · субтитры · описание + хэштеги',
     mission: 'Один тезис — максимально сильно.',
     tags: ['Shorts','вертикальное видео','удержание','один тезис'],
@@ -623,6 +632,7 @@ const platformProfiles = {
 Описание к видео: [2-3 предложения + хэштеги 5-10 штук]`
   },
   'TikTok': {
+    recommend: '💡 Лучшие форматы: Сценарий Reels/Shorts · Вовлекающий пост',
     output: '🎵 Сценарий 20-45 сек · таймкоды · комментарий-ловушка · подпись + 8-12 хэштегов',
     mission: 'Эмоция, контраст и комментируемость.',
     tags: ['эмоция','контраст','комментарии','споры'],
@@ -640,6 +650,7 @@ const platformProfiles = {
 Хэштеги ОБЯЗАТЕЛЬНО 8-12 штук: #ниша #тема #площадка (подбери релевантные)`
   },
   'Threads': {
+    recommend: '💡 Лучшие форматы: Threads-ветка · Рассуждение эксперта',
     output: '🧵 Ветка 6-8 постов · каждый пост отдельно · без хэштегов · вопрос в финале',
     mission: 'Мысль, которая разворачивается. Работает экспертность и честность.',
     tags: ['ветка','экспертность','диалог','текст'],
@@ -656,6 +667,7 @@ const platformProfiles = {
 БЕЗ хэштегов. Каждый пост — отдельный абзац с пометкой ПОСТ N.`
   },
   'TenChat': {
+    recommend: '💡 Лучшие форматы: Рассуждение эксперта · Разбор кейса · Продающий пост',
     output: '💼 Экспертный пост · спорный тезис + кейс · 3-5 хэштегов · идея для картинки',
     mission: 'Деловая экспертность без корпоративного занудства.',
     tags: ['B2B','кейс','экспертность','нетворкинг'],
@@ -668,6 +680,7 @@ const platformProfiles = {
 После текста: 📸 Идея для картинки: [описание]`
   },
   'Одноклассники': {
+    recommend: '💡 Лучшие форматы: Просто пост · Полезный пост / инструкция · Пост с юмором',
     output: '☀️ Короткий тёплый пост · простой язык · 2-3 эмодзи · 2-3 хэштега',
     mission: 'Простота, тепло и узнаваемость.',
     tags: ['простота','жизненные истории','польза','тепло'],
@@ -733,10 +746,13 @@ async function spendGeneration(){
 async function syncGenerationsToSupabase() {
   if (!currentUser || !sb) return;
   try {
+    const newLeft = getGenerationsLeft();
     await sb.from('user_balance').update({
-      generations_left: getGenerationsLeft(),
+      generations_left: newLeft,
       updated_at: new Date().toISOString()
     }).eq('id', currentUser.id);
+    // Синк прошёл успешно — обновляем эталонное значение
+    localStorage.setItem('supabase_last_gens', newLeft);
   } catch(e) {
     console.error('Sync generations error:', e.message);
   }
@@ -888,8 +904,29 @@ function renderFormats() {
     const b = document.createElement('button'); b.type='button';
     b.className = 'pill'+(S.formats.includes(v)?' on':''); b.textContent = v;
     b.onclick = () => {
-      if (S.formats.includes(v)&&S.formats.length>1){S.formats=S.formats.filter(x=>x!==v);b.classList.remove('on');}
-      else if(!S.formats.includes(v)){if(S.formats.length>=3){const f=S.formats.shift();[...box.querySelectorAll('.pill')].find(x=>x.textContent===f)?.classList.remove('on');}S.formats.push(v);b.classList.add('on');}
+      if (S.formats.includes(v) && S.formats.length > 1) {
+        S.formats = S.formats.filter(x => x !== v);
+        b.classList.remove('on');
+        const warn = document.getElementById('formatLimitWarn');
+        if (warn) warn.remove();
+      } else if (!S.formats.includes(v)) {
+        if (S.formats.length >= 3) {
+          // Показываем предупреждение вместо замены
+          let warn = document.getElementById('formatLimitWarn');
+          if (!warn) {
+            warn = document.createElement('div');
+            warn.id = 'formatLimitWarn';
+            warn.style.cssText = 'margin-top:8px;padding:10px 14px;background:rgba(255,180,0,.1);border:1px solid rgba(255,180,0,.35);border-radius:12px;font-size:12px;color:#ffd166;line-height:1.5';
+            warn.innerHTML = '⚡ Максимум 3 формата — так выдача лучше. Сначала сними один выбранный, потом выбери другой.';
+            box.after(warn);
+          }
+          b.style.opacity = '0.5';
+          setTimeout(() => { b.style.opacity = ''; }, 800);
+        } else {
+          S.formats.push(v);
+          b.classList.add('on');
+        }
+      }
       sum();
     };
     box.appendChild(b);
@@ -897,7 +934,7 @@ function renderFormats() {
 }
 function updatePlatform() {
   const p = platformProfiles[S.platform]||platformProfiles['Telegram'];
-  document.getElementById('platformInfo').innerHTML = `<b>Режим: ${S.platform}</b><p>${p.mission}</p><div style="margin-top:8px;padding:8px 12px;background:rgba(0,255,209,.07);border:1px solid rgba(0,255,209,.2);border-radius:10px;font-size:12px;color:#aefdf0"><span style="color:var(--accent);font-weight:700">Что получишь:</span> ${p.output}</div><div class="platform-tags">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div>`;
+  document.getElementById('platformInfo').innerHTML = `<b>Режим: ${S.platform}</b><p>${p.mission}</p><div style="margin-top:8px;padding:8px 12px;background:rgba(0,255,209,.07);border:1px solid rgba(0,255,209,.2);border-radius:10px;font-size:12px;color:#aefdf0"><span style="color:var(--accent);font-weight:700">Что получишь:</span> ${p.output}</div>${p.recommend ? `<div style="margin-top:8px;padding:8px 12px;background:rgba(200,255,0,.07);border:1px solid rgba(200,255,0,.25);border-radius:10px;font-size:12px;color:#eaffbd">${p.recommend}</div>` : ''}<div class="platform-tags">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div>`;
 }
 function sum() {
   document.getElementById('summary').innerHTML = [S.platform,S.goal,S.audience,S.formats.join(' + '),S.tone,S.depth].map(v=>`<span class="badge">${escapeHtml(v)}</span>`).join('');
@@ -1114,6 +1151,9 @@ function buildFormatInstructions() {
 ВАЖНО: Пиши НАСТОЯЩИЕ заголовки блоков — не слова "Подзаголовок 1" или "Финал", а реальные смысловые заголовки по теме статьи.
 
 СТРУКТУРА СТРОГО В ТАКОМ ПОРЯДКЕ:
+
+ЗАПРЕЩЕНО: английские слова в русском тексте (frustration, challenge, insight и др.) — только русский язык.
+ЗАПРЕЩЕНО: стиль безликой статьи из интернета. Пиши от первого лица, через личный опыт.
 
 Шаг 1. Напиши строку:
 ЗАГОЛОВОК: [твой заголовок 40-70 символов — интригующий, не кликбейт]
@@ -1439,7 +1479,7 @@ ${buildFormatInstructions()}`;
 // ============================================================
 
 const SAVE_FIELDS = ['project','role','audFindNiche','audFindProduct','audFindKnown',
-  'audienceData','topic','product','cta','tovDescription','tovPhrases','tovNever'];
+  'audienceData','topic','product','cta','tovDescription','tovPhrases','tovNever','tovExample'];
 
 function saveProject() {
   const data = {};
@@ -1448,6 +1488,11 @@ function saveProject() {
     if (el) data[id] = el.value;
   });
   // Сохраняем выбранные форматы и настройки
+  // Сохраняем TOV дропдауны
+  ['tovAddress','tovTone','tovEmoji','tovLength'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) data[id] = el.value;
+  });
   data._platform = S.platform;
   data._goal = S.goal;
   data._audience = S.audience;
@@ -1476,6 +1521,11 @@ function loadProject() {
       }
     });
 
+    // Восстанавливаем TOV дропдауны
+    ['tovAddress','tovTone','tovEmoji','tovLength'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && data[id]) el.value = data[id];
+    });
     // Восстанавливаем настройки
     if (data._platform) {
       S.platform = data._platform;
@@ -1782,7 +1832,7 @@ async function findAudience() {
     out.value = result;
     if (!result.startsWith('__TEST_MODE__')) await spendGeneration();
     updateStatusBar();
-  } catch(e) { out.value = 'Ошибка: ' + e.message; }
+  } catch(e) { out.value = '⚠️ Не удалось получить ответ. Проверь интернет и попробуй снова. (' + (e.message||'') + ')'; console.error(e); }
 }
 
 // ИЗМЕНЕНО: передаём mode: 'topics' → идёт в GPT-4o-mini (дешевле)
@@ -1804,7 +1854,7 @@ async function findTopics() {
     out.value = result;
     if (!result.startsWith('__TEST_MODE__')) await spendGeneration();
     updateStatusBar();
-  } catch(e) { out.value = 'Ошибка: ' + e.message; }
+  } catch(e) { out.value = '⚠️ Не удалось получить ответ. Проверь интернет и попробуй снова. (' + (e.message||'') + ')'; console.error(e); }
 }
 
 // Генерация контента — идёт в Claude (высокое качество)
@@ -1841,7 +1891,17 @@ async function generateAI() {
     }, 100);
     if (getGenerationsLeft() <= 0 && getUserTier()==='free') document.getElementById('paywall').classList.remove('hidden');
   } catch(e) {
-    out.value = 'Ошибка: ' + e.message + '\n\nПромпт собран — скопируй его и вставь в ChatGPT или Claude вручную.';
+    const m = e.message || '';
+    if (m.includes('fetch') || m.includes('network') || m.includes('Failed to fetch')) {
+      out.value = '⚠️ Нет соединения с сервером. Проверь интернет и попробуй ещё раз.';
+    } else if (m.includes('429')) {
+      out.value = '⏸️ Слишком много запросов. Подожди 30 секунд и попробуй снова.';
+    } else if (m.includes('504') || m.includes('timeout')) {
+      out.value = '⏳ Сервер долго отвечает. Попробуй ещё раз через 10 секунд.';
+    } else {
+      out.value = '⚠️ Что-то пошло не так. Попробуй ещё раз или обнови страницу.';
+    }
+    console.error('generateAI error:', m);
   } finally {
     btn.disabled = false; btn.innerHTML = '🔥 Сгенерировать контент';
   }
@@ -2140,10 +2200,22 @@ async function loadUserBalance(userId, email) {
         created_at: new Date().toISOString(), updated_at: new Date().toISOString()
       }, { onConflict: 'id' });
       if (upsertErr) { setGenerationsLeft(5); }
-      else { setGenerationsLeft(5); showCopyToast('🎉 +5 генераций бесплатно!'); }
+      else { setGenerationsLeft(5); localStorage.setItem('supabase_last_gens', '5'); showCopyToast('🎉 +5 генераций бесплатно!'); }
       localStorage.setItem('user_tier', 'free');
     } else {
-      setGenerationsLeft(data.generations_left);localStorage.setItem('user_tier', data.tier || 'free');
+      // Умное слияние: учитываем то что потратили локально до синка с Supabase
+      const supabaseGens = data.generations_left;
+      const prevSupabase = parseInt(localStorage.getItem('supabase_last_gens') || '-1');
+      const localGens = getGenerationsLeft();
+      let effectiveGens = supabaseGens;
+      if (prevSupabase >= 0 && localGens < prevSupabase) {
+        // Локально потратили больше чем Supabase знает — вычитаем разницу
+        const spentLocally = prevSupabase - localGens;
+        effectiveGens = Math.max(0, supabaseGens - spentLocally);
+      }
+      setGenerationsLeft(effectiveGens);
+      localStorage.setItem('supabase_last_gens', supabaseGens);
+      localStorage.setItem('user_tier', data.tier || 'free');
     }
     localStorage.setItem('generation_balance_initialized', '1');
     updateStatusBar();updateUserBar();
