@@ -3,7 +3,29 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Контент на автопилоте PRO</title>
+<title>Контент на автопилоте PRO — посты и пины за 30 секунд</title>
+<!-- SEO & Open Graph -->
+<meta name="description" content="Контент на автопилоте PRO — пишешь посты, пины и сценарии за 30 секунд. Без ступора, без идей с нуля. 10 платформ, 18 форматов, психологические техники.">
+<meta name="keywords" content="генератор контента, SMM, посты для Instagram, Pinterest пины, контент для Telegram, нейросеть для блогера">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph (ВКонтакте, Telegram, WhatsApp) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://content-ai-gilt.vercel.app/">
+<meta property="og:title" content="Контент на автопилоте PRO — посты за 30 секунд">
+<meta property="og:description" content="Пишешь посты, пины и сценарии за 30 секунд. Без ступора, без копирайтера. 10 платформ · 5 генераций бесплатно.">
+<meta property="og:image" content="https://content-ai-gilt.vercel.app/og-image.png">
+<meta property="og:locale" content="ru_RU">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Контент на автопилоте PRO">
+<meta name="twitter:description" content="Посты, пины и сценарии за 30 секунд. Без ступора. 5 генераций бесплатно.">
+<meta name="twitter:image" content="https://content-ai-gilt.vercel.app/og-image.png">
+
+<!-- Canonical -->
+<link rel="canonical" href="https://content-ai-gilt.vercel.app/">
+
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800&family=Onest:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#030606;--card:#0b1111;--card2:#111d1c;--line:#1d3d3a;--line2:#00ffd155;--accent:#00ffd1;--accent2:#00a7ff;--lime:#c8ff00;--text:#ecfffb;--muted:#89aaa5;--danger:#ff6b6b;--r:24px;--rs:14px;--shadow:0 28px 90px rgba(0,255,209,.13)}
@@ -72,14 +94,30 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   header:before{display:none}
 }
 </style>
+<!-- Яндекс.Метрика -->
+<script type="text/javascript">
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+   m[i].l=1*new Date();
+   for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+   ym(109395089, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true,
+        webvisor:true
+   });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/109395089" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Яндекс.Метрика -->
 </head>
 <body class="noise">
 
 <header>
   <div class="brand">AI content system · PRO</div>
   <h1>Контент на <span>автопилоте</span> PRO</h1>
-  <p class="sub">Пишешь посты, пины и сценарии за 30 секунд — без ступора, без идей с нуля, без копирайтера.</p>
-  <div class="herochips"><span>10 платформ</span><span>5 генераций бесплатно</span><span>1 идея → много форматов</span><span>Психологические техники</span><span>Claude AI внутри</span></div>
+  <p class="sub">Генерируй контент для 10 платформ за 30 секунд — без ступора, без копирайтера, без пустого экрана.</p>
+  <div class="herochips"><span>10 платформ</span><span>5 генераций бесплатно</span><span>1 идея → много форматов</span><span>Психологические техники</span><span>⚡ AI внутри</span></div>
   <div class="user-bar" id="userBar">
     <div class="user-bar-info" id="userBarInfo">🎁 Зарегистрируйся — получи <strong style="color:var(--lime)">5 генераций бесплатно</strong></div>
     <button class="user-bar-btn" id="userBarBtn">Войти / Регистрация</button>
@@ -287,11 +325,14 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   </div>
   <div class="hint" style="margin-top:8px;font-size:12px">💡 Тему можно перенести из блока 4 — или написать свою.</div><br>
   <div class="field-label" style="align-items:flex-start;flex-direction:column;gap:4px">
-    <div style="display:flex;align-items:center;gap:8px">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
       Ключевые мысли, факты, выгоды <span>→</span>
       <span id="detailsHint" style="background:rgba(200,255,0,.15);border:1px solid rgba(200,255,0,.5);border-radius:999px;padding:2px 10px;font-size:10px;color:#c8ff00;font-weight:700;animation:pulse 2s infinite">⚡ заполни — выдача будет сильнее</span>
     </div>
-    <div style="font-size:11px;color:var(--muted)">Пример: 8-10 часов работы · гипоаллергенная пряжа · глазки вышиты · уникальная в мире</div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px">
+      <div style="font-size:11px;color:var(--muted)">Пример: 8-10 часов работы · гипоаллергенная пряжа · глазки вышиты</div>
+      <button onclick="pullFromAudience()" style="background:rgba(0,255,209,.08);border:1px solid var(--line2);color:var(--accent);border-radius:999px;padding:2px 10px;cursor:pointer;font-size:11px;font-family:Onest,sans-serif;white-space:nowrap">← Добавить боли из блока 3</button>
+    </div>
   </div>
   <textarea id="details" placeholder="Конкретные факты и выгоды твоего продукта. Без этого AI пишет общие слова — с этим пишет про ТВОЙ продукт. Пример: 8-10 часов работы, гипоаллергенная пряжа с сертификатами, глазки вышиты нитками (не оторвать), каждая деталь отдельно..." oninput="document.getElementById('detailsHint').style.display=this.value?'none':'inline'"></textarea>
   <br>
@@ -951,6 +992,7 @@ function updatePlatform() {
   document.getElementById('platformInfo').innerHTML = `<b>Режим: ${S.platform}</b><p>${p.mission}</p><div style="margin-top:8px;padding:8px 12px;background:rgba(0,255,209,.07);border:1px solid rgba(0,255,209,.2);border-radius:10px;font-size:12px;color:#aefdf0"><span style="color:var(--accent);font-weight:700">Что получишь:</span> ${p.output}</div>${p.recommend ? `<div style="margin-top:8px;padding:8px 12px;background:rgba(200,255,0,.07);border:1px solid rgba(200,255,0,.25);border-radius:10px;font-size:12px;color:#eaffbd">${p.recommend}</div>` : ''}<div class="platform-tags">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div>`;
 }
 function sum() {
+  const noFormats = S.formats.length === 0;
   document.getElementById('summary').innerHTML = [S.platform,S.goal,S.audience,S.formats.join(' + '),S.tone,S.depth].map(v=>`<span class="badge">${escapeHtml(v)}</span>`).join('');
 }
 function v(id) { return document.getElementById(id)?.value?.trim()||''; }
@@ -1488,12 +1530,29 @@ ${buildFormatInstructions()}`;
 
 
 
+
+function pullFromAudience() {
+  const aud = document.getElementById('audienceData')?.value?.trim();
+  const details = document.getElementById('details');
+  if (!aud) {
+    showCopyToast('Сначала заполни блок 3 — портрет покупателя 👆');
+    return;
+  }
+  // Extract key phrases from audience data - take first 500 chars as context
+  const extract = aud.length > 500 ? aud.substring(0, 500) + '...' : aud;
+  const current = details.value.trim();
+  details.value = current ? current + '\n\n' + extract : extract;
+  details.dispatchEvent(new Event('input'));
+  details.scrollIntoView({behavior:'smooth', block:'center'});
+  showCopyToast('✓ Боли покупателя добавлены в ключевые мысли');
+}
+
 // ============================================================
 // АВТОСОХРАНЕНИЕ ПРОЕКТА
 // ============================================================
 
 const SAVE_FIELDS = ['project','role','audFindNiche','audFindProduct','audFindKnown',
-  'audienceData','topic','product','cta','tovDescription','tovPhrases','tovNever','tovExample'];
+  'audienceData','topic','product','cta','details','tovDescription','tovPhrases','tovNever','tovExample'];
 
 function saveProject() {
   const data = {};
