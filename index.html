@@ -794,9 +794,9 @@ function addGenerations(amount){const current=Number(localStorage.getItem('gener
 async function spendGeneration(){
   const left=getGenerationsLeft();
   if(left<=0) return false;
+  // Серверная логика теперь в generate.js — клиент только обновляет локальный счётчик
   setGenerationsLeft(left-1);
   updateStatusBar();
-  try { await syncGenerationsToSupabase(); } catch(e) { console.error('Sync error:', e); }
   return true;
 }
 
@@ -1915,8 +1915,15 @@ async function callAPIRaw(prompt, mode = 'content') {
   const res = await fetch(API_ENDPOINT, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prompt, mode })
+    body: JSON.stringify({ prompt, mode, userId: currentUser?.id || null })
   });
+  if (res.status === 402) {
+    const errData = await res.json().catch(() => ({}));
+    if (errData.error === 'NO_GENERATIONS') {
+      document.getElementById('paywall')?.classList.remove('hidden');
+      throw new Error('NO_GENERATIONS');
+    }
+  }
   if (!res.ok) throw new Error('Ошибка API: ' + res.status);
   const raw = await res.text();
   let text = '';
