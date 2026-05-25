@@ -1939,6 +1939,7 @@ async function findAudience() {
     out.value = result;
     if (!result.startsWith('__TEST_MODE__')) await spendGeneration();
     updateStatusBar();
+    setTimeout(saveProject, 400);
   } catch(e) { out.value = '⚠️ Не удалось получить ответ. Проверь интернет и попробуй снова. (' + (e.message||'') + ')'; console.error(e); }
 }
 
@@ -1961,6 +1962,7 @@ async function findTopics() {
     out.value = result;
     if (!result.startsWith('__TEST_MODE__')) await spendGeneration();
     updateStatusBar();
+    setTimeout(saveProject, 400);
   } catch(e) { out.value = '⚠️ Не удалось получить ответ. Проверь интернет и попробуй снова. (' + (e.message||'') + ')'; console.error(e); }
 }
 
@@ -1984,7 +1986,8 @@ async function generateAI() {
     const result = await callAPIRaw(prompt, 'content');
     out.value = result;
     if (!result.startsWith('__TEST_MODE__')) { await spendGeneration(); showCopyToast('✓ Контент готов — смотри ниже!');
-    saveToHistory(result); }
+    saveToHistory(result);
+    setTimeout(saveProject, 300); }
     // Всегда скроллим к результату + подсвечиваем поле
     setTimeout(() => {
       const panel = document.getElementById('contentPanel');
