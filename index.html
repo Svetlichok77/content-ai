@@ -1927,11 +1927,23 @@ async function callAPIRaw(prompt, mode = 'content') {
   if (!res.ok) throw new Error('Ошибка API: ' + res.status);
   const raw = await res.text();
   let text = '';
+  // Если пришёл HTML (ошибка Vercel/сервера) — показываем понятное сообщение
+  if (raw.trim().startsWith('<')) {
+    throw new Error('Сервер вернул HTML вместо данных. Попробуй ещё раз.');
+  }
   try {
     const parsed = JSON.parse(raw);
+    // Обработка 402 (нет генераций) уже выше
+    if (parsed?.error === 'NO_GENERATIONS') throw new Error('NO_GENERATIONS');
     text = parsed?.result || parsed?.text || parsed?.choices?.[0]?.message?.content || '';
-  } catch (_) { text = raw; }
-  return cleanMarkdown(text || raw);
+    if (!text && parsed?.error) throw new Error(parsed.error);
+  } catch (parseErr) {
+    if (parseErr.message === 'NO_GENERATIONS') throw parseErr;
+    if (parseErr.message.includes('HTML')) throw parseErr;
+    text = raw; // Если не JSON — используем сырой текст
+  }
+  if (!text) throw new Error('Пустой ответ от сервера');
+  return cleanMarkdown(text);
 }
 
 // ИЗМЕНЕНО: передаём mode: 'audience' → идёт в GPT-4o-mini (дешевле)
@@ -1939,6 +1951,11 @@ async function findAudience() {
   ensureGenerationBalance();
   const out = document.getElementById('audienceFinderOutput');
   if (!currentUser) {openAuthModal('register');showCopyToast('Зарегистрируйся — получишь 5 генераций бесплатно');return;}
+  // Валидация полей
+  if (!S.formats.length) { showCopyToast('Выбери хотя бы один формат ↑'); return; }
+  const _topic = (v('topic')||'').trim(), _details = (v('details')||'').trim(), _aud = (v('audienceData')||'').trim();
+  if (!_topic && !_details && !_aud) { showCopyToast('Заполни тему поста или ключевые мысли ↑'); return; }
+
   if (getGenerationsLeft() <= 0) { document.getElementById('paywall').classList.remove('hidden'); out.value='Лимит закончился. Выбери тариф.'; openPricingModal(); return; }
   out.value = '⏳ Анализирую ЦА: сегменты, мифы, триггеры, страхи и живые фразы...';
   try {
@@ -2004,6 +2021,9 @@ async function generateAI() {
         out.style.transition = 'box-shadow 0.3s';
         out.style.boxShadow = '0 0 0 3px var(--accent), 0 0 30px rgba(0,255,209,.35)';
         setTimeout(() => { out.style.boxShadow = ''; }, 2000);
+        // Авто-resize высоты под контент
+        out.style.height = 'auto';
+        out.style.height = Math.min(out.scrollHeight, window.innerHeight * 0.8) + 'px';
       }
     }, 100);
     if (getGenerationsLeft() <= 0 && getUserTier()==='free') document.getElementById('paywall').classList.remove('hidden');
@@ -2076,7 +2096,9 @@ function copyText(id) {
     } catch(e) { showCopyToast('Выдели текст и скопируй вручную (Ctrl+C)'); }
   };
   if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(text).then(() => showCopyToast('✓ Скопировано')).catch(doFallback);
+    navigator.clipboard.writeText(text).then(() => {
+    showCopyToast('✓ Скопировано');
+  }).catch(doFallback);
   } else { doFallback(); }
 }
 
