@@ -1,10 +1,68 @@
 export default async function handler(req, res) {
   try {
-    const { prompt, mode } = req.body;
+    const { prompt, mode, userId } = req.body;
     if (!prompt) {
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
+    const SUPABASE_URL = process.env.SUPABASE_URL;
+    const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY;
+
+    // ============================================================
+    // СЕРВЕРНАЯ ПРОВЕРКА БАЛАНСА (безопасно — клиент не трогает)
+    // ============================================================
+    if (userId && SUPABASE_URL && SUPABASE_KEY && !prompt.includes('__TEST_MODE__')) {
+      try {
+        // 1. Читаем текущий баланс
+        const balanceRes = await fetch(
+          `${SUPABASE_URL}/rest/v1/user_balance?id=eq.${userId}&select=generations_left,tier`,
+          {
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': `Bearer ${SUPABASE_KEY}`,
+            }
+          }
+        );
+
+        if (balanceRes.ok) {
+          const balanceData = await balanceRes.json();
+          const row = balanceData?.[0];
+
+          if (row) {
+            const currentLeft = row.generations_left || 0;
+
+            // 2. Проверяем что баланс > 0
+            if (currentLeft <= 0) {
+              return res.status(402).json({ error: 'NO_GENERATIONS', message: 'Генерации закончились' });
+            }
+
+            // 3. Списываем 1 генерацию СЕРВЕРНО (не клиент!)
+            await fetch(
+              `${SUPABASE_URL}/rest/v1/user_balance?id=eq.${userId}`,
+              {
+                method: 'PATCH',
+                headers: {
+                  'apikey': SUPABASE_KEY,
+                  'Authorization': `Bearer ${SUPABASE_KEY}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  generations_left: currentLeft - 1,
+                  updated_at: new Date().toISOString()
+                })
+              }
+            );
+          }
+        }
+      } catch(balanceErr) {
+        console.error('Balance check error:', balanceErr.message);
+        // Если баланс проверить не удалось — не блокируем, продолжаем
+      }
+    }
+
+    // ============================================================
+    // ГЕНЕРАЦИЯ КОНТЕНТА
+    // ============================================================
     const systemPrompt = mode === 'audience' || mode === 'topics'
       ? `Ты — маркетинговый аналитик и психолог потребительского поведения с опытом 20 лет. Ты думаешь КАК клиент — знаешь его внутренний монолог, страхи которые он никогда не скажет вслух, мечты которые стесняется признать. Пишешь на русском языке, конкретно и психологически точно. Никогда не используй markdown (**, *, ##). Только чистый текст.`
       : `Ты — первоклассный русскоязычный копирайтер, контент-стратег и психолог потребительского поведения с 20-летним опытом.
