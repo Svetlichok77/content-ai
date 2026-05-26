@@ -370,20 +370,22 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   <h2 style="font-family:Unbounded,sans-serif;font-size:18px;letter-spacing:-.03em;margin-bottom:8px">Создай план публикаций</h2>
   <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5">Генерирует план → нажимаешь на любую строку → тема переносится в генератор → получаешь готовый пост</p>
 
-  <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:16px">
+  <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:20px">
     <div>
-      <div class="field-label" style="margin-bottom:6px">Период</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;padding:8px 14px;background:rgba(200,255,0,.07);border:1px solid rgba(200,255,0,.25);border-radius:10px">
-          <input type="radio" name="planPeriod" id="planPeriodWeek" value="week" checked onchange="updatePlanPeriod('week')"> Неделя (7 постов)
-        </label>
-        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;padding:8px 14px;background:rgba(200,255,0,.07);border:1px solid rgba(200,255,0,.25);border-radius:10px">
-          <input type="radio" name="planPeriodMonth" value="month" onchange="updatePlanPeriod('month')"> Месяц (30 постов)
-        </label>
+      <div class="field-label" style="margin-bottom:8px">Период</div>
+      <div style="display:flex;gap:0;border-radius:12px;overflow:hidden;border:1px solid rgba(200,255,0,.3)">
+        <button id="btnPeriodWeek" onclick="setPlanPeriod('week')"
+          style="padding:10px 20px;font-size:13px;font-family:Onest,sans-serif;cursor:pointer;border:none;border-right:1px solid rgba(200,255,0,.3);background:rgba(200,255,0,.25);color:#c8ff00;font-weight:700;transition:.2s">
+          Неделя · 7 постов
+        </button>
+        <button id="btnPeriodMonth" onclick="setPlanPeriod('month')"
+          style="padding:10px 20px;font-size:13px;font-family:Onest,sans-serif;cursor:pointer;border:none;background:transparent;color:var(--muted);font-weight:400;transition:.2s">
+          Месяц · 30 постов
+        </button>
       </div>
     </div>
     <div style="flex:1;min-width:200px">
-      <div class="field-label" style="margin-bottom:6px">Фокус плана</div>
+      <div class="field-label" style="margin-bottom:8px">Фокус плана</div>
       <select id="planFocus" style="width:100%" onchange="updatePlanFocus(this.value)">
         <option value="balanced">🎯 Сбалансированный</option>
         <option value="growth">🚀 Рост аудитории</option>
@@ -1636,6 +1638,27 @@ function pullFromAudience() {
 let planPeriodValue = 'week';
 let planFocusValue = 'balanced';
 function updatePlanFocus(val) { planFocusValue = val; }
+
+function setPlanPeriod(val) {
+  planPeriodValue = val;
+  const btnWeek = document.getElementById('btnPeriodWeek');
+  const btnMonth = document.getElementById('btnPeriodMonth');
+  if (val === 'week') {
+    btnWeek.style.background = 'rgba(200,255,0,.25)';
+    btnWeek.style.color = '#c8ff00';
+    btnWeek.style.fontWeight = '700';
+    btnMonth.style.background = 'transparent';
+    btnMonth.style.color = 'var(--muted)';
+    btnMonth.style.fontWeight = '400';
+  } else {
+    btnMonth.style.background = 'rgba(200,255,0,.25)';
+    btnMonth.style.color = '#c8ff00';
+    btnMonth.style.fontWeight = '700';
+    btnWeek.style.background = 'transparent';
+    btnWeek.style.color = 'var(--muted)';
+    btnWeek.style.fontWeight = '400';
+  }
+}
 let planDoneItems = new Set(); // Индексы сгенерированных постов
 
 function updatePlanPeriod(val) { planPeriodValue = val; }
@@ -1785,7 +1808,8 @@ function renderPlanCards(rawText, doneSet) {
   display.style.gap = '8px';
 }
 
-function applyPlanItem(idx, day, type, format, topic, goal) {
+async function applyPlanItem(idx, day, type, format, topic, goal) {
+  // Заполняем поля
   const topicEl = document.getElementById('topic');
   if (topicEl) { topicEl.value = topic; topicEl.dispatchEvent(new Event('input')); }
 
@@ -1798,19 +1822,34 @@ function applyPlanItem(idx, day, type, format, topic, goal) {
   const goalEl = document.getElementById('goal');
   if (goalEl) goalEl.value = S.goal;
 
-  // Запоминаем что этот пункт выбрали
+  sum();
   window._currentPlanIdx = idx;
 
-  sum();
-
-  const btn = document.getElementById('btnGenerate');
-  if (btn) {
-    btn.scrollIntoView({behavior:'smooth', block:'center'});
-    btn.style.boxShadow = '0 0 0 3px var(--lime)';
-    setTimeout(() => btn.style.boxShadow = '', 2000);
+  // Показываем что генерируем
+  const row = document.getElementById('planRow' + idx);
+  if (row) {
+    const rowBtn = row.querySelector('button');
+    if (rowBtn) { rowBtn.textContent = '⏳ Генерирую...'; rowBtn.disabled = true; }
   }
 
-  showCopyToast('✓ ' + day + ' перенесено → нажми Сгенерировать');
+  showCopyToast('⏳ Генерирую пост "' + topic.substring(0,25) + '..."');
+
+  try {
+    // Генерируем напрямую
+    await generateAI();
+
+    // Скроллим к результату
+    setTimeout(() => {
+      const panel = document.getElementById('contentPanel');
+      if (panel) panel.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 300);
+
+  } catch(e) {
+    if (row) {
+      const rowBtn = row.querySelector('button');
+      if (rowBtn) { rowBtn.textContent = 'Создать пост →'; rowBtn.disabled = false; }
+    }
+  }
 }
 
 function markPlanItemDone() {
@@ -1818,18 +1857,37 @@ function markPlanItemDone() {
   if (idx === undefined) return;
   planDoneItems.add(idx);
   savePlanDone();
-  // Обновляем карточку
   const row = document.getElementById('planRow' + idx);
   if (row) {
     row.style.background = 'rgba(0,200,100,.12)';
     row.style.borderColor = 'rgba(0,200,100,.4)';
     row.dataset.done = 'true';
+    // Кнопка → "✓ Готово" и восстанавливаем доступность
     const btn = row.querySelector('button');
-    if (btn) { btn.textContent = '✓ Готово'; btn.style.color = '#00c864'; }
-    const checkSpan = document.createElement('span');
-    checkSpan.textContent = '✓';
-    checkSpan.style.cssText = 'color:#00c864;font-size:16px';
-    row.insertBefore(checkSpan, row.firstChild);
+    if (btn) {
+      btn.textContent = '✓ Готово';
+      btn.style.color = '#00c864';
+      btn.style.borderColor = 'rgba(0,200,100,.4)';
+      btn.disabled = false;
+    }
+    // Добавляем галочку если ещё нет
+    if (!row.querySelector('.plan-check')) {
+      const checkSpan = document.createElement('span');
+      checkSpan.className = 'plan-check';
+      checkSpan.textContent = '✓';
+      checkSpan.style.cssText = 'color:#00c864;font-size:16px;flex-shrink:0';
+      row.insertBefore(checkSpan, row.firstChild);
+    }
+    // Скроллим к истории генераций
+    const historyEl = document.getElementById('historyList');
+    if (historyEl) {
+      setTimeout(() => {
+        historyEl.scrollIntoView({behavior:'smooth', block:'start'});
+        historyEl.style.transition = 'box-shadow .3s';
+        historyEl.style.boxShadow = '0 0 0 2px var(--lime)';
+        setTimeout(() => historyEl.style.boxShadow = '', 2000);
+      }, 800);
+    }
   }
   window._currentPlanIdx = undefined;
 }
