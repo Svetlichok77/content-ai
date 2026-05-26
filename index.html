@@ -294,7 +294,18 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 <section class="panel" id="section-topics">
   <div class="label">4 · Темы из болей покупателя&nbsp;<span style="background:rgba(0,255,209,.07);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0;font-family:Onest,sans-serif;font-weight:400;margin-left:4px">необязательно — пропусти если есть тема</span></div>
   <h2 style="font-family:Unbounded,sans-serif;font-size:20px;letter-spacing:-.03em;margin-bottom:8px">Не знаешь, о чём писать? Найдём темы из боли</h2>
-  <div class="hint warning">🔥 Темы по 16 проверенным формулам заголовков — из болей, мифов и живых фраз твоего покупателя.</div>
+  <div id="planPeriodBlock" style="display:none;margin-bottom:12px;padding:10px 14px;background:rgba(0,255,209,.07);border:1px solid rgba(0,255,209,.2);border-radius:12px">
+  <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Период контент-плана:</div>
+  <div style="display:flex;gap:8px">
+    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+      <input type="radio" name="planPeriod" id="planPeriod" value="week" checked> Неделя (7 постов)
+    </label>
+    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
+      <input type="radio" name="planPeriod" value="month" onchange="document.getElementById('planPeriod').value='month'"> Месяц (16 постов)
+    </label>
+  </div>
+</div>
+<div class="hint warning">🔥 Темы по 16 проверенным формулам заголовков — из болей, мифов и живых фраз твоего покупателя.</div>
   <div class="hint" style="margin-top:8px;font-size:12px;display:flex;align-items:flex-start;gap:8px">
     <span>💡</span>
     <span>Темы строятся на основе <strong style="color:var(--accent)">блока 3</strong> — чем точнее описан покупатель, тем острее темы. Если блок 3 пустой — сначала заполни его или нажми «Найти покупателя» в блоке 2.</span>
@@ -988,6 +999,9 @@ function renderFormats() {
     };
     box.appendChild(b);
   });
+  // Показываем выбор периода если выбран Контент-план
+  const planBlock = document.getElementById('planPeriodBlock');
+  if (planBlock) planBlock.style.display = S.formats.includes('Контент-план') ? 'block' : 'none';
 }
 function updatePlatform() {
   const p = platformProfiles[S.platform]||platformProfiles['Telegram'];
@@ -1308,22 +1322,31 @@ function buildFormatInstructions() {
 Логика: каждый слайд = одна законченная мысль или шаг
 Последний слайд: итог + один чёткий следующий шаг`);
 
-  if(has('Контент-план')) blocks.push(`КОНТЕНТ-ПЛАН
+  if(has('Контент-план')) {
+    const period = document.getElementById('planPeriod')?.value || 'week';
+    const postCount = period === 'month' ? 16 : 7;
+    const periodLabel = period === 'month' ? 'МЕСЯЦ (4 недели, 16 постов)' : 'НЕДЕЛЮ (7 постов)';
+    blocks.push(`КОНТЕНТ-ПЛАН НА ${periodLabel} — ${S.platform}
 
-Сделай план на 7 дней для ${S.platform}. Каждый день разный формат и угол.
+Создай профессиональный контент-план. Учти аудиторию, продукт и площадку.
 
-Для каждого дня:
-ДЕНЬ [N] — [День недели]
-Тема: (конкретная, из болей ЦА)
-Формат: (пост / карусель / видео / опрос / кейс и т.д.)
-Цель: (охват / доверие / вовлечение / продажа / прогрев)
-Хук (первая строка): готовый вариант
-Содержание: 3–5 ключевых тезисов
-CTA: что делает читатель в конце
+ВАЖНО: выведи план СТРОГО в этом формате, каждый пост на отдельной строке:
 
-После плана:
-3 ЗАПАСНЫХ ТЕМЫ на случай когда нет сил думать
-СОВЕТ ПО ВРЕМЕНИ: когда публиковать на ${S.platform}`);
+##PLAN##
+[день недели или "Нед.1 Пн"]|[тип: Охват/Польза/Прогрев/Вовлечение/Продажа]|[формат из списка]|[конкретная тема/хук — 5-10 слов]|[цель]
+##ENDPLAN##
+
+Форматы для выбора: Просто пост, Эмоциональный пост, Вовлекающий пост, Полезный пост / инструкция, Рассуждение эксперта, Продающий пост, Пост-прогрев
+
+Логика распределения типов:
+— Охват (30%): цепляющие хуки, узнавание, пересылки
+— Польза (25%): инструкции, списки, советы — для сохранений
+— Прогрев (20%): личные истории, кейсы — для доверия
+— Вовлечение (15%): вопросы, дискуссии — для комментариев
+— Продажа (10%): результаты, оферы — для покупок
+
+Темы берёт из болей и живых фраз покупателя. Хуки — острые, конкретные.`);
+  }
 
   if(has('Вирусные заголовки')) {
     if(chosen.length > 0) {
@@ -1579,6 +1602,116 @@ function pullFromAudience() {
   details.dispatchEvent(new Event('input'));
   details.scrollIntoView({behavior:'smooth', block:'center'});
   showCopyToast('✓ Ключевые боли и фразы добавлены!');
+}
+
+
+// ============================================================
+// КОНТЕНТ-ПЛАН — интерактивные карточки
+// ============================================================
+
+function renderContentPlan(rawText) {
+  const planMatch = rawText.match(/##PLAN##([\s\S]*?)##ENDPLAN##/);
+  if (!planMatch) return null;
+
+  const lines = planMatch[1].trim().split('\n').filter(l => l.trim() && l.includes('|'));
+  if (lines.length < 3) return null;
+
+  // Цвета для типов постов
+  const typeColors = {
+    'Охват': {bg:'rgba(0,255,209,.12)', border:'rgba(0,255,209,.3)', color:'var(--accent)'},
+    'Польза': {bg:'rgba(200,255,0,.1)', border:'rgba(200,255,0,.3)', color:'var(--lime)'},
+    'Прогрев': {bg:'rgba(0,167,255,.1)', border:'rgba(0,167,255,.3)', color:'#00a7ff'},
+    'Вовлечение': {bg:'rgba(200,100,255,.1)', border:'rgba(200,100,255,.3)', color:'#c87cff'},
+    'Продажа': {bg:'rgba(255,150,0,.1)', border:'rgba(255,150,0,.3)', color:'#ff9600'},
+  };
+
+  const rows = lines.map((line, i) => {
+    const parts = line.split('|').map(p => p.trim());
+    const [day, type, format, topic, goal] = parts;
+    const colors = typeColors[type] || typeColors['Охват'];
+
+    return `<div style="background:${colors.bg};border:1px solid ${colors.border};border-radius:14px;padding:12px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;cursor:pointer;transition:.15s"
+              onmouseenter="this.style.borderColor='${colors.color}';this.style.transform='translateX(2px)'"
+              onmouseleave="this.style.borderColor='${colors.border}';this.style.transform=''"
+              onclick="applyPlanItem('${escapeAttr(day)}','${escapeAttr(type)}','${escapeAttr(format)}','${escapeAttr(topic)}','${escapeAttr(goal)}')">
+      <div style="min-width:80px;font-size:12px;font-weight:700;color:${colors.color}">${escapeHtml(day)}</div>
+      <div style="background:${colors.bg};border:1px solid ${colors.border};border-radius:999px;padding:2px 8px;font-size:11px;color:${colors.color}">${escapeHtml(type)}</div>
+      <div style="flex:1;font-size:13px;color:#e0f0f0;min-width:150px">${escapeHtml(topic)}</div>
+      <div style="font-size:11px;color:var(--muted);white-space:nowrap">${escapeHtml(format)}</div>
+      <button style="background:${colors.bg};border:1px solid ${colors.border};color:${colors.color};border-radius:999px;padding:4px 12px;cursor:pointer;font-size:11px;font-family:Onest,sans-serif;white-space:nowrap"
+              onclick="event.stopPropagation();applyPlanItem('${escapeAttr(day)}','${escapeAttr(type)}','${escapeAttr(format)}','${escapeAttr(topic)}','${escapeAttr(goal)}')">
+        Создать пост →
+      </button>
+    </div>`;
+  });
+
+  // Верхний текст (до ##PLAN##)
+  const header = rawText.split('##PLAN##')[0].trim();
+
+  return `<div style="margin-bottom:16px;font-size:13px;color:#b9d6d1;line-height:1.6">${escapeHtml(header)}</div>
+<div style="display:flex;flex-direction:column;gap:8px">${rows.join('')}</div>
+<div style="margin-top:12px;font-size:12px;color:var(--muted);text-align:center">👆 Нажми на любую строку — тема перенесётся в генератор</div>`;
+}
+
+function escapeAttr(str) {
+  return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+function applyPlanItem(day, type, format, topic, goal) {
+  // Переносим тему
+  const topicEl = document.getElementById('topic');
+  if (topicEl) { topicEl.value = topic; topicEl.dispatchEvent(new Event('input')); }
+
+  // Устанавливаем формат
+  const validFormats = ['Просто пост','Эмоциональный пост','Вовлекающий пост',
+    'Полезный пост / инструкция','Рассуждение эксперта','Продающий пост','Пост-прогрев'];
+  if (validFormats.includes(format)) {
+    S.formats = [format];
+    renderFormats();
+  }
+
+  // Устанавливаем цель
+  const goalMap = {
+    'Охват': 'Охват', 'Польза': 'Сохранения', 'Прогрев': 'Прогрев',
+    'Вовлечение': 'Комментарии', 'Продажа': 'Продажи'
+  };
+  const newGoal = goalMap[type] || type;
+  S.goal = newGoal;
+  const goalEl = document.getElementById('goal');
+  if (goalEl) goalEl.value = newGoal;
+
+  sum();
+
+  // Скроллим к кнопке генерации
+  const btn = document.getElementById('btnGenerate');
+  if (btn) {
+    btn.scrollIntoView({behavior:'smooth', block:'center'});
+    btn.style.boxShadow = '0 0 0 3px var(--accent)';
+    setTimeout(() => btn.style.boxShadow = '', 2000);
+  }
+
+  showCopyToast('✓ ' + day + ' — "' + topic.substring(0,30) + '..." перенесено → нажми Сгенерировать');
+}
+
+// После генерации — проверяем есть ли контент-план
+function tryRenderPlan(text, outputEl) {
+  if (!text.includes('##PLAN##')) return false;
+  const rendered = renderContentPlan(text);
+  if (!rendered) return false;
+
+  // Создаём div для плана
+  let planDiv = document.getElementById('planDisplay');
+  if (!planDiv) {
+    planDiv = document.createElement('div');
+    planDiv.id = 'planDisplay';
+    planDiv.style.cssText = 'margin-top:16px;padding:16px;background:#071010;border:1px solid var(--line2);border-radius:16px';
+    outputEl.parentNode.insertBefore(planDiv, outputEl.nextSibling);
+  }
+  planDiv.innerHTML = rendered;
+  planDiv.style.display = 'block';
+  outputEl.value = '📋 Контент-план готов — смотри карточки ниже';
+  outputEl.style.minHeight = '60px';
+  return true;
 }
 
 // ============================================================
@@ -2011,7 +2144,15 @@ async function generateAI() {
     out.value = result;
     if (!result.startsWith('__TEST_MODE__')) { await spendGeneration(); showCopyToast('✓ Контент готов — смотри ниже!');
     saveToHistory(result);
-    setTimeout(saveProject, 300); }
+    setTimeout(saveProject, 300);
+    // Если контент-план — рендерим интерактивные карточки
+    if (result.includes('##PLAN##')) {
+      setTimeout(() => tryRenderPlan(result, out), 200);
+    } else {
+      // Убираем старый план если был
+      const oldPlan = document.getElementById('planDisplay');
+      if (oldPlan) oldPlan.style.display = 'none';
+    } }
     // Всегда скроллим к результату + подсвечиваем поле
     setTimeout(() => {
       const panel = document.getElementById('contentPanel');
