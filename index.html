@@ -294,17 +294,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 <section class="panel" id="section-topics">
   <div class="label">4 · Темы из болей покупателя&nbsp;<span style="background:rgba(0,255,209,.07);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0;font-family:Onest,sans-serif;font-weight:400;margin-left:4px">необязательно — пропусти если есть тема</span></div>
   <h2 style="font-family:Unbounded,sans-serif;font-size:20px;letter-spacing:-.03em;margin-bottom:8px">Не знаешь, о чём писать? Найдём темы из боли</h2>
-  <div id="planPeriodBlock" style="display:none;margin-bottom:12px;padding:10px 14px;background:rgba(0,255,209,.07);border:1px solid rgba(0,255,209,.2);border-radius:12px">
-  <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Период контент-плана:</div>
-  <div style="display:flex;gap:8px">
-    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
-      <input type="radio" name="planPeriod" id="planPeriod" value="week" checked> Неделя (7 постов)
-    </label>
-    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px">
-      <input type="radio" name="planPeriod" value="month" onchange="document.getElementById('planPeriod').value='month'"> Месяц (16 постов)
-    </label>
-  </div>
-</div>
+  
 <div class="hint warning">🔥 Темы по 16 проверенным формулам заголовков — из болей, мифов и живых фраз твоего покупателя.</div>
   <div class="hint" style="margin-top:8px;font-size:12px;display:flex;align-items:flex-start;gap:8px">
     <span>💡</span>
@@ -372,6 +362,42 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   <div class="hint warning">⚡ То, что вручную занимает 2–3 часа — здесь делается за 30 секунд.</div>
   <button class="btn btn-blue" id="btnGenerate" onclick="generateAI()">🔥 Сгенерировать контент</button>
 
+</section>
+
+
+<section class="panel" id="section-content-plan" style="border-color:rgba(200,255,0,.2);background:linear-gradient(160deg,rgba(15,20,5,.97),rgba(7,11,3,.99))">
+  <div class="label" style="color:var(--lime)">7 · Контент-план <span style="background:rgba(200,255,0,.1);border:1px solid rgba(200,255,0,.3);border-radius:999px;padding:2px 9px;font-size:10px;color:var(--lime);text-transform:none;letter-spacing:0;font-family:Onest,sans-serif;font-weight:400;margin-left:4px">отдельный блок</span></div>
+  <h2 style="font-family:Unbounded,sans-serif;font-size:18px;letter-spacing:-.03em;margin-bottom:8px">Создай план публикаций</h2>
+  <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5">Генерирует план → нажимаешь на любую строку → тема переносится в генератор → получаешь готовый пост</p>
+
+  <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:16px">
+    <div>
+      <div class="field-label" style="margin-bottom:6px">Период</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;padding:8px 14px;background:rgba(200,255,0,.07);border:1px solid rgba(200,255,0,.25);border-radius:10px">
+          <input type="radio" name="planPeriod" id="planPeriodWeek" value="week" checked onchange="updatePlanPeriod('week')"> Неделя (7 постов)
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;padding:8px 14px;background:rgba(200,255,0,.07);border:1px solid rgba(200,255,0,.25);border-radius:10px">
+          <input type="radio" name="planPeriodMonth" value="month" onchange="updatePlanPeriod('month')"> Месяц (30 постов)
+        </label>
+      </div>
+    </div>
+    <div style="flex:1;min-width:200px">
+      <div class="field-label" style="margin-bottom:6px">Фокус плана</div>
+      <select id="planFocus" style="width:100%" onchange="updatePlanFocus(this.value)">
+        <option value="balanced">🎯 Сбалансированный</option>
+        <option value="growth">🚀 Рост аудитории</option>
+        <option value="launch">🔥 Запуск / Продажа</option>
+        <option value="warmup">💝 Прогрев к запуску</option>
+        <option value="engage">💬 Вовлечение и активность</option>
+      </select>
+    </div>
+  </div>
+
+  <button class="btn" id="btnPlan" onclick="generatePlan()" style="margin-top:0;max-width:280px;background:linear-gradient(135deg,#5a8c00,#a0c800);margin-bottom:16px">📅 Создать контент-план</button>
+
+  <div id="planDisplay" style="display:none;flex-direction:column;gap:8px"></div>
+  <div id="planEmpty" style="color:var(--muted);font-size:13px;text-align:center;padding:20px 0">Нажми "Создать контент-план" → получишь план с кликабельными строками</div>
 </section>
 
 <section class="panel" id="contentPanel" style="border-color:rgba(0,255,209,.25)">
@@ -579,7 +605,7 @@ const appData = {
   platforms: ['Telegram','Pinterest','ВКонтакте','Дзен','Instagram / Reels','YouTube Shorts','TikTok','Threads','TenChat','Одноклассники'],
   goals:     ['Охват','Сохранения','Комментарии','Диалог с аудиторией','Переход в Telegram','Подписка','Продажа','Прогрев доверия','Объяснить ценность','Показать экспертность','Запуск продукта'],
   audiences: ['Мастер / Хендмейд','Лайфстайл-блогер','Бьюти-мастер','Психолог / коуч','Юрист / консультант','Эксперт / фрилансер','Контент-мейкер / блогер','SMM-специалист','Нейроассистент / AI-креатор','Онлайн-школа','Малый бизнес','Продавец цифрового продукта'],
-  formats:   ['Просто пост','Рассуждение эксперта','Эмоциональный пост','Пост с юмором','Полезный пост / инструкция','Вовлекающий пост','Продающий пост','Пост-прогрев','Контент-план','Pinterest-пины','Pinterest-карусель 5 слайдов','Threads-ветка','Вирусные заголовки','Описание к пинам','Сценарий Reels/Shorts','Разбор кейса','Серия из 10 постов','Контент-воронка'],
+  formats:   ['Просто пост','Рассуждение эксперта','Эмоциональный пост','Пост с юмором','Полезный пост / инструкция','Вовлекающий пост','Продающий пост','Пост-прогрев','Pinterest-пины','Pinterest-карусель 5 слайдов','Threads-ветка','Вирусные заголовки','Описание к пинам','Сценарий Reels/Shorts','Разбор кейса','Серия из 10 постов','Контент-воронка'],
   tone:      ['Живой разговорный','Короткий','Эмоциональный','С юмором','Рассуждения эксперта','Дерзкий, но умный','Мягкий и заботливый','Продажный без впаривания'],
   depth:     ['Быстро и по делу','Экспертно','Максимально глубоко','С дерзким крючком','Мягко и человечно','Продажно, но без впаривания']
 };
@@ -999,9 +1025,7 @@ function renderFormats() {
     };
     box.appendChild(b);
   });
-  // Показываем выбор периода если выбран Контент-план
-  const planBlock = document.getElementById('planPeriodBlock');
-  if (planBlock) planBlock.style.display = S.formats.includes('Контент-план') ? 'block' : 'none';
+
 }
 function updatePlatform() {
   const p = platformProfiles[S.platform]||platformProfiles['Telegram'];
@@ -1324,8 +1348,8 @@ function buildFormatInstructions() {
 
   if(has('Контент-план')) {
     const period = document.getElementById('planPeriod')?.value || 'week';
-    const postCount = period === 'month' ? 16 : 7;
-    const periodLabel = period === 'month' ? 'МЕСЯЦ (4 недели, 16 постов)' : 'НЕДЕЛЮ (7 постов)';
+    const postCount = period === 'month' ? 30 : 7;
+    const periodLabel = period === 'month' ? 'МЕСЯЦ (30 постов, по одному на каждый день)' : 'НЕДЕЛЮ (7 постов)';
     blocks.push(`КОНТЕНТ-ПЛАН НА ${periodLabel} — ${S.platform}
 
 Создай профессиональный контент-план. Учти аудиторию, продукт и площадку.
@@ -1606,112 +1630,239 @@ function pullFromAudience() {
 
 
 // ============================================================
-// КОНТЕНТ-ПЛАН — интерактивные карточки
+// КОНТЕНТ-ПЛАН — отдельный блок
 // ============================================================
 
-function renderContentPlan(rawText) {
+let planPeriodValue = 'week';
+let planFocusValue = 'balanced';
+function updatePlanFocus(val) { planFocusValue = val; }
+let planDoneItems = new Set(); // Индексы сгенерированных постов
+
+function updatePlanPeriod(val) { planPeriodValue = val; }
+
+async function generatePlan() {
+  const btn = document.getElementById('btnPlan');
+  const display = document.getElementById('planDisplay');
+  const empty = document.getElementById('planEmpty');
+  if (!btn || !display) return;
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Создаю план...';
+
+  try {
+    planDoneItems = new Set();
+    savePlanDone();
+
+    const period = planPeriodValue;
+    const postCount = period === 'month' ? 30 : 7;
+    const periodLabel = period === 'month' ? 'МЕСЯЦ (30 постов)' : 'НЕДЕЛЮ (7 постов)';
+
+    // Логика распределения по фокусу
+    const focusDistributions = {
+      balanced: 'Охват 30% · Польза 25% · Прогрев 20% · Вовлечение 15% · Продажа 10%',
+      growth:   'Охват 45% · Польза 30% · Вовлечение 15% · Прогрев 10% · Продажа 0%',
+      launch:   'Продажа 35% · Прогрев 30% · Охват 20% · Польза 15% · Вовлечение 0%',
+      warmup:   'Прогрев 35% · Охват 25% · Польза 25% · Вовлечение 15% · Продажа 0%',
+      engage:   'Вовлечение 40% · Охват 30% · Польза 20% · Прогрев 10% · Продажа 0%',
+    };
+    const focusNames = {
+      balanced: 'Сбалансированный',
+      growth:   'Рост аудитории',
+      launch:   'Запуск/Продажа',
+      warmup:   'Прогрев',
+      engage:   'Вовлечение',
+    };
+    const distribution = focusDistributions[planFocusValue] || focusDistributions.balanced;
+    const focusName = focusNames[planFocusValue] || 'Сбалансированный';
+
+    // Мощный промпт с полным контекстом
+    const planPrompt = `Ты — топовый контент-стратег с 20-летним опытом. Создай профессиональный контент-план.
+
+КОНТЕКСТ ПРОЕКТА:
+Площадка: ${S.platform} | Тип: ${S.audience} | Фокус плана: ${focusName}
+Проект: ${v('project')||'не указан'} | Роль автора: ${v('role')||'эксперт'}
+Продукт: ${v('product')||'не указан'} | CTA: ${v('cta')||'не указан'}
+${v('tovDescription') ? 'Голос бренда: ' + v('tovDescription') : ''}
+
+ПОРТРЕТ ПОКУПАТЕЛЯ (используй его боли и живые фразы для тем):
+${v('audienceData') || v('audienceFinderOutput') || 'не указан — заполни блок 3'}
+
+КЛЮЧЕВЫЕ МЫСЛИ И ФАКТЫ:
+${v('details') || 'не указаны'}
+
+${v('topicsOutput') ? 'ГОТОВЫЕ ТЕМЫ (используй как основу): ' + v('topicsOutput').substring(0, 600) : ''}
+
+ЗАДАЧА: Создай контент-план на ${periodLabel} для ${S.platform}.
+
+Распределение типов (фокус "${focusName}"): ${distribution}
+
+ПРАВИЛА ТЕМ:
+— Темы берёшь из болей и живых фраз покупателя выше
+— Хук в теме = конкретная ситуация или провокация, 5-8 слов
+— Каждая тема должна остановить скроллинг
+— НЕ используй абстрактные темы ("о важном", "полезный совет")
+
+Выведи СТРОГО в формате — ${postCount} строк:
+
+##PLAN##
+[день недели или "Нед.N День"]|[тип]|[формат]|[конкретная тема/хук]|[цель одним словом]
+##ENDPLAN##
+
+Доступные форматы: Просто пост, Эмоциональный пост, Вовлекающий пост, Полезный пост / инструкция, Рассуждение эксперта, Продающий пост, Пост-прогрев`;
+
+    const result = await callAPIRaw(planPrompt, 'content');
+
+    if (result && result.includes('##PLAN##')) {
+      renderPlanCards(result);
+      savePlanToStorage(result);
+      if (empty) empty.style.display = 'none';
+      showCopyToast('✓ Контент-план готов!');
+    } else {
+      if (empty) { empty.textContent = 'Не удалось создать план. Попробуй ещё раз.'; empty.style.display = 'block'; }
+    }
+  } catch(e) {
+    console.error('generatePlan error:', e);
+    if (empty) { empty.textContent = '⚠️ Ошибка. Попробуй ещё раз.'; empty.style.display = 'block'; }
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '📅 Создать контент-план';
+  }
+}
+
+function buildPromptBase() {
+  const p = platformProfiles[S.platform] || platformProfiles['Telegram'];
+  return `Ты — опытный контент-стратег. Площадка: ${S.platform}. Тип проекта: ${S.audience}.
+Проект: ${v('project')||'не указан'}. Роль: ${v('role')||'эксперт'}.
+Покупатель и его боли: ${v('audienceData')||'не указано'}.
+Продукт: ${v('product')||'не указан'}.
+${v('tovDescription') ? 'Голос бренда: ' + v('tovDescription') : ''}`;
+}
+
+function renderPlanCards(rawText, doneSet) {
+  const display = document.getElementById('planDisplay');
+  if (!display) return;
+
   const planMatch = rawText.match(/##PLAN##([\s\S]*?)##ENDPLAN##/);
-  if (!planMatch) return null;
+  if (!planMatch) return;
 
   const lines = planMatch[1].trim().split('\n').filter(l => l.trim() && l.includes('|'));
-  if (lines.length < 3) return null;
+  const done = doneSet || planDoneItems;
 
-  // Цвета для типов постов
   const typeColors = {
-    'Охват': {bg:'rgba(0,255,209,.12)', border:'rgba(0,255,209,.3)', color:'var(--accent)'},
-    'Польза': {bg:'rgba(200,255,0,.1)', border:'rgba(200,255,0,.3)', color:'var(--lime)'},
-    'Прогрев': {bg:'rgba(0,167,255,.1)', border:'rgba(0,167,255,.3)', color:'#00a7ff'},
-    'Вовлечение': {bg:'rgba(200,100,255,.1)', border:'rgba(200,100,255,.3)', color:'#c87cff'},
-    'Продажа': {bg:'rgba(255,150,0,.1)', border:'rgba(255,150,0,.3)', color:'#ff9600'},
+    'Охват':      {bg:'rgba(0,255,209,.1)',    border:'rgba(0,255,209,.3)',    color:'#00ffd1'},
+    'Польза':     {bg:'rgba(200,255,0,.1)',    border:'rgba(200,255,0,.3)',    color:'#c8ff00'},
+    'Прогрев':    {bg:'rgba(0,167,255,.1)',    border:'rgba(0,167,255,.3)',    color:'#00a7ff'},
+    'Вовлечение': {bg:'rgba(200,100,255,.1)',  border:'rgba(200,100,255,.3)',  color:'#c87cff'},
+    'Продажа':    {bg:'rgba(255,150,0,.1)',    border:'rgba(255,150,0,.3)',    color:'#ff9600'},
   };
 
   const rows = lines.map((line, i) => {
     const parts = line.split('|').map(p => p.trim());
     const [day, type, format, topic, goal] = parts;
     const colors = typeColors[type] || typeColors['Охват'];
+    const isDone = done.has(i);
 
-    return `<div style="background:${colors.bg};border:1px solid ${colors.border};border-radius:14px;padding:12px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;cursor:pointer;transition:.15s"
-              onmouseenter="this.style.borderColor='${colors.color}';this.style.transform='translateX(2px)'"
-              onmouseleave="this.style.borderColor='${colors.border}';this.style.transform=''"
-              onclick="applyPlanItem('${escapeAttr(day)}','${escapeAttr(type)}','${escapeAttr(format)}','${escapeAttr(topic)}','${escapeAttr(goal)}')">
-      <div style="min-width:80px;font-size:12px;font-weight:700;color:${colors.color}">${escapeHtml(day)}</div>
+    return `<div id="planRow${i}" style="background:${isDone ? 'rgba(0,200,100,.12)' : colors.bg};border:1px solid ${isDone ? 'rgba(0,200,100,.4)' : colors.border};border-radius:14px;padding:12px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;cursor:pointer;transition:.2s"
+              onmouseenter="if(!this.dataset.done){this.style.borderColor='${colors.color}';this.style.transform='translateX(2px)'}"
+              onmouseleave="if(!this.dataset.done){this.style.borderColor='${isDone ? 'rgba(0,200,100,.4)' : colors.border}';this.style.transform=''}"
+              data-done="${isDone}"
+              onclick="applyPlanItem(${i},'${escapeAttr(day)}','${escapeAttr(type)}','${escapeAttr(format)}','${escapeAttr(topic)}','${escapeAttr(goal)}')">
+      ${isDone ? '<span style="color:#00c864;font-size:16px">✓</span>' : ''}
+      <div style="min-width:80px;font-size:12px;font-weight:700;color:${isDone ? '#00c864' : colors.color}">${escapeHtml(day)}</div>
       <div style="background:${colors.bg};border:1px solid ${colors.border};border-radius:999px;padding:2px 8px;font-size:11px;color:${colors.color}">${escapeHtml(type)}</div>
-      <div style="flex:1;font-size:13px;color:#e0f0f0;min-width:150px">${escapeHtml(topic)}</div>
+      <div style="flex:1;font-size:13px;color:${isDone ? '#80c890' : '#e0f0f0'};min-width:150px">${escapeHtml(topic)}</div>
       <div style="font-size:11px;color:var(--muted);white-space:nowrap">${escapeHtml(format)}</div>
-      <button style="background:${colors.bg};border:1px solid ${colors.border};color:${colors.color};border-radius:999px;padding:4px 12px;cursor:pointer;font-size:11px;font-family:Onest,sans-serif;white-space:nowrap"
-              onclick="event.stopPropagation();applyPlanItem('${escapeAttr(day)}','${escapeAttr(type)}','${escapeAttr(format)}','${escapeAttr(topic)}','${escapeAttr(goal)}')">
-        Создать пост →
+      <button style="background:${isDone ? 'rgba(0,200,100,.15)' : colors.bg};border:1px solid ${isDone ? 'rgba(0,200,100,.4)' : colors.border};color:${isDone ? '#00c864' : colors.color};border-radius:999px;padding:4px 12px;cursor:pointer;font-size:11px;font-family:Onest,sans-serif;white-space:nowrap"
+              onclick="event.stopPropagation();applyPlanItem(${i},'${escapeAttr(day)}','${escapeAttr(type)}','${escapeAttr(format)}','${escapeAttr(topic)}','${escapeAttr(goal)}')">
+        ${isDone ? '✓ Готово' : 'Создать пост →'}
       </button>
     </div>`;
   });
 
-  // Верхний текст (до ##PLAN##)
-  const header = rawText.split('##PLAN##')[0].trim();
-
-  return `<div style="margin-bottom:16px;font-size:13px;color:#b9d6d1;line-height:1.6">${escapeHtml(header)}</div>
-<div style="display:flex;flex-direction:column;gap:8px">${rows.join('')}</div>
-<div style="margin-top:12px;font-size:12px;color:var(--muted);text-align:center">👆 Нажми на любую строку — тема перенесётся в генератор</div>`;
+  display.innerHTML = rows.join('') + '<div style="margin-top:8px;font-size:12px;color:var(--muted);text-align:center">👆 Нажми на строку — тема перенесётся в генератор</div>';
+  display.style.display = 'flex';
+  display.style.flexDirection = 'column';
+  display.style.gap = '8px';
 }
 
-function escapeAttr(str) {
-  return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-}
-
-function applyPlanItem(day, type, format, topic, goal) {
-  // Переносим тему
+function applyPlanItem(idx, day, type, format, topic, goal) {
   const topicEl = document.getElementById('topic');
   if (topicEl) { topicEl.value = topic; topicEl.dispatchEvent(new Event('input')); }
 
-  // Устанавливаем формат
   const validFormats = ['Просто пост','Эмоциональный пост','Вовлекающий пост',
     'Полезный пост / инструкция','Рассуждение эксперта','Продающий пост','Пост-прогрев'];
-  if (validFormats.includes(format)) {
-    S.formats = [format];
-    renderFormats();
-  }
+  if (validFormats.includes(format)) { S.formats = [format]; renderFormats(); }
 
-  // Устанавливаем цель
-  const goalMap = {
-    'Охват': 'Охват', 'Польза': 'Сохранения', 'Прогрев': 'Прогрев',
-    'Вовлечение': 'Комментарии', 'Продажа': 'Продажи'
-  };
-  const newGoal = goalMap[type] || type;
-  S.goal = newGoal;
+  const goalMap = {'Охват':'Охват','Польза':'Сохранения','Прогрев':'Прогрев','Вовлечение':'Комментарии','Продажа':'Продажи'};
+  S.goal = goalMap[type] || type;
   const goalEl = document.getElementById('goal');
-  if (goalEl) goalEl.value = newGoal;
+  if (goalEl) goalEl.value = S.goal;
+
+  // Запоминаем что этот пункт выбрали
+  window._currentPlanIdx = idx;
 
   sum();
 
-  // Скроллим к кнопке генерации
   const btn = document.getElementById('btnGenerate');
   if (btn) {
     btn.scrollIntoView({behavior:'smooth', block:'center'});
-    btn.style.boxShadow = '0 0 0 3px var(--accent)';
+    btn.style.boxShadow = '0 0 0 3px var(--lime)';
     setTimeout(() => btn.style.boxShadow = '', 2000);
   }
 
-  showCopyToast('✓ ' + day + ' — "' + topic.substring(0,30) + '..." перенесено → нажми Сгенерировать');
+  showCopyToast('✓ ' + day + ' перенесено → нажми Сгенерировать');
 }
 
-// После генерации — проверяем есть ли контент-план
-function tryRenderPlan(text, outputEl) {
-  if (!text.includes('##PLAN##')) return false;
-  const rendered = renderContentPlan(text);
-  if (!rendered) return false;
-
-  // Создаём div для плана
-  let planDiv = document.getElementById('planDisplay');
-  if (!planDiv) {
-    planDiv = document.createElement('div');
-    planDiv.id = 'planDisplay';
-    planDiv.style.cssText = 'margin-top:16px;padding:16px;background:#071010;border:1px solid var(--line2);border-radius:16px';
-    outputEl.parentNode.insertBefore(planDiv, outputEl.nextSibling);
+function markPlanItemDone() {
+  const idx = window._currentPlanIdx;
+  if (idx === undefined) return;
+  planDoneItems.add(idx);
+  savePlanDone();
+  // Обновляем карточку
+  const row = document.getElementById('planRow' + idx);
+  if (row) {
+    row.style.background = 'rgba(0,200,100,.12)';
+    row.style.borderColor = 'rgba(0,200,100,.4)';
+    row.dataset.done = 'true';
+    const btn = row.querySelector('button');
+    if (btn) { btn.textContent = '✓ Готово'; btn.style.color = '#00c864'; }
+    const checkSpan = document.createElement('span');
+    checkSpan.textContent = '✓';
+    checkSpan.style.cssText = 'color:#00c864;font-size:16px';
+    row.insertBefore(checkSpan, row.firstChild);
   }
-  planDiv.innerHTML = rendered;
-  planDiv.style.display = 'block';
-  outputEl.value = '📋 Контент-план готов — смотри карточки ниже';
-  outputEl.style.minHeight = '60px';
-  return true;
+  window._currentPlanIdx = undefined;
+}
+
+function savePlanToStorage(raw) {
+  try { localStorage.setItem('content_plan_raw', raw); } catch(e) {}
+}
+function savePlanDone() {
+  try { localStorage.setItem('content_plan_done', JSON.stringify([...planDoneItems])); } catch(e) {}
+}
+function loadPlanFromStorage() {
+  try {
+    const raw = localStorage.getItem('content_plan_raw');
+    const doneArr = JSON.parse(localStorage.getItem('content_plan_done') || '[]');
+    planDoneItems = new Set(doneArr);
+    if (raw && raw.includes('##PLAN##')) {
+      renderPlanCards(raw, planDoneItems);
+      const empty = document.getElementById('planEmpty');
+      if (empty) empty.style.display = 'none';
+    }
+  } catch(e) {}
+}
+
+function escapeAttr(str) {
+  return (str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+// СТАРЫЕ функции — оставляем для совместимости
+function renderContentPlan(rawText) { return null; }
+function tryRenderPlan(text, out) {
+  // Теперь план не прячем при генерации поста
+  markPlanItemDone();
+  return false;
 }
 
 // ============================================================
@@ -2145,14 +2296,8 @@ async function generateAI() {
     if (!result.startsWith('__TEST_MODE__')) { await spendGeneration(); showCopyToast('✓ Контент готов — смотри ниже!');
     saveToHistory(result);
     setTimeout(saveProject, 300);
-    // Если контент-план — рендерим интерактивные карточки
-    if (result.includes('##PLAN##')) {
-      setTimeout(() => tryRenderPlan(result, out), 200);
-    } else {
-      // Убираем старый план если был
-      const oldPlan = document.getElementById('planDisplay');
-      if (oldPlan) oldPlan.style.display = 'none';
-    } }
+    // Отмечаем пункт плана как выполненный если генерировали из плана
+    setTimeout(markPlanItemDone, 100); }
     // Всегда скроллим к результату + подсвечиваем поле
     setTimeout(() => {
       const panel = document.getElementById('contentPanel');
@@ -2543,6 +2688,7 @@ loadTOV();
 loadProject();
 setTimeout(initAutosave, 500);
 renderHistory();
+loadPlanFromStorage();
 
 let isRecoveryMode = false;
 
