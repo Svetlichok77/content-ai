@@ -46,7 +46,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 #legalContent p{margin-bottom:12px}
 #legalContent p:last-child{margin-bottom:0}
 .auth-overlay{display:none;position:fixed;inset:0;background:rgba(2,4,4,.94);backdrop-filter:blur(16px);z-index:4000;align-items:center;justify-content:center}
-.auth-box{background:linear-gradient(180deg,rgba(13,22,22,.98),rgba(7,11,11,.99));border:1px solid rgba(0,255,209,.22);border-radius:28px;padding:36px 32px;width:100%;max-width:420px;box-shadow:0 32px 80px rgba(0,255,209,.15)}
+.auth-box{background:linear-gradient(180deg,rgba(13,22,22,.98),rgba(7,11,11,.99));border:1px solid rgba(0,255,209,.22);border-radius:28px;padding:clamp(20px,5vw,36px) clamp(16px,5vw,32px);width:100%;max-width:420px;box-shadow:0 32px 80px rgba(0,255,209,.15)}
 .auth-tab{display:flex;gap:0;background:#071010;border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:24px}
 .auth-tab button{flex:1;padding:9px;border:0;background:transparent;color:var(--muted);border-radius:9px;cursor:pointer;font-family:Onest,sans-serif;font-size:13px;font-weight:600;transition:.15s}
 .auth-tab button.on{background:linear-gradient(180deg,#132120,#0d1716);color:var(--text);border:1px solid var(--line)}
@@ -73,25 +73,51 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   h1{font-size:clamp(24px,6vw,40px)}
   .out{min-height:300px;font-size:13px}
   .field-label{font-size:11px}
-  .herochips{gap:6px}
+  .herochips{gap:6px;flex-wrap:wrap;justify-content:center}
   .herochips span{font-size:11px;padding:6px 10px}
   .start-list{grid-template-columns:1fr 1fr}
   .step-card{padding:12px}
   .step-num{width:28px;height:28px;font-size:11px}
   .step-title{font-size:11px}
   .step-desc{font-size:11px}
-  .user-bar{gap:6px}
+  .user-bar{gap:6px;flex-wrap:wrap;justify-content:center;padding:8px 12px}
   .user-bar-info{font-size:11px;padding:5px 10px}
-  .tabs{overflow-x:auto}
-  .copybar{gap:6px}
+  .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .copybar{gap:6px;flex-wrap:wrap}
   .btn2{padding:8px 11px;font-size:12px}
   #tierGrid{grid-template-columns:1fr}
+  /* Модалки — полный экран на мобильном */
+  #pricingOverlay > div, #authOverlay > div, #onboardingOverlay > div {
+    width:100%!important;max-width:100%!important;margin:0!important;
+    border-radius:16px 16px 0 0!important;position:fixed!important;
+    bottom:0!important;max-height:90vh!important;overflow-y:auto!important
+  }
+}
+@media(max-width:600px){
+  /* Карточки контент-плана — вертикально */
+  #planDisplay > div {flex-direction:column!important;align-items:flex-start!important}
+  #planDisplay > div > div:first-child {min-width:auto!important}
+  #planDisplay > div button {width:100%!important;margin-top:4px}
+  /* Кнопки периода */
+  #btnPeriodWeek, #btnPeriodMonth {padding:8px 12px!important;font-size:12px!important}
+  /* Таблица платформ — скрол */
+  .platform-tags{flex-wrap:wrap;gap:4px}
+  .copybar{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  /* История */
+  #historyList > div {flex-direction:column;gap:6px}
 }
 @media(max-width:480px){
   .start-list{grid-template-columns:1fr}
-  h1{font-size:clamp(22px,7vw,32px)}
-  .wrap{padding:12px 10px 60px}
+  h1{font-size:clamp(20px,7vw,30px)}
+  .wrap{padding:12px 8px 80px}
   header:before{display:none}
+  .herochips span{font-size:10px;padding:5px 8px}
+  /* Шапка user-bar на маленьких экранах */
+  .user-bar{padding:6px 8px;gap:4px}
+  .user-bar-info{font-size:10px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .user-bar-btn{font-size:11px;padding:6px 12px}
+  /* Скрываем часть чипов в шапке на очень маленьких */
+  .herochips span:nth-child(4), .herochips span:nth-child(5){display:none}
 }
 </style>
 <!-- Яндекс.Метрика -->
@@ -120,6 +146,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   <div class="herochips"><span>10 платформ</span><span>5 генераций бесплатно</span><span>1 идея → много форматов</span><span>Психологические техники</span><span>⚡ AI внутри</span></div>
   <div class="user-bar" id="userBar">
     <div class="user-bar-info" id="userBarInfo">🎁 Зарегистрируйся — получи <strong style="color:var(--lime)">5 генераций бесплатно</strong></div>
+    <button onclick="openPricingModal()" style="background:rgba(200,255,0,.12);border:1px solid rgba(200,255,0,.35);color:var(--lime);border-radius:999px;padding:7px 16px;cursor:pointer;font-size:12px;font-family:Onest,sans-serif;font-weight:600;white-space:nowrap;transition:.2s" onmouseenter="this.style.background='rgba(200,255,0,.2)'" onmouseleave="this.style.background='rgba(200,255,0,.12)'">Тарифы</button>
     <button class="user-bar-btn" id="userBarBtn">Войти / Регистрация</button>
   </div>
   <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:18px;padding:0 16px">
@@ -373,7 +400,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:20px">
     <div>
       <div class="field-label" style="margin-bottom:8px">Период</div>
-      <div style="display:flex;gap:0;border-radius:12px;overflow:hidden;border:1px solid rgba(200,255,0,.3)">
+      <div style="display:flex;gap:0;border-radius:12px;overflow:hidden;border:1px solid rgba(200,255,0,.3);flex-wrap:wrap">
         <button id="btnPeriodWeek" onclick="setPlanPeriod('week')"
           style="padding:10px 20px;font-size:13px;font-family:Onest,sans-serif;cursor:pointer;border:none;border-right:1px solid rgba(200,255,0,.3);background:rgba(200,255,0,.25);color:#c8ff00;font-weight:700;transition:.2s">
           Неделя · 7 постов
