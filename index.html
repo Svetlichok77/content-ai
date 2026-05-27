@@ -296,14 +296,14 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   <textarea id="tovDescription" style="min-height:90px;margin-bottom:10px;display:none" placeholder="Здесь появится описание твоего голоса..."></textarea>
 
   <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-    <button class="btn btn-blue" id="btnTov" onclick="generateTOV()" style="margin-top:0;max-width:280px;padding:14px">✦ Определить мой голос</button>
+    <button class="btn btn-blue" id="btnTov" onclick="generateTOV()" title="Не тратит генерации" style="margin-top:0;max-width:280px;padding:14px">✦ Определить мой голос</button>
     <button id="btnTovClear" onclick="clearTOV()" style="display:none;background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:8px 14px;cursor:pointer;font-family:Onest,sans-serif;font-size:12px">Сбросить</button>
     <span id="tovStatus" style="font-size:12px;color:var(--muted)"></span>
   </div>
 </section>
 
 <section class="panel" id="section-audience-finder">
-  <div class="label">2 · Найти покупателя&nbsp;<span style="color:var(--muted);font-size:10px;font-family:Onest,sans-serif;font-weight:400;letter-spacing:0;text-transform:none">(ЦА)</span>&nbsp;<span style="background:rgba(0,255,209,.07);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0;font-family:Onest,sans-serif;font-weight:400;margin-left:4px">необязательно — пропусти если знаешь покупателя</span></div>
+  <div class="label">2 · Найти покупателя&nbsp;<span style="color:var(--muted);font-size:10px;font-family:Onest,sans-serif;font-weight:400;letter-spacing:0;text-transform:none">(ЦА)</span>&nbsp;<span style="background:rgba(0,255,209,.07);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:10px;color:var(--muted);text-transform:none;letter-spacing:0;font-family:Onest,sans-serif;font-weight:400;margin-left:4px">🆓 бесплатно · не тратит генерации</span></div>
   <h2 style="font-family:Unbounded,sans-serif;font-size:20px;letter-spacing:-.03em;margin-bottom:8px">Сначала найдём, кто твой покупатель</h2>
   <div class="hint warning">⚡ 30 секунд → готовый портрет покупателя: боли, страхи, живые фразы и темы для постов.</div><br>
   <div class="row"><input id="audFindNiche" placeholder="Твоя тема / ниша: Pinterest, фитнес дома, психология отношений"><input id="audFindProduct" placeholder="Что продаёшь: курс, консультация, гайд, подписка"></div><br>
@@ -384,8 +384,22 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
       </select>
     </div>
   </div><br>
-  <div class="field-label">Куда вести читателя в конце поста <span>→</span> <span style="color:var(--muted);font-weight:400">(призыв к действию)</span></div>
-  <input id="cta" placeholder="Например: написать в директ / скачать бесплатный гайд / подписаться на канал / записаться на разбор">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px">
+    <div>
+      <div class="field-label" style="margin-bottom:6px">Давление CTA <span>→</span></div>
+      <select id="ctaPressure" onchange="S.ctaPressure=this.value;sum()">
+        <option value="soft">💬 Мягко — дать пользу</option>
+        <option value="invite">🤝 Пригласить познакомиться</option>
+        <option value="gentle_sell">🌿 Аккуратная продажа</option>
+        <option value="sell">🎯 Прямой продающий</option>
+        <option value="none">🚫 Без продаж совсем</option>
+      </select>
+    </div>
+    <div>
+      <div class="field-label" style="margin-bottom:6px">Куда вести читателя <span>→</span></div>
+      <input id="cta" placeholder="в директ / по ссылке / подписаться">
+    </div>
+  </div>
   <div class="hint warning">⚡ То, что вручную занимает 2–3 часа — здесь делается за 30 секунд.</div>
   <button class="btn btn-blue" id="btnGenerate" onclick="generateAI()">🔥 Сгенерировать контент</button>
 
@@ -639,7 +653,7 @@ const appData = {
   depth:     ['Быстро и по делу','Экспертно','Максимально глубоко','С дерзким крючком','Мягко и человечно','Продажно, но без впаривания']
 };
 
-let S = {platform:'Pinterest', goal:'Охват', audience:'SMM-специалист', formats:['Pinterest-пины','Вирусные заголовки'], tone:'Короткий', depth:'С дерзким крючком'};
+let S = {platform:'Pinterest', goal:'Охват', audience:'SMM-специалист', formats:['Pinterest-пины','Вирусные заголовки'], tone:'Короткий', depth:'С дерзким крючком', ctaPressure:'soft'};
 
 const platformProfiles = {
   'Telegram': {
@@ -647,313 +661,71 @@ const platformProfiles = {
     output: '⚡ Готовый пост · без заголовка · без хэштегов · 800-1500 символов · идея для картинки',
     mission: 'Доверие, удержание и диалог. Человек подписан — значит уже доверяет.',
     tags: ['живой пост','диалог','пересылки','прогрев'],
-    rules: `TELEGRAM — КАК ОФОРМИТЬ ВЫДАЧУ:
-Начни сразу с текста поста — без меток "ПОСТ 1", без заголовка.
-Структура: хук (2 строки, видны в превью) → тело (абзацы 2-4 строки, пустая строка между ними) → финал под цель.
-Финал: комментарии → вопрос; охват → "перешли той, кто..."; продажа → история + мягкий шаг.
-Длина: 800-1500 знаков. БЕЗ хэштегов. Эмодзи только по смыслу.
-После поста: 📸 Идея для картинки: [что на фото]`
+    rules: `TELEGRAM — КАК ОФОРМИТЬ ВЫДАЧУ:\n\nСТРУКТУРА (строго соблюдай):\n1. СЦЕНА (2-3 строки): живая бытовая ситуация от первого лица — что случилось, что почувствовала\n2. УЗНАВАНИЕ (1-2 строки): мысль которую читатель думал но не формулировал\n3. ЭКСПЕРТНЫЙ ИНСАЙТ (2-3 строки): один конкретный вывод — почему так происходит. Не "ты не одна", а реальное наблюдение.\n4. МЯГКИЙ ВЫВОД (1-2 строки): что с этим делать или о чём подумать\n5. CTA — по уровню давления из промпта\n\nЗАПРЕЩЕНА структура: боль → надежда → купи курс. Это штамп.\nНачни сразу с текста поста — без меток "ПОСТ 1", без заголовка.\nАбзацы 2-4 строки, пустая строка между ними. 800-1500 символов.`
   },
   'Pinterest': {
     recommend: '💡 Лучшие форматы: Pinterest-пины · Описание к пинам · Вирусные заголовки',
-    output: '📌 10 пинов · вирусный заголовок · описание 800 символов · ключевые слова · визуал',
-    mission: 'Поиск, сохранения и холодный трафик. Человек не знает тебя — он ищет решение.',
-    tags: ['SEO','сохранения','холодный трафик','вечный контент'],
-    rules: `PINTEREST — КАК ОФОРМИТЬ ВЫДАЧУ:
-Выдавай Pinterest-пины строго по структуре (не посты, не статьи — только пины).
-Каждый пин: ЗАГОЛОВОК → ОПИСАНИЕ (ПРИЗЫВ 150 симв. + ТЕКСТ 150 симв. + КЛЮЧЕВЫЕ СЛОВА 500 симв.) → ВИЗУАЛ.
-ЗАГОЛОВОК: 5-8 слов, боль ЦА её словами или поисковый запрос. Не абстракции.
-БЕЗ мотивационных фраз в описании. Только конкретика и польза.
-БЕЗ слов: узнайте, наш, купите, попробуйте.`
+    output: '📌 10 пинов · каждый с заголовком, призывом (150 симв), текстом (150 симв), ключевыми словами (500 симв) и идеей визуала',
+    mission: 'Поисковый трафик. Пины живут месяцами. Ключевые слова решают всё.',
+    tags: ['пины','SEO','охват','сохранения'],
+    rules: `PINTEREST — КАК ОФОРМИТЬ ВЫДАЧУ:\nВыдай 10 пинов строго по структуре:\n\nПИН [N]\nЗАГОЛОВОК: [вирусный заголовок 40-70 символов — боль или ситуация покупателя]\nОПИСАНИЕ:\nПРИЗЫВ: [активный призыв 150 символов]\nТЕКСТ: [описание ситуации 150 символов]\nКЛЮЧЕВЫЕ СЛОВА: [500 символов — через запятую, для поиска]\nВИЗУАЛ: [конкретное описание картинки или видео]\n\nЗаголовки из болей покупателя его словами. ЗАПРЕЩЕНЫ абстрактные заголовки.`
   },
   'ВКонтакте': {
     recommend: '💡 Лучшие форматы: Вовлекающий пост · Полезный пост / инструкция · Разбор кейса',
-    output: '📝 Готовый пост · хук в первых строках · 3-5 хэштегов в конце · вопрос для комментариев',
-    mission: 'Охват через алгоритм + живое обсуждение.',
-    tags: ['алгоритм','комментарии','репосты','польза'],
-    rules: `ВКонтакте — КАК ОФОРМИТЬ ВЫДАЧУ:
-
-⛔ ЗАПРЕЩЕНО: нумерованные списки (1. 2. 3.), слова "Первый/Второй/Третий способ/шаг". Только сплошной текст абзацами.
-
-Структура:
-Абзац 1 (хук): конкретная ситуация — первые строки видны до "Показать полностью"
-Абзац 2-3 (тело): раскрываешь через личный опыт, без перечислений
-Абзац 4 (финал): острый личный вопрос — не общий, а конкретный
-
-Длина: 600-1500 знаков.
-
-✅ ОБЯЗАТЕЛЬНО в самом конце — хэштеги (без них пост не засчитан):
-#тема #ниша #ключевое_слово (3-5 штук)
-
-После хэштегов: 📸 Идея для картинки: [описание]`
+    output: '📝 Пост с хуком · тело · острый вопрос · 3-5 хэштегов',
+    mission: 'Охват через вовлечение. Алгоритм смотрит на комментарии и репосты.',
+    tags: ['хэштеги','вопрос','охват','комментарии'],
+    rules: `ВКонтакте — КАК ОФОРМИТЬ ВЫДАЧУ:\n\n⛔ ЗАПРЕЩЕНО: нумерованные списки (1. 2. 3.), слова "Первый/Второй/Третий способ/шаг". Только сплошной текст абзацами.\n\nСтруктура:\nАбзац 1 (хук): конкретная ситуация — первые строки видны до "Показать полностью"\nАбзац 2-3 (тело): раскрываешь через личный опыт, без перечислений\nАбзац 4 (финал): острый личный вопрос\n\nДлина: 600-1500 знаков.\n\n✅ ОБЯЗАТЕЛЬНО последними строками — хэштеги (без них пост не засчитан):\n#тема #ниша #ключевое_слово (3-5 штук)\n\nПосле хэштегов: 📸 Идея для картинки: [описание]`
   },
   'Дзен': {
     recommend: '💡 Лучшие форматы: Просто пост · Эмоциональный пост · Полезный пост / инструкция',
-    output: '📖 Статья · заголовок отдельно · 3500+ символов · подзаголовки · вопрос в конце · 5-7 хэштегов',
-    mission: 'Клик по заголовку + дочитывание. Яндекс ранжирует по времени на странице.',
-    tags: ['SEO','дочитывание','рекомендации','статья'],
-    rules: `ДЗЕН — КАК ОФОРМИТЬ ВЫДАЧУ:
-ОБЯЗАТЕЛЬНАЯ СТРУКТУРА — строго в таком порядке:
-
-ЗАГОЛОВОК: [заголовок 40-70 символов — не кликбейт, но интригующий. Формулы: "Почему [факт]", "[Цифра] способов [результат]", "Я [сделала X] — вот что вышло"]
-
-[Текст статьи МИНИМУМ 3500 символов]
-Структура текста:
-— Лид (1 абзац): цепляющая история или парадокс
-— Основная часть: 3-5 смысловых блоков с подзаголовками
-— Каждый блок: 300-500 знаков, конкретика + личный опыт
-— Финал: вывод + вопрос к читателям (вовлекающий, не риторический)
-
-В конце обязательно хэштеги: #ниша #тема #ключевое_слово #дача #огород (5-7 штук)`
+    output: '📰 Статья: ЗАГОЛОВОК отдельно + 3500+ символов + подзаголовки + вопрос + 5-7 хэштегов',
+    mission: 'SEO-трафик из Яндекса. Статьи живут годами. Время чтения важнее всего.',
+    tags: ['заголовок','статья','хэштеги','Яндекс'],
+    rules: `ДЗЕН — КАК ОФОРМИТЬ ВЫДАЧУ:\n\nШаг 1. Напиши строку:\nЗАГОЛОВОК: [твой заголовок 40-70 символов — интригующий, не кликбейт]\n\nШаг 2. Напиши статью минимум 3500 символов:\n— Первый абзац: зацепи сразу — личная история или острый вопрос\n— Подзаголовки (3-5 штук) — реальные, не "Подзаголовок 1"\n— Пиши от первого лица, через личный опыт\n— В конце: вопрос к читателям\n— Последняя строка: 5-7 хэштегов\n\nЗАПРЕЩЕНО: английские слова (frustration, challenge и др.) — только русский.\nЗАПРЕЩЕНО: стиль безликой статьи из интернета. Личный голос.\nИТОГО: минимум 3500 символов — это примерно 5-6 развёрнутых абзацев по 500-600 символов каждый.`
   },
   'Instagram / Reels': {
     recommend: '💡 Лучшие форматы: Сценарий Reels/Shorts · Вовлекающий пост',
-    output: '🎬 Сценарий с таймкодами · текст на экране · совет по съёмке · подпись + 15-20 хэштегов',
-    mission: 'Удержание в первые 3 секунды и досмотр до конца.',
-    tags: ['Reels','хук','досмотр','виральность'],
-    rules: `INSTAGRAM/REELS — КАК ОФОРМИТЬ ВЫДАЧУ:
-Выдавай СЦЕНАРИЙ для съёмки + подпись к посту.
-
-СЦЕНАРИЙ:
-0:00-0:03 — ХУК: [что говоришь / показываешь на превью — 1 провокационная фраза]
-0:03-0:10 — ПРОБЛЕМА: [озвучиваешь боль зрителя]
-0:10-0:45 — ПОЛЬЗА: [3-4 конкретных шага или факта, каждые 5-7 сек новый]
-0:45-0:55 — ИТОГ: [результат одной фразой]
-0:55-1:00 — CTA: [призыв: сохрани / перешли / напиши в комментах]
-Текст на экране: [ключевые фразы для субтитров]
-Совет по съёмке: [как снять на телефон — свет, ракурс, реквизит]
-
-ПОДПИСЬ К ПОСТУ (caption):
-[2-3 строки текста — продолжение темы или вопрос]
-[пустая строка]
-Хэштеги ОБЯЗАТЕЛЬНО 15-20 штук: #ниша #тема #площадка #формат (напиши все 15-20 штук).
-Пиши "директ", не "лс".`
+    output: '🎬 Сценарий с таймкодами + субтитры + совет по съёмке + подпись + 15-20 хэштегов',
+    mission: 'Охват через Reels. Алгоритм смотрит на досмотр и сохранения.',
+    tags: ['Reels','хэштеги','сценарий','съёмка'],
+    rules: `INSTAGRAM / REELS — КАК ОФОРМИТЬ ВЫДАЧУ:\nСценарий для Reels (30-60 секунд) с таймкодами.\nДля каждого момента: [время] — что говоришь | что в кадре | текст на экране\n\n0:00-0:03 — ХУК: [цепляющая фраза]\n0:03-0:10 — ПРОБЛЕМА: [ситуация зрителя]\n0:10-0:45 — ПОЛЬЗА: [3-4 шага по теме]\n0:45-0:55 — ИТОГ\n0:55-1:00 — CTA\n\nСУБТИТРЫ: [ключевые фразы для субтитров]\nПОДПИСЬ К ПОСТУ: [текст + призыв]\nХЭШТЕГИ ОБЯЗАТЕЛЬНО 15-20 штук: #ниша #тема...\nСОВЕТ ПО СЪЁМКЕ: [конкретная рекомендация]`
   },
   'YouTube Shorts': {
     recommend: '💡 Лучшие форматы: Сценарий Reels/Shorts',
-    output: '🎥 Сценарий 30-59 сек · таймкоды · субтитры · описание + хэштеги',
-    mission: 'Один тезис — максимально сильно.',
-    tags: ['Shorts','вертикальное видео','удержание','один тезис'],
-    rules: `YOUTUBE SHORTS — КАК ОФОРМИТЬ ВЫДАЧУ:
-Выдавай СЦЕНАРИЙ для съёмки.
-
-СЦЕНАРИЙ (30-59 секунд):
-0:00-0:03 — ХУК: [первая фраза — сразу в суть, без "привет"]
-0:03-0:15 — КОНТЕКСТ: [почему это важно / в чём проблема]
-0:15-0:45 — ОСНОВА: [3-4 конкретных момента, каждые 7-10 сек]
-0:45-0:55 — ВЫВОД: [главная мысль одним предложением]
-0:55-1:00 — CTA: [подпишись / комментируй / сохрани]
-
-Субтитры (текст на экране): [ключевые фразы каждые 5-7 сек]
-Описание к видео: [2-3 предложения + хэштеги 5-10 штук]`
+    output: '🎬 Сценарий 30-59 сек с таймкодами',
+    mission: 'Алгоритм YouTube. Короткий формат для нового трафика.',
+    tags: ['Shorts','сценарий','YouTube','хуки'],
+    rules: `YOUTUBE SHORTS — КАК ОФОРМИТЬ ВЫДАЧУ:\nСценарий 30-59 секунд строго.\n0:00-0:03 — ХУК (не "привет, сегодня расскажу" — сразу к делу)\n0:03-0:10 — ПРОБЛЕМА\n0:10-0:50 — ПОЛЬЗА\n0:50-0:59 — CTA\n\nСУБТИТРЫ: [текст для субтитров]\nОПИСАНИЕ: [для YouTube, с ключевыми словами]\nТЕГИ: [8-12 тегов]`
   },
   'TikTok': {
     recommend: '💡 Лучшие форматы: Сценарий Reels/Shorts · Вовлекающий пост',
-    output: '🎵 Сценарий 20-45 сек · таймкоды · комментарий-ловушка · подпись + 8-12 хэштегов',
-    mission: 'Эмоция, контраст и комментируемость.',
-    tags: ['эмоция','контраст','комментарии','споры'],
-    rules: `TIKTOK — КАК ОФОРМИТЬ ВЫДАЧУ:
-Выдавай СЦЕНАРИЙ для съёмки. Строго следуй этой структуре — не добавляй лишних блоков.
-
-СЦЕНАРИЙ (30-50 секунд):
-0:00-0:03 — ХУК: [провокационная фраза — бьёт в боль зрителя]
-0:03-0:08 — ПРОБЛЕМА: [конкретная ситуация из жизни]
-0:08-0:40 — ПОЛЬЗА: [3-4 конкретных момента из промпта]
-0:40-0:50 — ИТОГ: [результат одной фразой]
-0:45-0:60 — КОММЕНТАРИЙ-ЛОВУШКА (это ПОСЛЕДНЕЕ что говоришь — ОБЯЗАТЕЛЬНО):
-НЕ используй: "Пишите в директ", "Делитесь историями", "Поделитесь с подругами"
-ИСПОЛЬЗУЙ один из шаблонов — выбери подходящий к теме:
-✓ "Признавайся — ты первой мирится после ссоры или ждёшь пока муж сделает шаг? 👇"
-✓ "У кого муж сам просит прощения, а кто всегда первая идёт мириться? Пиши честно 👇"
-✓ "Ты считаешь что в ссоре всегда виноваты оба, или один виноват больше? 👇 спорим в комментах"
-Адаптируй под свою тему — главное: ДВА ЛАГЕРЯ, конкретный вопрос, 👇 в конце.
-
-Озвучка: разговорная речь как другу. "Директ" не "лс".
-Подпись: [1-2 живые строки]
-Хэштеги ОБЯЗАТЕЛЬНО 8-12 штук (перечисли все):`
+    output: '🎵 Сценарий с таймкодами + комментарий-ловушка + 8-12 хэштегов',
+    mission: 'Алгоритм TikTok. Досмотры и комментарии решают всё.',
+    tags: ['сценарий','хэштеги','ловушка','вирус'],
+    rules: `TIKTOK — КАК ОФОРМИТЬ ВЫДАЧУ:\nВыдавай СЦЕНАРИЙ для съёмки. Строго следуй этой структуре — не добавляй лишних блоков.\n\nСЦЕНАРИЙ (30-50 секунд):\n0:00-0:03 — ХУК: [провокационная фраза — бьёт в боль зрителя]\n0:03-0:08 — ПРОБЛЕМА: [конкретная ситуация из жизни]\n0:08-0:40 — ПОЛЬЗА: [3-4 конкретных момента из промпта]\n0:40-0:50 — ИТОГ: [результат одной фразой]\n0:45-0:60 — КОММЕНТАРИЙ-ЛОВУШКА (ПОСЛЕДНЯЯ ФРАЗА — ОБЯЗАТЕЛЬНА):\nНЕ используй: "Пишите в директ", "Делитесь историями", "Поделитесь с подругами"\nИСПОЛЬЗУЙ один из шаблонов:\n✓ "Признавайся — ты первой мирится после ссоры или ждёшь пока муж сделает шаг? 👇"\n✓ "У кого муж сам просит прощения, а кто всегда первая идёт мириться? Пиши честно 👇"\nАдаптируй под тему — главное: ДВА ЛАГЕРЯ, конкретный вопрос, 👇 в конце.\n\nОзвучка: разговорная речь. Пиши "директ", не "лс".\nПодпись: [1-2 живые строки]\nХэштеги ОБЯЗАТЕЛЬНО 8-12 штук (перечисли все):`
   },
   'Threads': {
     recommend: '💡 Лучшие форматы: Threads-ветка · Рассуждение эксперта',
-    output: '🧵 Ветка 6-8 постов · каждый пост отдельно · без хэштегов · вопрос в финале',
-    mission: 'Мысль, которая разворачивается. Работает экспертность и честность.',
-    tags: ['ветка','экспертность','диалог','текст'],
-    rules: `THREADS — КАК ОФОРМИТЬ ВЫДАЧУ:
-Выдавай ветку из 6-8 отдельных постов.
-
-ПОСТ 1 (хук, 80-150 симв.): [провокационный тезис — работает без остальных]
-ПОСТ 2 (контекст, 100-200 симв.): [откуда это наблюдение]
-ПОСТ 3-5 (развитие, каждый 100-200 симв.): [один аргумент = один пост]
-ПОСТ 6 (поворот, 100-150 симв.): [неожиданная мысль, которую никто не говорит вслух]
-ПОСТ 7 (вывод, 80-120 симв.): [ёмкая афористичная фраза]
-ПОСТ 8 (вопрос, 80-100 симв.): [конкретный вопрос про их опыт]
-
-БЕЗ хэштегов. Каждый пост — отдельный абзац с пометкой ПОСТ N.`
+    output: '🧵 Ветка 6-8 постов · без хэштегов',
+    mission: 'Дискуссии и экспертность. Без хэштегов — только мысль.',
+    tags: ['ветка','мысли','диалог','эксперт'],
+    rules: `THREADS — КАК ОФОРМИТЬ ВЫДАЧУ:\nВетка из 6-8 постов. Каждый пост — отдельный абзац.\n\nПОСТ 1 (хук, 80-150 симв): [провокационный тезис]\nПОСТ 2 (контекст, 100-200 симв): [откуда это наблюдение]\nПОСТ 3-5 (развитие, каждый 100-200 симв): [один аргумент = один пост]\nПОСТ 6 (поворот, 100-150 симв): [неожиданная мысль]\nПОСТ 7 (вывод, 80-120 симв): [ёмкая афористичная фраза]\nПОСТ 8 (вопрос, 80-100 симв): [конкретный вопрос про их опыт]\n\nБЕЗ хэштегов. Каждый пост = отдельный абзац с меткой ПОСТ N.`
   },
   'TenChat': {
     recommend: '💡 Лучшие форматы: Рассуждение эксперта · Разбор кейса · Продающий пост',
-    output: '💼 Экспертный пост · спорный тезис + кейс · 3-5 хэштегов · идея для картинки',
-    mission: 'Деловая экспертность без корпоративного занудства.',
-    tags: ['B2B','кейс','экспертность','нетворкинг'],
-    rules: `ТЕНЧАТ — КАК ОФОРМИТЬ ВЫДАЧУ:
-Структура: спорный тезис → доказательство с цифрами/кейсом → неожиданный вывод → вопрос к профессионалам.
-Или: кейс (что делали → результат → что понял).
-Длина: 800-2000 знаков.
-БЕЗ корпоративных слов. Конкретные цифры и факты.
-Хэштеги: 3-5 профессиональных в конце.
-После текста: 📸 Идея для картинки: [описание]`
+    output: '💼 Экспертный пост + 3-5 хэштегов',
+    mission: 'Алгоритм Зевс даёт органический охват 5000-30000 без подписчиков.',
+    tags: ['эксперт','Зевс','охват','B2B'],
+    rules: `TENCHAT — КАК ОФОРМИТЬ ВЫДАЧУ:\nЭкспертный пост с конкретной позицией автора.\nСтруктура: спорный тезис → аргументы из практики → конкретный вывод → вопрос.\nДлина: 800-2000 символов.\nТон: профессиональный, конкретный, без воды.\nОБЯЗАТЕЛЬНО в конце: 3-5 хэштегов через пробел.`
   },
   'Одноклассники': {
     recommend: '💡 Лучшие форматы: Просто пост · Полезный пост / инструкция · Пост с юмором',
-    output: '☀️ Короткий тёплый пост · простой язык · 2-3 эмодзи · 2-3 хэштега',
-    mission: 'Простота, тепло и узнаваемость.',
-    tags: ['простота','жизненные истории','польза','тепло'],
-    rules: `ОДНОКЛАССНИКИ — КАК ОФОРМИТЬ ВЫДАЧУ:
-Начни с жизненной ситуации, знакомой каждому.
-Язык: максимально простой, как разговор с соседкой за чаем.
-Эмодзи: 2-4 штуки для тепла и узнаваемости.
-Длина: 300-800 знаков — коротко и по делу.
-Финал: тёплый вопрос или наблюдение.
-В конце 2-3 хэштега.
-После текста: 📸 Идея для картинки: [описание]`
+    output: '☀️ Тёплый короткий пост + 2-3 хэштега',
+    mission: 'Аудитория 35+. Тепло, простота, жизненность.',
+    tags: ['тепло','простота','жизнь','семья'],
+    rules: `ОДНОКЛАССНИКИ — КАК ОФОРМИТЬ ВЫДАЧУ:\nКороткий тёплый пост 300-800 символов.\nПростой разговорный язык — как пишут друзьям.\nБез сложных терминов, без англицизмов.\nЖизненная история или простой совет.\nВ конце: мягкий вопрос или призыв.\nОБЯЗАТЕЛЬНО: 2-3 хэштега в конце.`
   }
-};
-
-function cleanMarkdown(text) {
-  if (!text) return '';
-  return text
-    .replace(/\*\*\*([^*\n]+)\*\*\*/g, '$1')
-    .replace(/\*\*([^*\n]+)\*\*/g, '$1')
-    .replace(/\*([^*\n]+)\*/g, '$1')
-    .replace(/__([^_\n]+)__/g, '$1')
-    .replace(/_([^_\n]+)_/g, '$1')
-    .replace(/^#{1,6}\s+/gm, '')
-    .replace(/^[-*]{3,}\s*$/gm, '')
-    .replace(/`([^`\n]+)`/g, '$1')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
-}
-
-// БАЛАНС ГЕНЕРАЦИЙ
-(function migrateStorage() {
-  if (localStorage.getItem('gen_init') && !localStorage.getItem('generation_balance_initialized')) {
-    const oldLeft = localStorage.getItem('gen_left');
-    const oldTier = localStorage.getItem('user_tier');
-    if (oldLeft !== null) localStorage.setItem('generations_left', oldLeft);
-    if (oldTier !== null) localStorage.setItem('user_tier', oldTier);
-    localStorage.setItem('generation_balance_initialized', '1');
-    localStorage.removeItem('gen_left');
-    localStorage.removeItem('gen_init');
-  }
-})();
-
-function ensureGenerationBalance(){
-  if(!localStorage.getItem('generation_balance_initialized')){
-    localStorage.setItem('generations_left',String(FREE_LIMIT));
-    localStorage.setItem('generation_balance_initialized','1');
-    localStorage.setItem('user_tier','free');
-  }
-}
-function getUserTier(){ensureGenerationBalance();return localStorage.getItem('user_tier')||'free';}
-function getGenerationsLeft(){ensureGenerationBalance();return Math.max(0,Number(localStorage.getItem('generations_left')||0));}
-function setGenerationsLeft(n){localStorage.setItem('generations_left',String(Math.max(0,Number(n)||0)));}
-function addGenerations(amount){const current=Number(localStorage.getItem('generations_left')||0);setGenerationsLeft(current+Number(amount||0));}
-async function spendGeneration(){
-  const left=getGenerationsLeft();
-  if(left<=0) return false;
-  // Серверная логика теперь в generate.js — клиент только обновляет локальный счётчик
-  setGenerationsLeft(left-1);
-  updateStatusBar();
-  return true;
-}
-
-async function syncGenerationsToSupabase() {
-  if (!currentUser || !sb) return;
-  try {
-    const newLeft = getGenerationsLeft();
-    await sb.from('user_balance').update({
-      generations_left: newLeft,
-      updated_at: new Date().toISOString()
-    }).eq('id', currentUser.id);
-    // Синк прошёл успешно — обновляем эталонное значение
-    localStorage.setItem('supabase_last_gens', newLeft);
-  } catch(e) {
-    console.error('Sync generations error:', e.message);
-  }
-}
-
-function goToPay(tier){
-  const baseUrl=PAY_URLS[tier];
-  if(!baseUrl){alert('Ссылка на этот тариф ещё не добавлена.');return;}
-  ensureGenerationBalance();
-  localStorage.setItem('pending_tier',tier);
-  localStorage.setItem('pending_tier_ts',String(Date.now()));
-  localStorage.setItem('pending_payment_started','1');
-  const successUrl=window.location.origin+window.location.pathname+'?payment=success';
-  const failUrl=window.location.origin+window.location.pathname+'?payment=fail';
-  const url=new URL(baseUrl,window.location.href);
-  url.searchParams.set('success_url',successUrl);
-  url.searchParams.set('fail_url',failUrl);
-  url.searchParams.set('success',successUrl);
-  url.searchParams.set('error',failUrl);
-  url.searchParams.set('return_url',successUrl);
-  url.searchParams.set('redirect_url',successUrl);
-  closePricingModal();
-  window.location.href = url.toString();
-}
-
-async function detectTierFromUrl(){
-  ensureGenerationBalance();
-  const params=new URLSearchParams(window.location.search);
-  if (params.get('reset') === '1') {
-    window.history.replaceState({}, '', window.location.pathname);
-    setTimeout(() => showResetPasswordForm(), 500);
-    return;
-  }
-  const tierParam=(params.get('tier')||'').toLowerCase();
-  const paymentParam=(params.get('payment')||params.get('status')||params.get('result')||'').toLowerCase();
-  const pendingTier=localStorage.getItem('pending_tier');
-  const pendingTs=Number(localStorage.getItem('pending_tier_ts')||0);
-  const pendingRecent=pendingTier&&(Date.now()-pendingTs)<24*60*60*1000;
-  if(tierParam&&TIER_PACKS[tierParam]){await activatePaidTier(tierParam);cleanPaymentUrl();return;}
-  if(['success','paid','ok','done'].includes(paymentParam)&&pendingRecent&&TIER_PACKS[pendingTier]){await activatePaidTier(pendingTier);cleanPaymentUrl();return;}
-  if(['fail','failed','error','cancel','canceled'].includes(paymentParam)){
-    localStorage.removeItem('pending_tier');localStorage.removeItem('pending_tier_ts');cleanPaymentUrl();
-    showPaymentNotice('Оплата не завершена','Если это ошибка — попробуй оплатить ещё раз или напиши в поддержку.','⚠️');return;
-  }
-}
-
-async function activatePaidTier(tier){
-  const pack=TIER_PACKS[tier];if(!pack)return;
-  const activationKey='activated_'+tier+'_'+(localStorage.getItem('pending_tier_ts')||'direct');
-  if(localStorage.getItem(activationKey)){
-    localStorage.removeItem('pending_tier');localStorage.removeItem('pending_tier_ts');
-    showActivationBanner(tier,true);updateStatusBar();updateUserBar();return;
-  }
-  localStorage.setItem('user_tier',tier);
-  addGenerations(pack);
-  localStorage.setItem(activationKey,'1');
-  localStorage.removeItem('pending_tier');localStorage.removeItem('pending_tier_ts');
-  if (currentUser && sb) {
-    try {
-      await sb.from('user_balance').upsert({
-        id: currentUser.id, email: currentUser.email, tier: tier,
-        generations_left: getGenerationsLeft(), updated_at: new Date().toISOString()
-      });
-    } catch(e) { console.error('activatePaidTier Supabase error:', e); }
-  }
-  showActivationBanner(tier,false);updateStatusBar();updateUserBar();
-}
-
-function cleanPaymentUrl(){window.history.replaceState({},'',window.location.pathname);}
-
-function showActivationBanner(tier,alreadyActivated){
-  const labels={free:'Бесплатно',test:'TEST',monthly:'ПОТОК',annual:'ТУРБО',boost:'БУСТ',toplivо:'БУСТ',топливо:'БУСТ',автопилот:'ПОТОК'};
-  const count=TIER_PACKS[tier];
-  showPaymentNotice(
-    alreadyActivated?'Тариф уже активирован':'Тариф '+(labels[tier]||tier)+' активирован!',
-    alreadyActivated?'Генерации уже были начислены ранее.':`Начислено ${count} генераций на баланс.`,
-    alreadyActivated?'✅':'🎉'
-  );
 }
 
 function showPaymentNotice(title,text,icon){
@@ -981,6 +753,35 @@ document.addEventListener('visibilitychange', async ()=>{
     }
   }
 });
+
+
+
+function getUserTier() {
+  return localStorage.getItem('user_tier') || 'free';
+}
+
+function getGenerationsLeft() {
+  return parseInt(localStorage.getItem('generation_balance') || '0');
+}
+
+function setGenerationsLeft(n) {
+  localStorage.setItem('generation_balance', Math.max(0, n).toString());
+}
+
+function ensureGenerationBalance() {
+  // Инициализация баланса генераций для новых пользователей
+  const stored = localStorage.getItem('generation_balance');
+  if (stored === null) {
+    // Первый запуск — устанавливаем 0 (реальный баланс придёт из Supabase после входа)
+    localStorage.setItem('generation_balance', '0');
+  }
+  // Миграция со старого формата
+  const old = localStorage.getItem('gen_balance');
+  if (old !== null && stored === null) {
+    localStorage.setItem('generation_balance', old);
+    localStorage.removeItem('gen_balance');
+  }
+}
 
 function updateStatusBar(){
   ensureGenerationBalance();
@@ -1560,6 +1361,7 @@ function buildPrompt() {
 ПРОЕКТ И КОНТЕКСТ
 Проект: ${project} | Роль автора: ${role} | Площадка: ${S.platform} | Тип проекта: ${S.audience}
 ${v('tovDescription') ? '\nГОЛОС БРЕНДА — соблюдай этот стиль строго во всех текстах:\n' + v('tovDescription') : ''}
+${(()=>{const m={none:'БЕЗ ПРОДАЖ: дай только пользу, никаких призывов купить или написать.',soft:'CTA МЯГКИЙ: в конце — лёгкая мысль или вопрос, без давления.',invite:'CTA ЗНАКОМСТВО: пригласи узнать больше, без прямой продажи.',gentle_sell:'CTA АККУРАТНЫЙ: мягко упомяни продукт в конце, без давления и обещаний гарантий.',sell:'CTA ПРЯМОЙ: чёткий призыв к действию в конце.'};return m[S.ctaPressure]||m.soft;})()}
 
 ЦА — ГЛАВНЫЙ ОРИЕНТИР (боли, мифы, триггеры, живые фразы)
 ${audience}
@@ -2055,7 +1857,7 @@ function initAutosave() {
   });
 
   // Слушаем изменения селектов
-  ['platform','goal','audienceType','tone','depth','extraPreset','audFindDepth'].forEach(id => {
+  ['platform','goal','audienceType','tone','depth','extraPreset','audFindDepth','ctaPressure'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('change', debouncedSave);
   });
@@ -2330,7 +2132,7 @@ async function findAudience() {
   try {
     const result = await callAPIRaw(buildAudiencePrompt(), 'audience');
     out.value = result;
-    if (!result.startsWith('__TEST_MODE__')) await spendGeneration();
+    // Настройка системы — НЕ тратит генерации (findAudience/findTopics бесплатно)
     updateStatusBar();
     setTimeout(saveProject, 400);
   } catch(e) { out.value = '⚠️ Не удалось получить ответ. Проверь интернет и попробуй снова. (' + (e.message||'') + ')'; console.error(e); }
@@ -2341,7 +2143,7 @@ async function findTopics() {
   ensureGenerationBalance();
   const out = document.getElementById('topicsOutput');
   if (!currentUser) {openAuthModal('register');showCopyToast('Зарегистрируйся — получишь 5 генераций бесплатно');return;}
-  if (getGenerationsLeft() <= 0) { document.getElementById('paywall').classList.remove('hidden'); out.value='Лимит закончился. Выбери тариф.'; openPricingModal(); return; }
+  // Поиск тем бесплатный — не проверяем лимит
   const hasAudience = v('audienceData') || v('audienceFinderOutput');
   if (!hasAudience) {
     out.value = '';
@@ -2353,7 +2155,7 @@ async function findTopics() {
   try {
     const result = await callAPIRaw(buildTopicsPrompt(), 'topics');
     out.value = result;
-    if (!result.startsWith('__TEST_MODE__')) await spendGeneration();
+    // Настройка системы — НЕ тратит генерации (findAudience/findTopics бесплатно)
     updateStatusBar();
     setTimeout(saveProject, 400);
   } catch(e) { out.value = '⚠️ Не удалось получить ответ. Проверь интернет и попробуй снова. (' + (e.message||'') + ')'; console.error(e); }
