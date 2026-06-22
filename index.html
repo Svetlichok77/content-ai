@@ -489,7 +489,7 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
   <div style="text-align:center;padding:28px 0 28px">
     <div style="font-family:Unbounded,sans-serif;color:var(--accent);font-size:11px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px">Выбери тариф</div>
     <h2 style="font-family:Unbounded,sans-serif;font-size:clamp(26px,4vw,44px);letter-spacing:-.04em;margin-bottom:10px">Контент на <span style="color:var(--accent)">автопилоте</span></h2>
-    <p style="color:var(--muted);font-size:15px">Промпты тоже расходуют генерации. Остаток не сгорает.</p>
+    <p style="color:var(--muted);font-size:15px">Генерации не сгорают — остаток переносится на следующий месяц.</p>
   </div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding-top:16px" id="tierGrid">
 
@@ -536,9 +536,9 @@ header{padding:60px 22px 36px;text-align:center;border-bottom:1px solid var(--li
 
       </div>
       <ul style="list-style:none;text-align:left;font-size:13px;color:#b9d6d1;margin-bottom:24px;display:flex;flex-direction:column;gap:10px">
-        <li>✓ Для активных месяцев</li>
-        <li>✓ Генерации не сгорают</li>
-        <li>✓ Нужна активная подписка</li>
+        <li>✓ Можно купить в любой момент</li>
+        <li>✓ Генерации не сгорают — накапливаются</li>
+        <li>✓ Подходит к любому тарифу</li>
       </ul>
       <button class="btn btn-blue" style="margin-top:0;font-size:12px;padding:14px" onclick="goToPay('boost')">Добавить ТОПЛИВО →</button>
     </div>
@@ -781,6 +781,131 @@ function ensureGenerationBalance() {
     localStorage.setItem('generation_balance', old);
     localStorage.removeItem('gen_balance');
   }
+}
+
+
+// ============================================================
+// НЕДОСТАЮЩИЕ ФУНКЦИИ — КРИТИЧЕСКИ ВАЖНЫ
+// ============================================================
+
+function cleanMarkdown(text) {
+  if (!text) return '';
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\*(.+?)\*/g, '$1')
+    .replace(/#{1,6}\s+/gm, '')
+    .replace(/^---+$/gm, '')
+    .replace(/^___+$/gm, '')
+    .trim();
+}
+
+function addGenerations(amount) {
+  const current = getGenerationsLeft();
+  setGenerationsLeft(current + Math.max(0, Number(amount) || 0));
+}
+
+function spendGeneration() {
+  const left = getGenerationsLeft();
+  if (left <= 0) return false;
+  setGenerationsLeft(left - 1);
+  return true;
+}
+
+function goToPay(tier) {
+  const baseUrl = PAY_URLS[tier];
+  if (!baseUrl) { alert('Ссылка на этот тариф ещё не добавлена.'); return; }
+  ensureGenerationBalance();
+  localStorage.setItem('pending_tier', tier);
+  localStorage.setItem('pending_tier_ts', String(Date.now()));
+  localStorage.setItem('pending_payment_started', '1');
+  const successUrl = window.location.origin + window.location.pathname + '?payment=success';
+  const failUrl    = window.location.origin + window.location.pathname + '?payment=fail';
+  const url = new URL(baseUrl, window.location.href);
+  url.searchParams.set('success_url', successUrl);
+  url.searchParams.set('fail_url', failUrl);
+  url.searchParams.set('success', successUrl);
+  url.searchParams.set('error', failUrl);
+  url.searchParams.set('return_url', successUrl);
+  closePricingModal();
+  window.location.href = url.toString();
+}
+
+async function detectTierFromUrl() {
+  ensureGenerationBalance();
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('reset') === '1') {
+    window.history.replaceState({}, '', window.location.pathname);
+    setTimeout(() => showResetPasswordForm(), 500);
+    return;
+  }
+  const tierParam    = (params.get('tier') || '').toLowerCase();
+  const paymentParam = (params.get('payment') || params.get('status') || params.get('result') || '').toLowerCase();
+  const pendingTier  = localStorage.getItem('pending_tier');
+  const pendingTs    = Number(localStorage.getItem('pending_tier_ts') || 0);
+  const pendingRecent = pendingTier && (Date.now() - pendingTs) < 24 * 60 * 60 * 1000;
+
+  if (tierParam && TIER_PACKS[tierParam]) {
+    await activatePaidTier(tierParam); cleanPaymentUrl(); return;
+  }
+  if (['success','paid','ok','done'].includes(paymentParam) && pendingRecent && TIER_PACKS[pendingTier]) {
+    await activatePaidTier(pendingTier); cleanPaymentUrl(); return;
+  }
+  if (['fail','failed','error','cancel','canceled'].includes(paymentParam)) {
+    localStorage.removeItem('pending_tier'); localStorage.removeItem('pending_tier_ts');
+    cleanPaymentUrl();
+    showPaymentNotice('Оплата не завершена', 'Если это ошибка — попробуй оплатить ещё раз или напиши в поддержку.', '⚠️');
+    return;
+  }
+}
+
+async function activatePaidTier(tier) {
+  const pack = TIER_PACKS[tier]; if (!pack) return;
+  const activationKey = 'activated_' + tier + '_' + (localStorage.getItem('pending_tier_ts') || 'direct');
+  if (localStorage.getItem(activationKey)) {
+    localStorage.removeItem('pending_tier'); localStorage.removeItem('pending_tier_ts');
+    showActivationBanner(tier, true); updateStatusBar(); updateUserBar(); return;
+  }
+  // БУСТ — добавляем к существующему балансу (не сгорают!)
+  if (tier === 'boost' || tier === 'toplivо' || tier === 'топливо') {
+    addGenerations(pack);
+  } else {
+    // Месячный/годовой — тоже добавляем (не обнуляем остаток)
+    addGenerations(pack);
+    localStorage.setItem('user_tier', tier);
+  }
+  localStorage.setItem(activationKey, '1');
+  localStorage.removeItem('pending_tier'); localStorage.removeItem('pending_tier_ts');
+  if (currentUser && sb) {
+    try {
+      await sb.from('user_balance').upsert({
+        id: currentUser.id, email: currentUser.email, tier: tier,
+        generations_left: getGenerationsLeft(), updated_at: new Date().toISOString()
+      });
+    } catch(e) { console.error('activatePaidTier Supabase error:', e); }
+  }
+  showActivationBanner(tier, false); updateStatusBar(); updateUserBar();
+}
+
+function cleanPaymentUrl() { window.history.replaceState({}, '', window.location.pathname); }
+
+function showActivationBanner(tier, alreadyActivated) {
+  const labels = {free:'Бесплатно', monthly:'ПОТОК', annual:'ТУРБО', boost:'БУСТ', toplivо:'БУСТ', топливо:'БУСТ'};
+  const count = TIER_PACKS[tier];
+  showPaymentNotice(
+    alreadyActivated ? 'Тариф уже активирован' : 'Тариф ' + (labels[tier] || tier) + ' активирован!',
+    alreadyActivated ? 'Генерации уже были начислены ранее.' : 'Начислено ' + count + ' генераций. Они не сгорают.',
+    alreadyActivated ? '✅' : '🎉'
+  );
+}
+
+function generatePromptOnly() {
+  ensureGenerationBalance();
+  if (!currentUser) { openAuthModal('register'); showCopyToast('Зарегистрируйся — получишь 5 генераций бесплатно'); return; }
+  if (!canUsePrompt()) { document.getElementById('paywall').classList.remove('hidden'); openPricingModal(); return; }
+  const prompt = buildPrompt();
+  const pOut = document.getElementById('promptOut');
+  if (pOut) { pOut.value = prompt; pOut.style.display = 'block'; }
+  showCopyToast('Промпт скопирован в буфер!');
 }
 
 function updateStatusBar(){
