@@ -1623,6 +1623,21 @@ async function generatePlan() {
   const empty = document.getElementById('planEmpty');
   if (!btn || !display) return;
 
+  // Проверка авторизации
+  if (!currentUser) {
+    openAuthModal('register');
+    showCopyToast('Зарегистрируйся — получишь 5 генераций бесплатно');
+    return;
+  }
+
+  // Проверка баланса
+  ensureGenerationBalance();
+  if (getGenerationsLeft() <= 0) {
+    document.getElementById('paywall').classList.remove('hidden');
+    openPricingModal();
+    return;
+  }
+
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>Создаю план...';
 
@@ -1693,6 +1708,9 @@ ${v('topicsOutput') ? 'ГОТОВЫЕ ТЕМЫ (используй как осн
       renderPlanCards(result);
       savePlanToStorage(result);
       if (empty) empty.style.display = 'none';
+      // Списываем генерацию после успешного создания плана
+      await spendGeneration();
+      updateStatusBar();
       showCopyToast('✓ Контент-план готов!');
     } else {
       if (empty) { empty.textContent = 'Не удалось создать план. Попробуй ещё раз.'; empty.style.display = 'block'; }
